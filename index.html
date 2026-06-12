@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Fascicolo · Documenti e norme pronti per ogni controllo</title>
+<title>InRegola · Documenti e norme pronti per ogni controllo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -174,7 +174,7 @@ input,select,textarea{font-family:inherit;font-size:16px}
 
 <script>
 /* =========================================================
-   FASCICOLO v1 — archivio documenti per controlli ispettivi
+   INREGOLA — archivio documenti per controlli ispettivi
    Dati: IndexedDB (file + metadati), tutto sul dispositivo.
    ========================================================= */
 
@@ -234,22 +234,23 @@ const ENTI=[
   {t:'Autorizzazione insegna',n:'Codice della Strada art. 23 \u00B7 regolamento comunale'},
   {t:'Tabella alcolemica e etilometro a disposizione (se aperti dopo le 24)',n:'L. 120/2010 art. 54 \u00B7 D.L. 117/2007'}]},
  {id:'gdf',sigla:'G.D.F.',nome:'Guardia di Finanza',
-  nota:'Mancata memorizzazione/trasmissione corrispettivi: sanzione 90% dell\u2019imposta (min. 500 \u20AC); 4 violazioni in 5 anni = sospensione licenza (D.Lgs 471/1997 art. 12).',
+  nota:'Mancata memorizzazione/trasmissione corrispettivi: sanzione 90% dell\u2019imposta (min. 500 \u20AC); 4 violazioni in 5 anni = sospensione licenza (D.Lgs 471/1997 art. 12). Dal 2026 \u00E8 obbligatorio anche il collegamento POS\u2013registratore telematico: mancato abbinamento 1.000\u20134.000 \u20AC + 100 \u20AC per ogni giorno di mancata trasmissione dei dati dei pagamenti.',
   items:[
   {t:'Registratore telematico \u2014 libretto e verificazione periodica (biennale)',n:'D.Lgs 127/2015 art. 2 \u00B7 provv. Agenzia Entrate'},
   {t:'Documenti commerciali / corrispettivi giornalieri',n:'D.Lgs 127/2015 \u00B7 D.Lgs 471/1997 art. 6'},
   {t:'Visura camerale aggiornata',n:'L. 580/1993'},
   {t:'Certificato attribuzione P.IVA',n:'DPR 633/1972 art. 35'},
   {t:'Contratto affitto d\u2019azienda / locazione registrato',n:'DPR 131/1986'},
-  {t:'Comunicazioni vendita alcolici',n:'D.Lgs 504/1995 art. 29 (come modificato)'}]},
+  {t:'Comunicazioni vendita alcolici',n:'D.Lgs 504/1995 art. 29 (come modificato)'},
+  {t:'Collegamento POS \u2013 registratore telematico (abbinamento sul portale Agenzia Entrate)',n:'L. 207/2024 art. 1 cc. 74-77 \u00B7 D.Lgs 127/2015 art. 2 c. 3 \u2014 in vigore dal 1/01/2026, abbinamento operativo dal 5/03/2026'}]},
  {id:'gen',sigla:'GENERALE',nome:'Documenti aziendali',
   nota:'Documenti trasversali richiesti da pi\u00F9 enti o utili in ogni verifica.',
   items:[
   {t:'Atto costitutivo e statuto',n:'Codice Civile'},
-  {t:'Polizza rischi catastrofali (obbligatoria per le imprese)',n:'L. 213/2023 art. 1 c. 101 \u00B7 D.L. 39/2025'},
+  {t:'Polizza rischi catastrofali (obbligatoria \u2014 per somministrazione e ricettivo dal 31/03/2026)',n:'L. 213/2023 art. 1 c. 101 \u00B7 D.L. 39/2025 \u00B7 D.L. 200/2025 (Milleproroghe 2026)'},
   {t:'Polizza assicurativa RC',n:'facoltativa ma raccomandata'},
   {t:'Contratto smaltimento oli vegetali esausti',n:'D.Lgs 152/2006 art. 233 (CONOE)'},
-  {t:'Gestione rifiuti / iscrizione RENTRI (se dovuta)',n:'D.Lgs 152/2006 \u00B7 D.M. 59/2023'},
+  {t:'Gestione rifiuti / iscrizione RENTRI (solo se produttore di rifiuti pericolosi)',n:'D.Lgs 152/2006 \u00B7 D.M. 59/2023 \u2014 esclusi i soli rifiuti non pericolosi conferiti al servizio pubblico'},
   {t:'Informative privacy GDPR + cartelli videosorveglianza',n:'Reg. UE 2016/679 \u00B7 Provv. Garante 8/04/2010'},
   {t:'Esposizione tariffe e diritti del consumatore',n:'D.Lgs 206/2005 (Codice del Consumo)'}]}
 ];
@@ -328,7 +329,7 @@ function render(){
 
 function topbar(){
   return `<div class="topbar">
-    <div class="brand">Fascicolo<small>pronti a ogni controllo</small></div>
+    <div class="brand">InRegola<small>pronti a ogni controllo</small></div>
     <button class="icon-btn" onclick="go('settings')" aria-label="Impostazioni">&#9881;</button>
   </div>
   <div class="locale-bar">${S.locali.map((l,i)=>
@@ -625,7 +626,7 @@ async function exportBackup(){
   const data=JSON.stringify({v:1,exported:new Date().toISOString(),locali:S.locali,pin:S.pin,docs});
   const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
   const a=document.createElement('a');a.href=url;
-  a.download='fascicolo-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  a.download='inregola-backup-'+new Date().toISOString().slice(0,10)+'.json';
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),30000);
 }
@@ -657,7 +658,7 @@ async function showStorage(){
 function renderLock(){
   $('#app').innerHTML='';
   $('#layer').innerHTML=`<div class="lock">
-    <h1>Fascicolo</h1><p>Archivio protetto</p>
+    <h1>InRegola</h1><p>Archivio protetto</p>
     <input type="password" inputmode="numeric" maxlength="8" id="pinInput" autofocus
       onkeydown="if(event.key==='Enter')tryPin()" oninput="if(this.value.length>=String(S.pin).length)tryPin()">
     <div class="lk-err" id="pinErr"></div>

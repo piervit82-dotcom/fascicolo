@@ -275,14 +275,16 @@ const dbGet=(s,k)=>new Promise(r=>{const q=tx(s,'readonly').get(k);q.onsuccess=(
 const dbClear=s=>new Promise(r=>{const q=tx(s,'readwrite').clear();q.onsuccess=()=>r()});
 
 /* ---------- stato ---------- */
-let S={locali:['Il Fionco','La Fornace'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],op:''};
+let S={locali:['Il Fionco','La Fornace'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],op:'',
+  societa:[{ragione:'MASTERPLAN GROUP SRL',indirizzo:'Via Francesco Baracca, 10 - 35019 Tombolo (PD)',piva:'05662050284',rea:'PD 483354',pec:'masterplangroup@pec.it',email:'info@masterplangroup.it',sdi:'X2PH38J'},{}]};
 async function loadState(){
   const st=await dbGet('settings','app');
-  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];S.op=st.op||'';}
+  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];S.op=st.op||'';if(st.societa)S.societa=st.societa;}
+  while(S.societa.length<S.locali.length)S.societa.push({});
   S.docs=await dbAll('docs');
   S.logs=await dbAll('logs');
 }
-const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op});
+const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op,societa:S.societa});
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -418,6 +420,7 @@ function vEnte(eid){
     <button class="back-btn" onclick="go('home')">&#8592; Archivio</button>
     <h2>${e.nome}</h2>
     <div class="ph-meta">${e.sigla} &middot; ${st.covered}/${st.total} voci coperte &middot; ${esc(S.locali[S.locale])}</div>
+    ${(S.societa[S.locale]&&S.societa[S.locale].ragione)?`<div class="ph-meta">${esc(S.societa[S.locale].ragione)}${S.societa[S.locale].piva?' &middot; P.IVA '+esc(S.societa[S.locale].piva):''}</div>`:''}
     <button class="controllo-btn" onclick="startControllo('${eid}')"><span class="dot"></span> Modalità controllo</button>
     ${e.nota?`<div class="ente-nota">${esc(e.nota)}</div>`:''}
   </div>
@@ -454,6 +457,7 @@ function startControllo(eid){
     <button class="ch-close" onclick="document.getElementById('controlloScreen').remove()">Chiudi</button>
     <div class="ch-tag"><span class="dot"></span> Controllo in corso</div>
     <h2>${e.sigla}</h2><div class="ch-loc">${esc(S.locali[S.locale])} &middot; ${new Date().toLocaleDateString('it-IT')}</div>
+    ${(S.societa[S.locale]&&S.societa[S.locale].ragione)?`<div class="ch-loc" style="font-size:12.5px;opacity:.85">${esc(S.societa[S.locale].ragione)}${S.societa[S.locale].piva?' &middot; P.IVA '+esc(S.societa[S.locale].piva):''}${S.societa[S.locale].indirizzo?'<br>'+esc(S.societa[S.locale].indirizzo):''}</div>`:''}
   </div>
   <div class="controllo-body">
     ${e.items.map((it,i)=>{const l=inSlot(i);
@@ -610,7 +614,13 @@ function exportRegistroCSV(){
   const rows=S.logs.filter(l=>{const d=new Date(l.ts);return l.locale===S.locale&&d.getFullYear()===y&&d.getMonth()===m-1;})
     .sort((a,b)=>a.ts-b.ts);
   if(!rows.length)return toast('Nessuna registrazione in quel mese');
-  const csv=['data;ora;tipo;punto o area;valore C;range;esito;azione correttiva;operatore'];
+  const soc=S.societa[S.locale]||{};
+  const csv=[];
+  csv.push('REGISTRO DI AUTOCONTROLLO — '+S.locali[S.locale].replace(/;/g,','));
+  if(soc.ragione)csv.push((soc.ragione+(soc.piva?' — P.IVA/CF '+soc.piva:'')+(soc.rea?' — REA '+soc.rea:'')).replace(/;/g,','));
+  if(soc.indirizzo)csv.push(soc.indirizzo.replace(/;/g,','));
+  csv.push('');
+  csv.push('data;ora;tipo;punto o area;valore C;range;esito;azione correttiva;operatore');
   for(const l of rows){const d=new Date(l.ts);
     csv.push([d.toLocaleDateString('it-IT'),d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}),
       l.tipo==='temp'?'temperatura':'pulizia',(l.punto||l.area||'').replace(/;/g,','),
@@ -627,10 +637,13 @@ function exportRegistroCSV(){
 function vSettings(){
   return topbar()+`<div class="wrap">
     <div class="sec-label" style="margin-top:6px">Locali</div>
-    ${S.locali.map((l,i)=>`<div class="set-card"><div class="row" style="align-items:center">
+    ${S.locali.map((l,i)=>{const so=S.societa[i]||{};return `<div class="set-card"><div class="row" style="align-items:center">
       <input type="text" value="${esc(l)}" style="flex:1;border:1.5px solid var(--line2);border-radius:10px;padding:11px" onchange="renameLocale(${i},this.value)">
       ${S.locali.length>1?`<button class="sm-btn red" onclick="removeLocale(${i})">Elimina</button>`:''}
-    </div></div>`).join('')}
+    </div>
+    <p style="margin:9px 0 8px;font-size:13px;color:var(--ink2)">${so.ragione?esc(so.ragione)+(so.piva?' &middot; P.IVA '+esc(so.piva):''):'Dati società non ancora inseriti'}</p>
+    <button class="sm-btn" onclick="openSocietaModal(${i})">${so.ragione?'Modifica dati società':'+ Inserisci dati società'}</button>
+    </div>`;}).join('')}
     <button class="sm-btn" onclick="addLocale()">+ Aggiungi locale</button>
 
     <div class="sec-label">Sicurezza</div>
@@ -727,15 +740,39 @@ async function deleteDoc(id){
   closeModal();render();toast('Documento eliminato');
 }
 
+/* ---------- dati societa ---------- */
+function openSocietaModal(i){
+  const s=S.societa[i]||{};
+  const f=(id,lab,val,ph)=>`<div class="f-group"><label>${lab}</label><input type="text" id="${id}" value="${esc(val||'')}" placeholder="${ph||''}"></div>`;
+  $('#layer').innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <h3>Dati societ\u00E0 \u2014 ${esc(S.locali[i])}</h3>
+    ${f('soRag','Ragione sociale',s.ragione,'Es. ROSSI SRL')}
+    ${f('soInd','Sede legale',s.indirizzo,'Via, CAP, Comune (Prov.)')}
+    ${f('soPiva','P.IVA / C.F.',s.piva)}
+    ${f('soRea','REA',s.rea,'Es. PD 123456')}
+    ${f('soPec','PEC',s.pec)}
+    ${f('soEmail','Email',s.email)}
+    ${f('soSdi','Codice SDI',s.sdi)}
+    <div class="m-actions">
+      <button class="btn ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn primary" onclick="saveSocieta(${i})">Salva</button>
+    </div></div></div>`;
+}
+function saveSocieta(i){
+  S.societa[i]={ragione:$('#soRag').value.trim(),indirizzo:$('#soInd').value.trim(),piva:$('#soPiva').value.trim(),
+    rea:$('#soRea').value.trim(),pec:$('#soPec').value.trim(),email:$('#soEmail').value.trim(),sdi:$('#soSdi').value.trim()};
+  saveSettings();closeModal();render();toast('Dati societ\u00E0 salvati');
+}
+
 /* ---------- settings actions ---------- */
 function renameLocale(i,v){if(v.trim()){S.locali[i]=v.trim();saveSettings();render()}}
-function addLocale(){S.locali.push('Nuovo locale');saveSettings();render()}
+function addLocale(){S.locali.push('Nuovo locale');S.societa.push({});saveSettings();render()}
 async function removeLocale(i){
   const n=S.docs.filter(d=>d.locale===i).length;
   if(!confirm(`Eliminare «${S.locali[i]}»?${n?` Verranno eliminati anche ${n} documenti collegati.`:''}`))return;
   for(const d of S.docs.filter(x=>x.locale===i))await dbDel('docs',d.id);
   S.docs=(await dbAll('docs')).map(d=>{if(d.locale>i)d.locale--;dbPut('docs',d);return d});
-  S.locali.splice(i,1);if(S.locale>=S.locali.length)S.locale=0;
+  S.locali.splice(i,1);S.societa.splice(i,1);if(S.locale>=S.locali.length)S.locale=0;
   saveSettings();render();
 }
 function setPin(){
@@ -760,7 +797,7 @@ async function exportBackup(){
     const{blob,...rest}=d;
     docs.push({...rest,fileData:blob?await blobToB64(blob):null});
   }
-  const data=JSON.stringify({v:2,exported:new Date().toISOString(),locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op,docs,logs:S.logs});
+  const data=JSON.stringify({v:2,exported:new Date().toISOString(),locali:S.locali,societa:S.societa,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op,docs,logs:S.logs});
   const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
   const a=document.createElement('a');a.href=url;
   a.download='inregola-backup-'+new Date().toISOString().slice(0,10)+'.json';
@@ -782,6 +819,7 @@ async function importBackup(file){
     for(const l of(data.logs||[])){const{id,...r}=l;await dbPut('logs',r);}
     S.locali=data.locali||S.locali;S.pin=data.pin||'';
     S.punti=data.punti||[];S.aree=data.aree||[];S.op=data.op||'';
+    S.societa=data.societa||S.locali.map(()=>({}));while(S.societa.length<S.locali.length)S.societa.push({});
     await saveSettings();S.docs=await dbAll('docs');S.logs=await dbAll('logs');
     render();toast('Backup ripristinato');
   }catch(e){toast('File di backup non valido')}

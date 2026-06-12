@@ -259,10 +259,11 @@ const ENTE=id=>ENTI.find(e=>e.id===id);
 /* ---------- IndexedDB ---------- */
 let db;
 function openDB(){return new Promise((res,rej)=>{
-  const rq=indexedDB.open('fascicolo',1);
+  const rq=indexedDB.open('fascicolo',2);
   rq.onupgradeneeded=e=>{const d=e.target.result;
     if(!d.objectStoreNames.contains('docs'))d.createObjectStore('docs',{keyPath:'id',autoIncrement:true});
-    if(!d.objectStoreNames.contains('settings'))d.createObjectStore('settings',{keyPath:'k'});};
+    if(!d.objectStoreNames.contains('settings'))d.createObjectStore('settings',{keyPath:'k'});
+    if(!d.objectStoreNames.contains('logs'))d.createObjectStore('logs',{keyPath:'id',autoIncrement:true});};
   rq.onsuccess=e=>{db=e.target.result;res()};
   rq.onerror=()=>rej(rq.error);
 });}
@@ -274,13 +275,14 @@ const dbGet=(s,k)=>new Promise(r=>{const q=tx(s,'readonly').get(k);q.onsuccess=(
 const dbClear=s=>new Promise(r=>{const q=tx(s,'readwrite').clear();q.onsuccess=()=>r()});
 
 /* ---------- stato ---------- */
-let S={locali:['Il Fionco','La Fornace'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[]};
+let S={locali:['Il Fionco','La Fornace'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],op:''};
 async function loadState(){
   const st=await dbGet('settings','app');
-  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';}
+  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];S.op=st.op||'';}
   S.docs=await dbAll('docs');
+  S.logs=await dbAll('logs');
 }
-const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin});
+const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op});
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -323,6 +325,7 @@ function render(){
   if(S.screen==='home')app.innerHTML=vHome();
   else if(S.screen==='ente')app.innerHTML=vEnte(S.ente);
   else if(S.screen==='scadenze')app.innerHTML=vScadenze();
+  else if(S.screen==='registri')app.innerHTML=vRegistri();
   else if(S.screen==='settings')app.innerHTML=vSettings();
   bindNav();
 }
@@ -338,7 +341,7 @@ function topbar(){
 }
 
 function navBar(){
-  const n=[['home','&#127968;','Archivio'],['scadenze','&#9200;','Scadenze'],['settings','&#9881;','Impostazioni']];
+  const n=[['home','&#127968;','Archivio'],['registri','&#127777;','Registri'],['scadenze','&#9200;','Scadenze'],['settings','&#9881;','Impostazioni']];
   return `<div class="bottom-nav">${n.map(([id,ico,lab])=>
     `<button class="${S.screen===id?'active':''}" onclick="go('${id}')"><span class="n-ico">${ico}</span>${lab}</button>`).join('')}</div>
   <button class="fab" onclick="openDocModal()" aria-label="Aggiungi documento">+</button>`;
@@ -434,6 +437,7 @@ function vEnte(eid){
         <div class="ci-top"><h4>${esc(it.t)}</h4>${badge}</div>
         <div class="ci-norma">${esc(it.n)}</div>
         ${linked.map(docRow).join('')}
+        ${eid==='nas'&&(i===3||i===4)?`<button class="link-btn" onclick="go('registri')">&#128202; Apri il registro digitale compilabile</button><br>`:''}
         <button class="link-btn" onclick="openDocModal(null,'${eid}:${i}')">+ Carica documento per questa voce</button>
       </div>`;}).join('')}
     ${extra.length?`<div class="sec-label">Altri documenti collegati</div>${extra.map(docRow).join('')}`:''}
@@ -456,7 +460,8 @@ function startControllo(eid){
       return `<div class="check-item"><div class="ci-top"><h4>${esc(it.t)}</h4>
         ${l.length?'':'<span class="badge manca">Manca</span>'}</div>
         <div class="ci-norma">${esc(it.n)}</div>
-        ${l.map(docRow).join('')}</div>`;}).join('')}
+        ${l.map(docRow).join('')}
+        ${eid==='nas'&&(i===3||i===4)?`<button class="link-btn" onclick="document.getElementById('controlloScreen').remove();go('registri')">&#128202; Apri il registro digitale compilabile</button>`:''}</div>`;}).join('')}
     ${extra.length?`<div class="sec-label">Altri documenti</div>${extra.map(docRow).join('')}`:''}
   </div>`;
   document.body.appendChild(div);
@@ -484,6 +489,128 @@ function docRowScad(d){
     <button class="d-edit" onclick="openDocModal(${d.id})">&#9998;</button>
     <button class="d-open" onclick="openDoc(${d.id})">Apri</button>
   </div>`;
+}
+
+/* ---------- registri compilabili ---------- */
+function vRegistri(){
+  const punti=S.punti.filter(p=>p.locale===S.locale);
+  const aree=S.aree.filter(a=>a.locale===S.locale);
+  const t0=new Date();t0.setHours(0,0,0,0);
+  const logsLoc=S.logs.filter(l=>l.locale===S.locale);
+  const oggi=logsLoc.filter(l=>l.ts>=t0.getTime());
+  const tempRows=punti.length?punti.map(p=>{
+    const fatte=oggi.filter(l=>l.tipo==='temp'&&l.punto===p.nome);
+    const nonOk=fatte.some(l=>!l.conforme);
+    const badge=fatte.length?(nonOk?'<span class="badge exp">Fuori range</span>':'<span class="badge ok">Registrata</span>'):'<span class="badge manca">Da fare</span>';
+    return `<div class="check-item">
+      <div class="ci-top"><h4>&#10052;&#65039; ${esc(p.nome)}</h4>${badge}</div>
+      <div class="ci-norma">range consentito: ${p.min} / ${p.max} &deg;C${fatte.length?' &middot; oggi: '+fatte.map(l=>l.valore+'&deg;').join(', '):''}</div>
+      <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+        <input type="text" inputmode="decimal" placeholder="&deg;C" id="tin_${p.id}"
+          style="flex:1;min-width:0;border:1.5px solid var(--line2);border-radius:10px;padding:11px;background:#fff;font-size:16px">
+        <button class="d-open" onclick="regTemp('${p.id}')">Registra</button>
+        <button class="d-edit" onclick="delPunto('${p.id}')" aria-label="Elimina punto">&#10005;</button>
+      </div>
+    </div>`;}).join(''):'<div class="empty">Nessun frigorifero o cella configurati.<br>Aggiungili qui sotto per iniziare a registrare le temperature.</div>';
+  const pulRows=aree.length?aree.map(a=>{
+    const last=[...logsLoc].sort((x,y)=>y.ts-x.ts).find(l=>l.tipo==='pul'&&l.area===a.nome);
+    const oggiOk=oggi.some(l=>l.tipo==='pul'&&l.area===a.nome);
+    return `<div class="check-item"><div class="ci-top"><h4>&#129529; ${esc(a.nome)}</h4>
+      ${oggiOk?'<span class="badge ok">Fatta oggi</span>':'<span class="badge scad">Da fare</span>'}</div>
+      <div class="ci-norma">${last?'ultima: '+new Date(last.ts).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+(last.op?' ('+esc(last.op)+')':''):'mai registrata'}</div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="d-open" style="flex:1" onclick="regPulizia('${a.id}')">&#10003; Registra pulizia</button>
+        <button class="d-edit" onclick="delArea('${a.id}')" aria-label="Elimina area">&#10005;</button>
+      </div></div>`;}).join(''):'<div class="empty">Nessuna area di pulizia configurata.</div>';
+  return topbar()+`<div class="wrap">
+    <div class="sec-label" style="margin-top:6px">Operatore</div>
+    <div class="search-row"><input type="text" placeholder="Nome o sigla di chi registra (es. P.V.)" maxlength="20"
+      value="${esc(S.op)}" oninput="S.op=this.value" onchange="saveSettings()"></div>
+    <div class="sec-label">Temperature &middot; ${esc(S.locali[S.locale])}</div>
+    ${tempRows}
+    <button class="link-btn" onclick="addPunto()">+ Aggiungi frigorifero / cella</button>
+    <div class="sec-label">Pulizie e sanificazione</div>
+    ${pulRows}
+    <button class="link-btn" onclick="addArea()">+ Aggiungi area da pulire</button>
+    <div class="sec-label">Storico e stampa</div>
+    <div class="set-card"><p style="margin-bottom:10px">Ogni registrazione ha data e ora automatiche, non modificabili. Esporta il mese corrente per stamparlo o inviarlo al consulente.</p>
+      <div class="row"><button class="sm-btn green" onclick="exportRegistroCSV()">Esporta mese (CSV)</button></div></div>
+    ${storicoHTML(logsLoc)}
+  </div>`+navBar();
+}
+function storicoHTML(logsLoc){
+  const cut=Date.now()-60*86400000;
+  const recent=logsLoc.filter(l=>l.ts>=cut).sort((a,b)=>b.ts-a.ts).slice(0,200);
+  if(!recent.length)return'<div class="empty">Ancora nessuna registrazione.</div>';
+  let out='',lastDay='';
+  for(const l of recent){
+    const d=new Date(l.ts),day=d.toLocaleDateString('it-IT',{weekday:'short',day:'2-digit',month:'2-digit'});
+    if(day!==lastDay){out+=`<div class="sec-label">${day}</div>`;lastDay=day;}
+    const ora=d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    out+=`<div class="doc-row">
+      <div class="d-ico">${l.tipo==='temp'?'&deg;C':'PUL'}</div>
+      <div class="d-info"><div class="d-name">${esc(l.tipo==='temp'?l.punto:l.area)}${l.tipo==='temp'?' &middot; '+l.valore+'&deg;C':''}</div>
+        <div class="d-meta ${l.tipo==='temp'&&!l.conforme?'exp':''}">${ora}${l.op?' &middot; '+esc(l.op):''}${l.tipo==='temp'&&!l.conforme?' &middot; FUORI RANGE'+(l.azione?' &middot; '+esc(l.azione):''):''}</div></div>
+      <button class="d-edit" onclick="delLog(${l.id})" aria-label="Elimina">&#10005;</button>
+    </div>`;
+  }
+  return out;
+}
+function uid(){return Math.random().toString(36).slice(2,9)}
+function addPunto(){
+  const n=S.punti.filter(p=>p.locale===S.locale).length+1;
+  const nome=prompt('Nome del punto di controllo \u2014 mantieni il numero, \u00E8 richiesto dall\u2019autocontrollo (completa pure: es. Frigo '+n+' \u2013 Bibite):','Frigo '+n);if(!nome||!nome.trim())return;
+  const min=parseFloat(String(prompt('Temperatura MINIMA consentita (\u00B0C):','0')).replace(',','.'));
+  const max=parseFloat(String(prompt('Temperatura MASSIMA consentita (\u00B0C):','4')).replace(',','.'));
+  if(isNaN(min)||isNaN(max)||min>=max)return toast('Range non valido');
+  S.punti.push({id:uid(),locale:S.locale,nome:nome.trim(),min,max});saveSettings();render();
+}
+function delPunto(id){const p=S.punti.find(x=>x.id===id);if(!p)return;
+  if(confirm('Eliminare \u00AB'+p.nome+'\u00BB? Lo storico delle registrazioni resta conservato.')){S.punti=S.punti.filter(x=>x.id!==id);saveSettings();render();}}
+function addArea(){
+  const nome=prompt('Nome dell\u2019area (es. Banco bar, Cucina, Bagni):');if(!nome||!nome.trim())return;
+  S.aree.push({id:uid(),locale:S.locale,nome:nome.trim()});saveSettings();render();
+}
+function delArea(id){const a=S.aree.find(x=>x.id===id);if(!a)return;
+  if(confirm('Eliminare \u00AB'+a.nome+'\u00BB? Lo storico resta conservato.')){S.aree=S.aree.filter(x=>x.id!==id);saveSettings();render();}}
+async function regTemp(pid){
+  const p=S.punti.find(x=>x.id===pid);if(!p)return;
+  const inp=document.getElementById('tin_'+pid);
+  const v=parseFloat(String(inp.value).replace(',','.'));
+  if(isNaN(v))return toast('Inserisci la temperatura');
+  if(!S.op.trim())return toast('Indica prima la sigla operatore in alto');
+  const conforme=v>=p.min&&v<=p.max;
+  let azione=null;
+  if(!conforme)azione=prompt('\u26A0\uFE0F Temperatura FUORI RANGE!\nDescrivi l\u2019azione correttiva adottata (es. spostato i prodotti, chiamato il tecnico):')||'';
+  await dbPut('logs',{tipo:'temp',locale:S.locale,punto:p.nome,min:p.min,max:p.max,valore:v,conforme,azione,op:S.op.trim(),ts:Date.now()});
+  S.logs=await dbAll('logs');render();toast(conforme?'Temperatura registrata \u2713':'Registrata con non conformit\u00E0');
+}
+async function regPulizia(aid){
+  const a=S.aree.find(x=>x.id===aid);if(!a)return;
+  if(!S.op.trim())return toast('Indica prima la sigla operatore in alto');
+  await dbPut('logs',{tipo:'pul',locale:S.locale,area:a.nome,op:S.op.trim(),ts:Date.now()});
+  S.logs=await dbAll('logs');render();toast('Pulizia registrata \u2713');
+}
+async function delLog(id){
+  if(!confirm('Eliminare questa registrazione? L\u2019operazione \u00E8 definitiva.'))return;
+  await dbDel('logs',id);S.logs=await dbAll('logs');render();
+}
+function exportRegistroCSV(){
+  const now=new Date(),y=now.getFullYear(),m=now.getMonth();
+  const rows=S.logs.filter(l=>{const d=new Date(l.ts);return l.locale===S.locale&&d.getFullYear()===y&&d.getMonth()===m;})
+    .sort((a,b)=>a.ts-b.ts);
+  if(!rows.length)return toast('Nessuna registrazione questo mese');
+  const csv=['data;ora;tipo;punto o area;valore C;range;esito;azione correttiva;operatore'];
+  for(const l of rows){const d=new Date(l.ts);
+    csv.push([d.toLocaleDateString('it-IT'),d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}),
+      l.tipo==='temp'?'temperatura':'pulizia',(l.punto||l.area||'').replace(/;/g,','),
+      l.tipo==='temp'?String(l.valore).replace('.',','):'',l.tipo==='temp'?(l.min+' / '+l.max):'',
+      l.tipo==='temp'?(l.conforme?'conforme':'NON CONFORME'):'eseguita',
+      (l.azione||'').replace(/;/g,','),(l.op||'').replace(/;/g,',')].join(';'));}
+  const blob=new Blob(['\uFEFF'+csv.join('\n')],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;
+  a.download='registro-'+S.locali[S.locale].toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+y+'-'+String(m+1).padStart(2,'0')+'.csv';
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
 }
 
 /* ---------- settings ---------- */
@@ -623,7 +750,7 @@ async function exportBackup(){
     const{blob,...rest}=d;
     docs.push({...rest,fileData:blob?await blobToB64(blob):null});
   }
-  const data=JSON.stringify({v:1,exported:new Date().toISOString(),locali:S.locali,pin:S.pin,docs});
+  const data=JSON.stringify({v:2,exported:new Date().toISOString(),locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op,docs,logs:S.logs});
   const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
   const a=document.createElement('a');a.href=url;
   a.download='inregola-backup-'+new Date().toISOString().slice(0,10)+'.json';
@@ -641,8 +768,11 @@ async function importBackup(file){
       const{fileData,id,...rest}=d;
       await dbPut('docs',{...rest,blob:fileData?await b64ToBlob(fileData):null});
     }
+    await dbClear('logs');
+    for(const l of(data.logs||[])){const{id,...r}=l;await dbPut('logs',r);}
     S.locali=data.locali||S.locali;S.pin=data.pin||'';
-    await saveSettings();S.docs=await dbAll('docs');
+    S.punti=data.punti||[];S.aree=data.aree||[];S.op=data.op||'';
+    await saveSettings();S.docs=await dbAll('docs');S.logs=await dbAll('logs');
     render();toast('Backup ripristinato');
   }catch(e){toast('File di backup non valido')}
 }

@@ -344,7 +344,7 @@ function navBar(){
   const n=[['home','&#127968;','Archivio'],['registri','&#127777;','Registri'],['scadenze','&#9200;','Scadenze'],['settings','&#9881;','Impostazioni']];
   return `<div class="bottom-nav">${n.map(([id,ico,lab])=>
     `<button class="${S.screen===id?'active':''}" onclick="go('${id}')"><span class="n-ico">${ico}</span>${lab}</button>`).join('')}</div>
-  <button class="fab" onclick="openDocModal()" aria-label="Aggiungi documento">+</button>`;
+  ${S.screen==='registri'?'':'<button class="fab" onclick="openDocModal()" aria-label="Aggiungi documento">+</button>'}`;
 }
 
 /* ---------- home ---------- */
@@ -498,6 +498,11 @@ function vRegistri(){
   const t0=new Date();t0.setHours(0,0,0,0);
   const logsLoc=S.logs.filter(l=>l.locale===S.locale);
   const oggi=logsLoc.filter(l=>l.ts>=t0.getTime());
+  const kMese=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  const mesiSet=new Set(logsLoc.map(l=>kMese(new Date(l.ts))));mesiSet.add(kMese(new Date()));
+  const mesiOptions=[...mesiSet].sort().reverse().map(k=>{const[y,m]=k.split('-');
+    const lab=new Date(y,m-1,1).toLocaleDateString('it-IT',{month:'long',year:'numeric'});
+    return `<option value="${k}">${lab}</option>`;}).join('');
   const tempRows=punti.length?punti.map(p=>{
     const fatte=oggi.filter(l=>l.tipo==='temp'&&l.punto===p.nome);
     const nonOk=fatte.some(l=>!l.conforme);
@@ -533,8 +538,11 @@ function vRegistri(){
     ${pulRows}
     <button class="link-btn" onclick="addArea()">+ Aggiungi area da pulire</button>
     <div class="sec-label">Storico e stampa</div>
-    <div class="set-card"><p style="margin-bottom:10px">Ogni registrazione ha data e ora automatiche, non modificabili. Esporta il mese corrente per stamparlo o inviarlo al consulente.</p>
-      <div class="row"><button class="sm-btn green" onclick="exportRegistroCSV()">Esporta mese (CSV)</button></div></div>
+    <div class="set-card"><p style="margin-bottom:10px">Ogni registrazione ha data e ora automatiche, non modificabili. Scegli un mese ed esportalo per stamparlo o inviarlo al consulente (l'ASL può chiedere fino a 2 anni di registrazioni).</p>
+      <div class="row" style="align-items:center">
+        <select id="expMese" style="flex:1;border:1.5px solid var(--line2);border-radius:10px;padding:11px;background:#fff;font-size:15px">${mesiOptions}</select>
+        <button class="sm-btn green" onclick="exportRegistroCSV()">Esporta CSV</button>
+      </div></div>
     ${storicoHTML(logsLoc)}
   </div>`+navBar();
 }
@@ -596,10 +604,12 @@ async function delLog(id){
   await dbDel('logs',id);S.logs=await dbAll('logs');render();
 }
 function exportRegistroCSV(){
-  const now=new Date(),y=now.getFullYear(),m=now.getMonth();
-  const rows=S.logs.filter(l=>{const d=new Date(l.ts);return l.locale===S.locale&&d.getFullYear()===y&&d.getMonth()===m;})
+  const sel=document.getElementById('expMese');
+  const d0=new Date(),kDef=d0.getFullYear()+'-'+String(d0.getMonth()+1).padStart(2,'0');
+  const[y,m]=(sel&&sel.value?sel.value:kDef).split('-').map(Number);
+  const rows=S.logs.filter(l=>{const d=new Date(l.ts);return l.locale===S.locale&&d.getFullYear()===y&&d.getMonth()===m-1;})
     .sort((a,b)=>a.ts-b.ts);
-  if(!rows.length)return toast('Nessuna registrazione questo mese');
+  if(!rows.length)return toast('Nessuna registrazione in quel mese');
   const csv=['data;ora;tipo;punto o area;valore C;range;esito;azione correttiva;operatore'];
   for(const l of rows){const d=new Date(l.ts);
     csv.push([d.toLocaleDateString('it-IT'),d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}),
@@ -609,7 +619,7 @@ function exportRegistroCSV(){
       (l.azione||'').replace(/;/g,','),(l.op||'').replace(/;/g,',')].join(';'));}
   const blob=new Blob(['\uFEFF'+csv.join('\n')],{type:'text/csv'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;
-  a.download='registro-'+S.locali[S.locale].toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+y+'-'+String(m+1).padStart(2,'0')+'.csv';
+  a.download='registro-'+S.locali[S.locale].toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+y+'-'+String(m).padStart(2,'0')+'.csv';
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
 }
 

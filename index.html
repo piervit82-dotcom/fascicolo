@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Fascicolo · Documenti e norme pronti per ogni controllo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#21251f; --ink2:#5b5f56;
+  --paper:#ecebe2; --card:#fbfaf4;
+  --verde:#1d4634; --verde-d:#132f23;
+  --rosso:#b23427; --rosso-d:#8d281d;
+  --ambra:#a8761f; --ambra-bg:#f3e7cf;
+  --ok:#2c6e4c;
+  --line:#d6d4c6; --line2:#c2c0b1;
+  --r:14px;
+  --mono:'IBM Plex Mono',monospace; --sans:'Archivo',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-size:16px;line-height:1.45}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:16px}
+#app{max-width:680px;margin:0 auto;min-height:100%;padding-bottom:90px}
+
+/* ---------- header ---------- */
+.topbar{position:sticky;top:0;z-index:40;background:var(--verde);color:#f2f1e6;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{font-weight:900;font-size:21px;letter-spacing:-.02em}
+.brand small{display:block;font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.14em;opacity:.75;margin-top:1px;text-transform:uppercase}
+.topbar .icon-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#f2f1e6;border-radius:10px;padding:8px 11px;font-size:15px}
+.locale-bar{background:var(--verde-d);color:#e8e7d8;padding:9px 18px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.locale-bar::-webkit-scrollbar{display:none}
+.locale-chip{flex-shrink:0;border:1px solid rgba(255,255,255,.3);background:transparent;color:#cfcebf;border-radius:99px;padding:6px 15px;font-size:13.5px;font-weight:600;white-space:nowrap}
+.locale-chip.active{background:#f2f1e6;color:var(--verde-d);border-color:#f2f1e6}
+
+/* ---------- sections ---------- */
+.wrap{padding:18px}
+.sec-label{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);margin:22px 0 10px;display:flex;align-items:center;gap:10px}
+.sec-label::after{content:"";flex:1;height:1px;background:var(--line2)}
+
+/* ---------- alert scadenze ---------- */
+.alert-card{border-radius:var(--r);padding:14px 16px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;border:1.5px solid}
+.alert-card.scaduto{background:#f4ddd9;border-color:var(--rosso);color:var(--rosso-d)}
+.alert-card.scadenza{background:var(--ambra-bg);border-color:var(--ambra);color:#6e4c10}
+.alert-card .a-ico{font-size:20px;line-height:1.2}
+.alert-card b{display:block;font-size:15px}
+.alert-card span{font-size:13.5px}
+.alert-card .a-date{font-family:var(--mono);font-size:12px;font-weight:600}
+
+/* ---------- ente tiles ---------- */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{position:relative;text-align:left;background:var(--card);border:1.5px solid var(--line2);border-radius:var(--r);padding:14px;min-height:128px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 1px 0 rgba(0,0,0,.04)}
+.tile::before{content:"";position:absolute;inset:5px;border:1px dashed var(--line2);border-radius:9px;pointer-events:none}
+.tile .t-sigla{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.14em;color:var(--ink2);text-transform:uppercase}
+.tile h3{font-size:16.5px;font-weight:800;letter-spacing:-.01em;line-height:1.2;margin-top:3px}
+.tile .t-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-top:12px}
+.tile .t-pct{font-family:var(--mono);font-size:22px;font-weight:600;line-height:1}
+.tile .t-pct small{font-size:11px;color:var(--ink2)}
+.tile .t-missing{font-size:11.5px;color:var(--ink2);text-align:right;line-height:1.3}
+.tile.full .t-pct{color:var(--ok)}
+.tile.mid .t-pct{color:var(--ambra)}
+.tile.low .t-pct{color:var(--rosso)}
+.pbar{height:5px;border-radius:99px;background:#e3e1d3;overflow:hidden;margin-top:8px}
+.pbar i{display:block;height:100%;border-radius:99px;background:var(--verde)}
+.tile.low .pbar i{background:var(--rosso)}
+.tile.mid .pbar i{background:var(--ambra)}
+
+/* ---------- search ---------- */
+.search-row{display:flex;gap:8px;margin-bottom:4px}
+.search-row input{flex:1;border:1.5px solid var(--line2);border-radius:12px;padding:12px 14px;background:var(--card);color:var(--ink)}
+.search-row input:focus{outline:2px solid var(--verde);border-color:var(--verde)}
+
+/* ---------- ente screen ---------- */
+.page-head{padding:20px 18px 16px;background:var(--card);border-bottom:1.5px solid var(--line)}
+.back-btn{background:none;border:none;color:var(--verde);font-weight:700;font-size:15px;padding:0;margin-bottom:10px;display:inline-flex;align-items:center;gap:6px}
+.page-head h2{font-size:24px;font-weight:900;letter-spacing:-.02em;line-height:1.15}
+.page-head .ph-meta{font-family:var(--mono);font-size:12px;color:var(--ink2);margin-top:5px}
+.controllo-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:14px;background:var(--rosso);color:#fff;border:none;border-radius:12px;padding:15px;font-size:16px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.controllo-btn:active{background:var(--rosso-d)}
+
+.check-item{background:var(--card);border:1.5px solid var(--line2);border-radius:var(--r);padding:13px 14px;margin-bottom:10px}
+.check-item .ci-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.ci-norma{font-family:var(--mono);font-size:11px;color:var(--verde);margin-top:4px;line-height:1.45}
+.ente-nota{margin-top:12px;padding:11px 13px;background:var(--paper);border:1px dashed var(--line2);border-radius:10px;font-size:13px;color:var(--ink2);line-height:1.5}
+.check-item h4{font-size:15px;font-weight:700;line-height:1.3;flex:1}
+.badge{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.08em;padding:4px 9px;border-radius:99px;white-space:nowrap;text-transform:uppercase}
+.badge.manca{background:#f4ddd9;color:var(--rosso-d)}
+.badge.ok{background:#dcebe1;color:var(--ok)}
+.badge.scad{background:var(--ambra-bg);color:#6e4c10}
+.badge.exp{background:var(--rosso);color:#fff}
+.doc-row{display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px 11px;background:var(--paper);border-radius:10px;border:1px solid var(--line)}
+.doc-row .d-ico{width:34px;height:38px;flex-shrink:0;border:1.5px solid var(--line2);border-radius:4px;background:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:600;color:var(--ink2);position:relative}
+.doc-row .d-ico::after{content:"";position:absolute;top:-1px;right:-1px;border:5px solid transparent;border-top-color:var(--line2);border-right-color:var(--line2)}
+.doc-row .d-info{flex:1;min-width:0}
+.doc-row .d-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-row .d-meta{font-family:var(--mono);font-size:11px;color:var(--ink2);margin-top:1px}
+.doc-row .d-meta.warn{color:var(--ambra);font-weight:600}
+.doc-row .d-meta.exp{color:var(--rosso);font-weight:600}
+.doc-row .d-open{border:none;background:var(--verde);color:#fff;border-radius:8px;padding:8px 12px;font-size:13px;font-weight:700;flex-shrink:0}
+.doc-row .d-edit{border:1px solid var(--line2);background:#fff;color:var(--ink2);border-radius:8px;padding:8px 10px;font-size:13px;flex-shrink:0}
+.link-btn{background:none;border:none;color:var(--verde);font-weight:700;font-size:13.5px;padding:8px 0 0;text-decoration:underline}
+
+/* ---------- modalità controllo ---------- */
+.controllo-screen{position:fixed;inset:0;z-index:100;background:var(--paper);overflow-y:auto}
+.controllo-head{background:var(--rosso);color:#fff;padding:18px;position:sticky;top:0;z-index:5}
+.controllo-head .ch-tag{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.dot{width:9px;height:9px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.dot{animation:none}}
+.controllo-head h2{font-size:26px;font-weight:900;letter-spacing:-.02em;margin-top:6px}
+.controllo-head .ch-loc{font-size:14px;opacity:.9;margin-top:2px}
+.controllo-head .ch-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:10px;padding:8px 14px;font-weight:700;font-size:14px}
+.controllo-body{padding:18px;max-width:680px;margin:0 auto}
+.controllo-body .check-item{padding:15px}
+.controllo-body h4{font-size:16px}
+.controllo-body .doc-row .d-open{padding:11px 16px;font-size:14.5px}
+
+/* ---------- FAB & nav ---------- */
+.fab{position:fixed;right:18px;bottom:84px;z-index:50;width:60px;height:60px;border-radius:50%;background:var(--verde);color:#fff;border:none;font-size:30px;font-weight:400;box-shadow:0 6px 16px rgba(19,47,35,.35);display:flex;align-items:center;justify-content:center;line-height:1}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--card);border-top:1.5px solid var(--line);display:flex;max-width:680px;margin:0 auto}
+.bottom-nav button{flex:1;background:none;border:none;padding:10px 4px calc(10px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ink2);font-size:11px;font-weight:600}
+.bottom-nav button.active{color:var(--verde)}
+.bottom-nav .n-ico{font-size:20px;line-height:1}
+
+/* ---------- modal ---------- */
+.modal-bg{position:fixed;inset:0;z-index:90;background:rgba(33,37,31,.55);display:flex;align-items:flex-end;justify-content:center}
+.modal{background:var(--card);width:100%;max-width:680px;max-height:92vh;overflow-y:auto;border-radius:18px 18px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom))}
+.modal h3{font-size:20px;font-weight:900;letter-spacing:-.01em;margin-bottom:14px}
+.f-group{margin-bottom:14px}
+.f-group label{display:block;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-bottom:6px}
+.f-group input[type=text],.f-group input[type=date],.f-group input[type=password],.f-group select{width:100%;border:1.5px solid var(--line2);border-radius:10px;padding:12px;background:#fff;color:var(--ink)}
+.f-group input:focus,.f-group select:focus{outline:2px solid var(--verde)}
+.file-drop{border:2px dashed var(--line2);border-radius:12px;padding:18px;text-align:center;background:var(--paper);color:var(--ink2);font-size:14px}
+.file-drop.has-file{border-color:var(--verde);color:var(--verde);background:#e7efe9;font-weight:600}
+.slot-group{margin-bottom:8px}
+.slot-group .sg-name{font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);margin:10px 0 6px}
+.slot-chip{display:inline-block;border:1.5px solid var(--line2);background:#fff;border-radius:99px;padding:7px 13px;font-size:13px;font-weight:600;margin:0 6px 7px 0;color:var(--ink)}
+.slot-chip.on{background:var(--verde);border-color:var(--verde);color:#fff}
+.m-actions{display:flex;gap:10px;margin-top:18px}
+.btn{flex:1;border-radius:12px;padding:14px;font-size:15.5px;font-weight:800;border:none}
+.btn.primary{background:var(--verde);color:#fff}
+.btn.ghost{background:transparent;border:1.5px solid var(--line2);color:var(--ink2)}
+.btn.danger{background:#f4ddd9;color:var(--rosso-d)}
+
+/* ---------- lock ---------- */
+.lock{position:fixed;inset:0;z-index:200;background:var(--verde-d);color:#f2f1e6;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+.lock h1{font-size:34px;font-weight:900;letter-spacing:-.02em}
+.lock p{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.7;margin:6px 0 26px}
+.lock input{width:200px;text-align:center;font-family:var(--mono);font-size:26px;letter-spacing:.4em;border:none;border-radius:12px;padding:14px;background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.3)}
+.lock input:focus{outline:2px solid #f2f1e6}
+.lock .lk-err{color:#f0a99d;font-size:13.5px;margin-top:12px;min-height:18px}
+
+/* ---------- settings & misc ---------- */
+.set-card{background:var(--card);border:1.5px solid var(--line2);border-radius:var(--r);padding:15px;margin-bottom:12px}
+.set-card h4{font-size:15.5px;font-weight:800;margin-bottom:4px}
+.set-card p{font-size:13.5px;color:var(--ink2);margin-bottom:10px}
+.set-card .row{display:flex;gap:8px;flex-wrap:wrap}
+.sm-btn{border:1.5px solid var(--line2);background:#fff;border-radius:10px;padding:10px 14px;font-size:14px;font-weight:700;color:var(--ink)}
+.sm-btn.green{background:var(--verde);border-color:var(--verde);color:#fff}
+.sm-btn.red{background:#f4ddd9;border-color:#e6bdb5;color:var(--rosso-d)}
+.empty{padding:30px 18px;text-align:center;color:var(--ink2);font-size:14.5px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:100px;z-index:300;background:var(--ink);color:#fff;border-radius:99px;padding:11px 20px;font-size:14px;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,.3);opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:1}
+.scad-list .doc-row{margin-top:0;margin-bottom:9px;background:var(--card)}
+@media(min-width:560px){.tiles{grid-template-columns:1fr 1fr 1fr}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="layer"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   FASCICOLO v1 — archivio documenti per controlli ispettivi
+   Dati: IndexedDB (file + metadati), tutto sul dispositivo.
+   ========================================================= */
+
+/* ---------- checklist per ente ---------- */
+const ENTI=[
+ {id:'nas',sigla:'NAS · ULSS',nome:'Igienico-sanitario',
+  nota:'Controlli ufficiali: Reg. UE 2017/625. Sanzioni HACCP: D.Lgs 193/2007 (1.000\u20136.000 \u20AC); rintracciabilit\u00E0: D.Lgs 190/2006; etichettatura/allergeni: D.Lgs 231/2017.',
+  items:[
+  {t:'Manuale HACCP / piano di autocontrollo',n:'Reg. CE 852/2004 art. 5 \u00B7 D.Lgs 193/2007'},
+  {t:'Registrazione sanitaria (SCIA / notifica ai fini registrazione)',n:'Reg. CE 852/2004 art. 6 \u00B7 DGR regionale'},
+  {t:'Attestati formazione alimentaristi',n:'Reg. CE 852/2004 All. II cap. XII \u00B7 normativa regionale (Veneto: L.R. 2/2013)'},
+  {t:'Schede registrazione temperature frigoriferi',n:'Reg. CE 852/2004 All. II cap. IX \u00B7 Reg. CE 853/2004'},
+  {t:'Registro pulizie e sanificazione',n:'Reg. CE 852/2004 All. II capp. I-II'},
+  {t:'Contratto e verbali disinfestazione / derattizzazione',n:'Reg. CE 852/2004 All. II cap. IX'},
+  {t:'Tracciabilit\u00E0 fornitori (DDT, elenco fornitori)',n:'Reg. CE 178/2002 art. 18 \u00B7 D.Lgs 190/2006'},
+  {t:'Libro ingredienti / gestione allergeni',n:'Reg. UE 1169/2011 \u00B7 D.Lgs 231/2017'},
+  {t:'Schede tecniche prodotti',n:'Reg. CE 178/2002 \u00B7 Reg. UE 1169/2011'},
+  {t:'Analisi potabilit\u00E0 acqua (se applicabile)',n:'D.Lgs 18/2023'},
+  {t:'Gestione congelati / abbattimento (cartello prodotti surgelati)',n:'Reg. CE 852/2004 \u00B7 Reg. CE 853/2004 \u00B7 D.Lgs 110/1992'}]},
+ {id:'vvf',sigla:'VV.F.',nome:'Vigili del Fuoco',
+  nota:'Bar e ristoranti di norma NON sono soggetti al DPR 151/2011 (nota VVF 17072/2011), salvo cucine con potenza termica > 116 kW (att. 74), depositi GPL o pubblico spettacolo. Restano obbligatori i decreti del settembre 2021.',
+  items:[
+  {t:'Valutazione rischio incendio',n:'DM 3/09/2021 (minicodice) \u00B7 D.Lgs 81/2008 art. 17'},
+  {t:'SCIA antincendio / CPI (solo se attivit\u00E0 soggetta)',n:'DPR 151/2011 All. I (es. att. 74 cucine > 116 kW)'},
+  {t:'Registro antincendio (controlli e manutenzioni)',n:'DM 1/09/2021 \u2014 obbligatorio per tutte le attivit\u00E0'},
+  {t:'Verbali manutenzione estintori (semestrali)',n:'DM 1/09/2021 \u00B7 UNI 9994-1'},
+  {t:'Dichiarazione conformit\u00E0 impianto elettrico',n:'DM 37/2008 art. 7'},
+  {t:'Dichiarazione conformit\u00E0 impianto gas',n:'DM 37/2008 \u00B7 UNI 7129'},
+  {t:'Verifica periodica impianto di terra',n:'DPR 462/2001 (biennale o quinquennale)'},
+  {t:'Piano di emergenza ed evacuazione + planimetrie',n:'DM 2/09/2021 art. 2 \u2014 obbligo se \u226510 lavoratori o >50 presenti'},
+  {t:'Attestati addetti antincendio (e aggiornamenti)',n:'DM 2/09/2021 \u00B7 D.Lgs 81/2008 art. 37 c. 9'}]},
+ {id:'itl',sigla:'ITL \u00B7 INPS \u00B7 INAIL',nome:'Ispettorato del Lavoro',
+  nota:'Lavoro nero: maxisanzione D.L. 12/2002 art. 3 (da 1.950 \u20AC a oltre 46.000 \u20AC per lavoratore) + possibile sospensione attivit\u00E0 (D.Lgs 81/2008 art. 14).',
+  items:[
+  {t:'Comunicazioni di assunzione (UNILAV) e contratti',n:'D.L. 510/1996 art. 9-bis \u00B7 D.Lgs 152/1997'},
+  {t:'Libro Unico del Lavoro (LUL)',n:'D.L. 112/2008 art. 39'},
+  {t:'DVR \u2014 Documento Valutazione Rischi',n:'D.Lgs 81/2008 artt. 17, 28-29'},
+  {t:'Nomina RSPP',n:'D.Lgs 81/2008 artt. 17, 31-34'},
+  {t:'Nomina medico competente e sorveglianza sanitaria',n:'D.Lgs 81/2008 artt. 18, 25, 41'},
+  {t:'Attestati formazione sicurezza lavoratori e preposti',n:'D.Lgs 81/2008 art. 37 \u00B7 Accordo Stato-Regioni 17/04/2025'},
+  {t:'Formazione datore di lavoro (16 ore, entro 24/05/2027)',n:'Accordo Stato-Regioni 17/04/2025 \u00B7 D.L. 146/2021'},
+  {t:'Idoneit\u00E0 sanitarie (visite mediche)',n:'D.Lgs 81/2008 art. 41'},
+  {t:'DURC in corso di validit\u00E0',n:'D.M. 30/01/2015'},
+  {t:'Orari di lavoro / turni e riposi',n:'D.Lgs 66/2003'},
+  {t:'Autorizzazione videosorveglianza (ITL o accordo sindacale)',n:'L. 300/1970 art. 4 (Statuto dei Lavoratori)'}]},
+ {id:'plq',sigla:'QUESTURA \u00B7 P.L.',nome:'Questura e Polizia Locale',
+  nota:'La somministrazione senza titolo comporta sanzioni e chiusura (L. 287/1991 art. 10 \u00B7 TULPS).',
+  items:[
+  {t:'SCIA somministrazione alimenti e bevande',n:'L. 287/1991 \u00B7 D.Lgs 59/2010 art. 64 \u00B7 TULPS art. 86'},
+  {t:'Requisiti professionali (SAB / REC) e morali',n:'D.Lgs 59/2010 art. 71'},
+  {t:'Valutazione impatto acustico / deroghe rumore',n:'L. 447/1995 art. 8 \u00B7 DPCM 14/11/1997 \u00B7 regolamento comunale'},
+  {t:'Occupazione suolo pubblico (plateatico) \u2014 canone unico',n:'L. 160/2019 art. 1 c. 816 ss.'},
+  {t:'Permessi SIAE (musica d\u2019ambiente / eventi)',n:'L. 633/1941'},
+  {t:'Cartello orari di apertura esposto',n:'D.L. 223/2006 \u00B7 normativa regionale'},
+  {t:'Listino prezzi esposto (anche all\u2019esterno)',n:'L. 287/1991 art. 4 \u00B7 D.Lgs 206/2005'},
+  {t:'Cartelli divieto di fumo',n:'L. 3/2003 art. 51'},
+  {t:'Autorizzazione insegna',n:'Codice della Strada art. 23 \u00B7 regolamento comunale'},
+  {t:'Tabella alcolemica e etilometro a disposizione (se aperti dopo le 24)',n:'L. 120/2010 art. 54 \u00B7 D.L. 117/2007'}]},
+ {id:'gdf',sigla:'G.D.F.',nome:'Guardia di Finanza',
+  nota:'Mancata memorizzazione/trasmissione corrispettivi: sanzione 90% dell\u2019imposta (min. 500 \u20AC); 4 violazioni in 5 anni = sospensione licenza (D.Lgs 471/1997 art. 12).',
+  items:[
+  {t:'Registratore telematico \u2014 libretto e verificazione periodica (biennale)',n:'D.Lgs 127/2015 art. 2 \u00B7 provv. Agenzia Entrate'},
+  {t:'Documenti commerciali / corrispettivi giornalieri',n:'D.Lgs 127/2015 \u00B7 D.Lgs 471/1997 art. 6'},
+  {t:'Visura camerale aggiornata',n:'L. 580/1993'},
+  {t:'Certificato attribuzione P.IVA',n:'DPR 633/1972 art. 35'},
+  {t:'Contratto affitto d\u2019azienda / locazione registrato',n:'DPR 131/1986'},
+  {t:'Comunicazioni vendita alcolici',n:'D.Lgs 504/1995 art. 29 (come modificato)'}]},
+ {id:'gen',sigla:'GENERALE',nome:'Documenti aziendali',
+  nota:'Documenti trasversali richiesti da pi\u00F9 enti o utili in ogni verifica.',
+  items:[
+  {t:'Atto costitutivo e statuto',n:'Codice Civile'},
+  {t:'Polizza rischi catastrofali (obbligatoria per le imprese)',n:'L. 213/2023 art. 1 c. 101 \u00B7 D.L. 39/2025'},
+  {t:'Polizza assicurativa RC',n:'facoltativa ma raccomandata'},
+  {t:'Contratto smaltimento oli vegetali esausti',n:'D.Lgs 152/2006 art. 233 (CONOE)'},
+  {t:'Gestione rifiuti / iscrizione RENTRI (se dovuta)',n:'D.Lgs 152/2006 \u00B7 D.M. 59/2023'},
+  {t:'Informative privacy GDPR + cartelli videosorveglianza',n:'Reg. UE 2016/679 \u00B7 Provv. Garante 8/04/2010'},
+  {t:'Esposizione tariffe e diritti del consumatore',n:'D.Lgs 206/2005 (Codice del Consumo)'}]}
+];
+const ENTE=id=>ENTI.find(e=>e.id===id);
+
+/* ---------- IndexedDB ---------- */
+let db;
+function openDB(){return new Promise((res,rej)=>{
+  const rq=indexedDB.open('fascicolo',1);
+  rq.onupgradeneeded=e=>{const d=e.target.result;
+    if(!d.objectStoreNames.contains('docs'))d.createObjectStore('docs',{keyPath:'id',autoIncrement:true});
+    if(!d.objectStoreNames.contains('settings'))d.createObjectStore('settings',{keyPath:'k'});};
+  rq.onsuccess=e=>{db=e.target.result;res()};
+  rq.onerror=()=>rej(rq.error);
+});}
+const tx=(s,m)=>db.transaction(s,m).objectStore(s);
+const dbAll=s=>new Promise(r=>{const q=tx(s,'readonly').getAll();q.onsuccess=()=>r(q.result)});
+const dbPut=(s,v)=>new Promise(r=>{const q=tx(s,'readwrite').put(v);q.onsuccess=()=>r(q.result)});
+const dbDel=(s,k)=>new Promise(r=>{const q=tx(s,'readwrite').delete(k);q.onsuccess=()=>r()});
+const dbGet=(s,k)=>new Promise(r=>{const q=tx(s,'readonly').get(k);q.onsuccess=()=>r(q.result)});
+const dbClear=s=>new Promise(r=>{const q=tx(s,'readwrite').clear();q.onsuccess=()=>r()});
+
+/* ---------- stato ---------- */
+let S={locali:['Il Fionco','La Fornace'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[]};
+async function loadState(){
+  const st=await dbGet('settings','app');
+  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';}
+  S.docs=await dbAll('docs');
+}
+const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin});
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDate=d=>{if(!d)return'';const[y,m,g]=d.split('-');return g+'/'+m+'/'+y};
+function scadStato(doc){
+  if(!doc.scadenza)return'ok';
+  const today=new Date();today.setHours(0,0,0,0);
+  const sc=new Date(doc.scadenza+'T00:00:00');
+  const diff=(sc-today)/86400000;
+  if(diff<0)return'exp';
+  if(diff<=60)return'warn';
+  return'ok';
+}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2200)}
+const docsLocale=()=>S.docs.filter(d=>d.locale===S.locale);
+const docEnti=d=>{const set=new Set((d.slots||[]).map(s=>s.split(':')[0]));(d.extraEnti||[]).forEach(e=>set.add(e));return[...set]};
+function enteStats(eid){
+  const ente=ENTE(eid),docs=docsLocale();
+  let covered=0;
+  ente.items.forEach((_,i)=>{if(docs.some(d=>(d.slots||[]).includes(eid+':'+i)))covered++;});
+  return{covered,total:ente.items.length,pct:Math.round(covered/ente.items.length*100)};
+}
+
+/* ---------- file open ---------- */
+async function openDoc(id){
+  const d=S.docs.find(x=>x.id===id);if(!d||!d.blob)return toast('File non disponibile');
+  const url=URL.createObjectURL(d.blob);
+  const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+function render(){
+  if(S.pin&&!S.unlocked)return renderLock();
+  const app=$('#app');
+  if(S.screen==='home')app.innerHTML=vHome();
+  else if(S.screen==='ente')app.innerHTML=vEnte(S.ente);
+  else if(S.screen==='scadenze')app.innerHTML=vScadenze();
+  else if(S.screen==='settings')app.innerHTML=vSettings();
+  bindNav();
+}
+
+function topbar(){
+  return `<div class="topbar">
+    <div class="brand">Fascicolo<small>pronti a ogni controllo</small></div>
+    <button class="icon-btn" onclick="go('settings')" aria-label="Impostazioni">&#9881;</button>
+  </div>
+  <div class="locale-bar">${S.locali.map((l,i)=>
+    `<button class="locale-chip ${i===S.locale?'active':''}" onclick="setLocale(${i})">${esc(l)}</button>`).join('')}
+  </div>`;
+}
+
+function navBar(){
+  const n=[['home','&#127968;','Archivio'],['scadenze','&#9200;','Scadenze'],['settings','&#9881;','Impostazioni']];
+  return `<div class="bottom-nav">${n.map(([id,ico,lab])=>
+    `<button class="${S.screen===id?'active':''}" onclick="go('${id}')"><span class="n-ico">${ico}</span>${lab}</button>`).join('')}</div>
+  <button class="fab" onclick="openDocModal()" aria-label="Aggiungi documento">+</button>`;
+}
+
+/* ---------- home ---------- */
+function vHome(){
+  const docs=docsLocale();
+  const urgent=docs.map(d=>({d,st:scadStato(d)})).filter(x=>x.st!=='ok')
+    .sort((a,b)=>(a.d.scadenza||'').localeCompare(b.d.scadenza||''));
+  let alerts='';
+  if(urgent.length){
+    alerts=`<div class="sec-label">Da sistemare</div>`+urgent.slice(0,5).map(({d,st})=>
+      `<button class="alert-card ${st==='exp'?'scaduto':'scadenza'}" style="width:100%" onclick="openDocModal(${d.id})">
+        <span class="a-ico">${st==='exp'?'&#9888;':'&#9203;'}</span>
+        <span style="flex:1;text-align:left"><b>${esc(d.nome)}</b>
+        <span>${st==='exp'?'Scaduto il':'Scade il'} <span class="a-date">${fmtDate(d.scadenza)}</span></span></span>
+      </button>`).join('');
+  }
+  let results='';
+  if(S.query){
+    const q=S.query.toLowerCase();
+    const found=docs.filter(d=>d.nome.toLowerCase().includes(q));
+    results=`<div class="sec-label">Risultati (${found.length})</div>`+
+      (found.length?found.map(docRow).join(''):`<div class="empty">Nessun documento trovato per «${esc(S.query)}»</div>`);
+  }
+  return topbar()+`<div class="wrap">
+    <div class="search-row"><input type="text" placeholder="Cerca un documento…" value="${esc(S.query)}"
+      oninput="S.query=this.value;renderResultsOnly()" id="searchInput"></div>
+    <div id="searchResults">${results}</div>
+    ${alerts}
+    <div class="sec-label">Enti di controllo</div>
+    <div class="tiles">${ENTI.map(e=>{
+      const st=enteStats(e.id);
+      const cls=st.pct===100?'full':st.pct>=50?'mid':'low';
+      return `<button class="tile ${cls}" onclick="go('ente','${e.id}')">
+        <div><div class="t-sigla">${e.sigla}</div><h3>${e.nome}</h3></div>
+        <div><div class="t-foot"><div class="t-pct">${st.pct}<small>%</small></div>
+          <div class="t-missing">${st.total-st.covered===0?'completo':(st.total-st.covered)+' da caricare'}</div></div>
+          <div class="pbar"><i style="width:${st.pct}%"></i></div></div>
+      </button>`;}).join('')}
+    </div>
+  </div>`+navBar();
+}
+function renderResultsOnly(){
+  const docs=docsLocale(),q=S.query.toLowerCase();
+  const box=$('#searchResults');if(!box)return;
+  if(!q){box.innerHTML='';return}
+  const found=docs.filter(d=>d.nome.toLowerCase().includes(q));
+  box.innerHTML=`<div class="sec-label">Risultati (${found.length})</div>`+
+    (found.length?found.map(docRow).join(''):`<div class="empty">Nessun documento trovato</div>`);
+}
+
+function docRow(d){
+  const st=scadStato(d);
+  const ext=(d.fileName||'').split('.').pop().toUpperCase().slice(0,4)||'DOC';
+  const meta=d.scadenza
+    ?`<div class="d-meta ${st==='exp'?'exp':st==='warn'?'warn':''}">${st==='exp'?'SCADUTO ':'scade '}${fmtDate(d.scadenza)}</div>`
+    :`<div class="d-meta">nessuna scadenza</div>`;
+  return `<div class="doc-row">
+    <div class="d-ico">${ext}</div>
+    <div class="d-info"><div class="d-name">${esc(d.nome)}</div>${meta}</div>
+    <button class="d-edit" onclick="openDocModal(${d.id})" aria-label="Modifica">&#9998;</button>
+    <button class="d-open" onclick="openDoc(${d.id})">Apri</button>
+  </div>`;
+}
+
+/* ---------- ente ---------- */
+function vEnte(eid){
+  const e=ENTE(eid),docs=docsLocale(),st=enteStats(eid);
+  const inSlot=i=>docs.filter(d=>(d.slots||[]).includes(eid+':'+i));
+  const extra=docs.filter(d=>docEnti(d).includes(eid)&&!(d.slots||[]).some(s=>s.startsWith(eid+':')));
+  return topbar()+`<div class="page-head">
+    <button class="back-btn" onclick="go('home')">&#8592; Archivio</button>
+    <h2>${e.nome}</h2>
+    <div class="ph-meta">${e.sigla} &middot; ${st.covered}/${st.total} voci coperte &middot; ${esc(S.locali[S.locale])}</div>
+    <button class="controllo-btn" onclick="startControllo('${eid}')"><span class="dot"></span> Modalità controllo</button>
+    ${e.nota?`<div class="ente-nota">${esc(e.nota)}</div>`:''}
+  </div>
+  <div class="wrap">
+    <div class="sec-label">Checklist documenti</div>
+    ${e.items.map((it,i)=>{
+      const linked=inSlot(i);
+      let badge;
+      if(!linked.length)badge='<span class="badge manca">Manca</span>';
+      else{
+        const worst=linked.map(scadStato);
+        badge=worst.includes('exp')?'<span class="badge exp">Scaduto</span>'
+          :worst.includes('warn')?'<span class="badge scad">In scadenza</span>'
+          :'<span class="badge ok">OK</span>';
+      }
+      return `<div class="check-item">
+        <div class="ci-top"><h4>${esc(it.t)}</h4>${badge}</div>
+        <div class="ci-norma">${esc(it.n)}</div>
+        ${linked.map(docRow).join('')}
+        <button class="link-btn" onclick="openDocModal(null,'${eid}:${i}')">+ Carica documento per questa voce</button>
+      </div>`;}).join('')}
+    ${extra.length?`<div class="sec-label">Altri documenti collegati</div>${extra.map(docRow).join('')}`:''}
+  </div>`+navBar();
+}
+
+/* ---------- modalità controllo ---------- */
+function startControllo(eid){
+  const e=ENTE(eid),docs=docsLocale();
+  const inSlot=i=>docs.filter(d=>(d.slots||[]).includes(eid+':'+i));
+  const extra=docs.filter(d=>docEnti(d).includes(eid)&&!(d.slots||[]).some(s=>s.startsWith(eid+':')));
+  const div=document.createElement('div');div.className='controllo-screen';div.id='controlloScreen';
+  div.innerHTML=`<div class="controllo-head">
+    <button class="ch-close" onclick="document.getElementById('controlloScreen').remove()">Chiudi</button>
+    <div class="ch-tag"><span class="dot"></span> Controllo in corso</div>
+    <h2>${e.sigla}</h2><div class="ch-loc">${esc(S.locali[S.locale])} &middot; ${new Date().toLocaleDateString('it-IT')}</div>
+  </div>
+  <div class="controllo-body">
+    ${e.items.map((it,i)=>{const l=inSlot(i);
+      return `<div class="check-item"><div class="ci-top"><h4>${esc(it.t)}</h4>
+        ${l.length?'':'<span class="badge manca">Manca</span>'}</div>
+        <div class="ci-norma">${esc(it.n)}</div>
+        ${l.map(docRow).join('')}</div>`;}).join('')}
+    ${extra.length?`<div class="sec-label">Altri documenti</div>${extra.map(docRow).join('')}`:''}
+  </div>`;
+  document.body.appendChild(div);
+}
+
+/* ---------- scadenze ---------- */
+function vScadenze(){
+  const docs=S.docs.filter(d=>d.scadenza).map(d=>({d,st:scadStato(d)}))
+    .sort((a,b)=>a.d.scadenza.localeCompare(b.d.scadenza));
+  const grp=(t,arr)=>arr.length?`<div class="sec-label">${t}</div><div class="scad-list">${arr.map(x=>docRowScad(x.d)).join('')}</div>`:'';
+  return topbar()+`<div class="wrap">
+    <div class="sec-label" style="margin-top:6px">Scadenziario &middot; tutti i locali</div>
+    ${docs.length?'':'<div class="empty">Nessun documento con scadenza impostata.<br>Aggiungi le date ai documenti per ricevere gli avvisi.</div>'}
+    ${grp('&#9888; Scaduti',docs.filter(x=>x.st==='exp'))}
+    ${grp('&#9203; Entro 60 giorni',docs.filter(x=>x.st==='warn'))}
+    ${grp('In regola',docs.filter(x=>x.st==='ok'))}
+  </div>`+navBar();
+}
+function docRowScad(d){
+  const st=scadStato(d);
+  return `<div class="doc-row">
+    <div class="d-ico">${(d.fileName||'').split('.').pop().toUpperCase().slice(0,4)||'DOC'}</div>
+    <div class="d-info"><div class="d-name">${esc(d.nome)}</div>
+      <div class="d-meta ${st==='exp'?'exp':st==='warn'?'warn':''}">${esc(S.locali[d.locale]||'?')} &middot; ${fmtDate(d.scadenza)}</div></div>
+    <button class="d-edit" onclick="openDocModal(${d.id})">&#9998;</button>
+    <button class="d-open" onclick="openDoc(${d.id})">Apri</button>
+  </div>`;
+}
+
+/* ---------- settings ---------- */
+function vSettings(){
+  return topbar()+`<div class="wrap">
+    <div class="sec-label" style="margin-top:6px">Locali</div>
+    ${S.locali.map((l,i)=>`<div class="set-card"><div class="row" style="align-items:center">
+      <input type="text" value="${esc(l)}" style="flex:1;border:1.5px solid var(--line2);border-radius:10px;padding:11px" onchange="renameLocale(${i},this.value)">
+      ${S.locali.length>1?`<button class="sm-btn red" onclick="removeLocale(${i})">Elimina</button>`:''}
+    </div></div>`).join('')}
+    <button class="sm-btn" onclick="addLocale()">+ Aggiungi locale</button>
+
+    <div class="sec-label">Sicurezza</div>
+    <div class="set-card"><h4>PIN di sblocco</h4>
+      <p>${S.pin?'PIN attivo: l\u2019app chiede il codice all\u2019apertura.':'Nessun PIN impostato.'}</p>
+      <div class="row">
+        <button class="sm-btn green" onclick="setPin()">${S.pin?'Cambia PIN':'Imposta PIN'}</button>
+        ${S.pin?'<button class="sm-btn red" onclick="clearPin()">Rimuovi</button>':''}
+      </div></div>
+
+    <div class="sec-label">Backup</div>
+    <div class="set-card"><h4>Esporta tutto</h4>
+      <p>Scarica un file di backup con tutti i documenti e le impostazioni. Conservalo su Drive o sul PC.</p>
+      <div class="row"><button class="sm-btn green" onclick="exportBackup()">Scarica backup</button>
+      <button class="sm-btn" onclick="document.getElementById('importFile').click()">Ripristina backup</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(this.files[0])"></div></div>
+    <div class="set-card"><h4>Spazio utilizzato</h4><p id="storageInfo">Calcolo in corso…</p></div>
+
+    <div class="sec-label">Zona pericolosa</div>
+    <div class="set-card"><h4>Azzeramento totale</h4>
+      <p>Elimina definitivamente tutti i documenti e le impostazioni da questo dispositivo.</p>
+      <button class="sm-btn red" onclick="resetAll()">Cancella tutto</button></div>
+  </div>`+navBar();
+}
+
+/* ---------- modale documento ---------- */
+let modalFile=null;
+function openDocModal(docId=null,preSlot=null){
+  const d=docId?S.docs.find(x=>x.id===docId):null;
+  modalFile=null;
+  const slots=new Set(d?(d.slots||[]):(preSlot?[preSlot]:[]));
+  const layer=$('#layer');
+  layer.innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()">
+   <div class="modal">
+    <h3>${d?'Modifica documento':'Nuovo documento'}</h3>
+    <div class="f-group"><label>File (PDF o foto)</label>
+      <input type="file" id="docFile" accept="application/pdf,image/*" style="display:none" onchange="pickFile(this)">
+      <button class="file-drop ${d?'has-file':''}" id="fileDrop" style="width:100%" onclick="document.getElementById('docFile').click()">
+        ${d?esc(d.fileName)+' — tocca per sostituire':'Tocca per scegliere un file o scattare una foto'}</button>
+    </div>
+    <div class="f-group"><label>Nome documento</label>
+      <input type="text" id="docNome" value="${d?esc(d.nome):''}" placeholder="Es. Manuale HACCP 2026"></div>
+    <div class="f-group"><label>Locale</label>
+      <select id="docLocale">${S.locali.map((l,i)=>`<option value="${i}" ${ (d?d.locale:S.locale)===i?'selected':''}>${esc(l)}</option>`).join('')}</select></div>
+    <div class="f-group"><label>Scadenza (facoltativa)</label>
+      <input type="date" id="docScad" value="${d&&d.scadenza?d.scadenza:''}"></div>
+    <div class="f-group"><label>Collega alle voci della checklist</label>
+      <div style="max-height:230px;overflow-y:auto;border:1.5px solid var(--line2);border-radius:10px;padding:10px;background:#fff">
+      ${ENTI.map(e=>`<div class="slot-group"><div class="sg-name">${e.sigla}</div>
+        ${e.items.map((it,i)=>{const k=e.id+':'+i;
+          return `<button class="slot-chip ${slots.has(k)?'on':''}" data-slot="${k}" onclick="this.classList.toggle('on')">${esc(it.t)}</button>`;}).join('')}
+      </div>`).join('')}
+      </div></div>
+    <div class="m-actions">
+      ${d?`<button class="btn danger" onclick="deleteDoc(${d.id})">Elimina</button>`:''}
+      <button class="btn ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn primary" onclick="saveDoc(${d?d.id:'null'})">Salva</button>
+    </div>
+   </div></div>`;
+}
+function closeModal(){$('#layer').innerHTML='';modalFile=null}
+function pickFile(inp){
+  if(!inp.files.length)return;
+  modalFile=inp.files[0];
+  const drop=$('#fileDrop');drop.classList.add('has-file');drop.textContent=modalFile.name;
+  const nome=$('#docNome');
+  if(!nome.value)nome.value=modalFile.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ');
+}
+async function saveDoc(id){
+  const nome=$('#docNome').value.trim();
+  if(!nome)return toast('Dai un nome al documento');
+  const old=id?S.docs.find(x=>x.id===id):null;
+  if(!old&&!modalFile)return toast('Scegli un file da caricare');
+  const slots=[...document.querySelectorAll('.slot-chip.on')].map(b=>b.dataset.slot);
+  const doc={
+    ...(old||{}),
+    nome,
+    locale:parseInt($('#docLocale').value,10),
+    scadenza:$('#docScad').value||null,
+    slots,extraEnti:old?old.extraEnti||[]:[],
+    fileName:modalFile?modalFile.name:(old?old.fileName:''),
+    blob:modalFile||(old?old.blob:null),
+    updated:Date.now()
+  };
+  if(id)doc.id=id;
+  const newId=await dbPut('docs',doc);
+  if(!id)doc.id=newId;
+  S.docs=await dbAll('docs');
+  closeModal();render();toast('Documento salvato');
+}
+async function deleteDoc(id){
+  if(!confirm('Eliminare definitivamente questo documento?'))return;
+  await dbDel('docs',id);S.docs=await dbAll('docs');
+  closeModal();render();toast('Documento eliminato');
+}
+
+/* ---------- settings actions ---------- */
+function renameLocale(i,v){if(v.trim()){S.locali[i]=v.trim();saveSettings();render()}}
+function addLocale(){S.locali.push('Nuovo locale');saveSettings();render()}
+async function removeLocale(i){
+  const n=S.docs.filter(d=>d.locale===i).length;
+  if(!confirm(`Eliminare «${S.locali[i]}»?${n?` Verranno eliminati anche ${n} documenti collegati.`:''}`))return;
+  for(const d of S.docs.filter(x=>x.locale===i))await dbDel('docs',d.id);
+  S.docs=(await dbAll('docs')).map(d=>{if(d.locale>i)d.locale--;dbPut('docs',d);return d});
+  S.locali.splice(i,1);if(S.locale>=S.locali.length)S.locale=0;
+  saveSettings();render();
+}
+function setPin(){
+  const p=prompt('Nuovo PIN (4-8 cifre):');
+  if(p&&/^\d{4,8}$/.test(p)){S.pin=p;saveSettings();render();toast('PIN impostato')}
+  else if(p!==null)toast('PIN non valido: solo cifre, da 4 a 8');
+}
+function clearPin(){if(confirm('Rimuovere il PIN?')){S.pin='';saveSettings();render()}}
+async function resetAll(){
+  if(!confirm('ATTENZIONE: verranno cancellati TUTTI i documenti. Continuare?'))return;
+  if(!confirm('Confermi la cancellazione definitiva?'))return;
+  await dbClear('docs');await dbClear('settings');location.reload();
+}
+
+/* ---------- backup ---------- */
+const blobToB64=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)});
+async function b64ToBlob(u){const r=await fetch(u);return r.blob()}
+async function exportBackup(){
+  toast('Preparazione backup…');
+  const docs=[];
+  for(const d of S.docs){
+    const{blob,...rest}=d;
+    docs.push({...rest,fileData:blob?await blobToB64(blob):null});
+  }
+  const data=JSON.stringify({v:1,exported:new Date().toISOString(),locali:S.locali,pin:S.pin,docs});
+  const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
+  const a=document.createElement('a');a.href=url;
+  a.download='fascicolo-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),30000);
+}
+async function importBackup(file){
+  if(!file)return;
+  try{
+    const data=JSON.parse(await file.text());
+    if(!data.docs)throw new Error('formato');
+    if(!confirm(`Il backup contiene ${data.docs.length} documenti. L\u2019archivio attuale verrà sostituito. Continuare?`))return;
+    await dbClear('docs');
+    for(const d of data.docs){
+      const{fileData,id,...rest}=d;
+      await dbPut('docs',{...rest,blob:fileData?await b64ToBlob(fileData):null});
+    }
+    S.locali=data.locali||S.locali;S.pin=data.pin||'';
+    await saveSettings();S.docs=await dbAll('docs');
+    render();toast('Backup ripristinato');
+  }catch(e){toast('File di backup non valido')}
+}
+async function showStorage(){
+  const el=$('#storageInfo');if(!el)return;
+  if(navigator.storage&&navigator.storage.estimate){
+    const{usage,quota}=await navigator.storage.estimate();
+    el.textContent=(usage/1048576).toFixed(1)+' MB usati su circa '+(quota/1048576).toFixed(0)+' MB disponibili.';
+  }else el.textContent='Informazione non disponibile su questo browser.';
+}
+
+/* ---------- lock ---------- */
+function renderLock(){
+  $('#app').innerHTML='';
+  $('#layer').innerHTML=`<div class="lock">
+    <h1>Fascicolo</h1><p>Archivio protetto</p>
+    <input type="password" inputmode="numeric" maxlength="8" id="pinInput" autofocus
+      onkeydown="if(event.key==='Enter')tryPin()" oninput="if(this.value.length>=String(S.pin).length)tryPin()">
+    <div class="lk-err" id="pinErr"></div>
+  </div>`;
+  setTimeout(()=>{const i=$('#pinInput');if(i)i.focus()},150);
+}
+function tryPin(){
+  const i=$('#pinInput');
+  if(i.value===S.pin){S.unlocked=true;$('#layer').innerHTML='';render()}
+  else{$('#pinErr').textContent='PIN errato';i.value='';}
+}
+
+/* ---------- nav ---------- */
+function go(screen,ente){S.screen=screen;S.ente=ente||null;S.query='';render();window.scrollTo(0,0);if(screen==='settings')showStorage()}
+function setLocale(i){S.locale=i;render()}
+function bindNav(){}
+
+/* ---------- avvio ---------- */
+(async()=>{
+  await openDB();
+  await loadState();
+  render();
+})();
+</script>
+</body>
+</html>

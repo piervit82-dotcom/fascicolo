@@ -276,15 +276,17 @@ const dbClear=s=>new Promise(r=>{const q=tx(s,'readwrite').clear();q.onsuccess=(
 
 /* ---------- stato ---------- */
 let S={locali:['Il Fionco','La Fornace'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],op:'',
-  societa:[{ragione:'MASTERPLAN GROUP SRL',indirizzo:'Via Francesco Baracca, 10 - 35019 Tombolo (PD)',piva:'05662050284',rea:'PD 483354',pec:'masterplangroup@pec.it',email:'info@masterplangroup.it',sdi:'X2PH38J'},{}]};
+  societa:[{ragione:'MASTERPLAN GROUP SRL',indirizzo:'Via Francesco Baracca, 10 - 35019 Tombolo (PD)',piva:'05662050284',rea:'PD 483354',pec:'masterplangroup@pec.it',email:'info@masterplangroup.it',sdi:'X2PH38J'},{}],
+  loghi:[null,null],scadenze:[],discOk:false};
 async function loadState(){
   const st=await dbGet('settings','app');
-  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];S.op=st.op||'';if(st.societa)S.societa=st.societa;}
+  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];S.op=st.op||'';if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;}
   while(S.societa.length<S.locali.length)S.societa.push({});
+  while(S.loghi.length<S.locali.length)S.loghi.push(null);
   S.docs=await dbAll('docs');
   S.logs=await dbAll('logs');
 }
-const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op,societa:S.societa});
+const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk});
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -322,6 +324,7 @@ async function openDoc(id){
    RENDER
    ========================================================= */
 function render(){
+  if(!S.discOk)return renderDisclaimer();
   if(S.pin&&!S.unlocked)return renderLock();
   const app=$('#app');
   if(S.screen==='home')app.innerHTML=vHome();
@@ -467,32 +470,142 @@ function startControllo(eid){
         ${l.map(docRow).join('')}
         ${eid==='nas'&&(i===3||i===4)?`<button class="link-btn" onclick="document.getElementById('controlloScreen').remove();go('registri')">&#128202; Apri il registro digitale compilabile</button>`:''}</div>`;}).join('')}
     ${extra.length?`<div class="sec-label">Altri documenti</div>${extra.map(docRow).join('')}`:''}
+    <button class="sm-btn green" style="width:100%;margin-top:8px;padding:14px" onclick="stampaControllo('${eid}')">&#128424; Stampa o salva PDF della checklist</button>
   </div>`;
   document.body.appendChild(div);
 }
+// genera una finestra di stampa pulita e intestata
+function intestazioneHTML(){
+  const so=S.societa[S.locale]||{},logo=S.loghi[S.locale];
+  return `<div style="display:flex;gap:14px;align-items:center;border-bottom:2px solid #1d4634;padding-bottom:12px;margin-bottom:16px">
+    ${logo?`<img src="${logo}" style="height:60px;width:60px;object-fit:contain">`:''}
+    <div>
+      <div style="font-size:20px;font-weight:800;color:#1d4634">${esc(S.locali[S.locale])}</div>
+      ${so.ragione?`<div style="font-size:13px;font-weight:600">${esc(so.ragione)}</div>`:''}
+      <div style="font-size:11px;color:#555">${[so.indirizzo,so.piva?'P.IVA '+esc(so.piva):'',so.rea?'REA '+esc(so.rea):''].filter(Boolean).join(' &middot; ')}</div>
+      ${(so.pec||so.email)?`<div style="font-size:11px;color:#555">${[so.pec?'PEC '+esc(so.pec):'',so.email?esc(so.email):''].filter(Boolean).join(' &middot; ')}</div>`:''}
+    </div></div>`;
+}
+function apriStampa(titolo,corpo){
+  const w=window.open('','_blank');
+  if(!w)return toast('Consenti le finestre pop-up per stampare');
+  w.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>${esc(titolo)}</title>
+    <style>body{font-family:-apple-system,Arial,sans-serif;color:#21251f;padding:24px;max-width:800px;margin:0 auto;font-size:13px;line-height:1.5}
+    h1{font-size:18px;color:#1d4634;margin:0 0 4px} .sub{color:#666;font-size:12px;margin-bottom:18px}
+    table{width:100%;border-collapse:collapse;margin-top:8px} th,td{border:1px solid #ccc;padding:6px 8px;text-align:left;font-size:12px}
+    th{background:#ecebe2} .ko{color:#b23427;font-weight:bold} .ok{color:#2c6e4c}
+    .varea{font-weight:700;margin:16px 0 4px;font-size:14px} ul{margin:4px 0 12px;padding-left:20px} li{margin:2px 0}
+    @media print{button{display:none}} .foot{margin-top:24px;font-size:10px;color:#888;border-top:1px solid #ddd;padding-top:8px}</style></head>
+    <body>${intestazioneHTML()}<h1>${esc(titolo)}</h1><div class="sub">Generato il ${new Date().toLocaleString('it-IT')} con InRegola</div>
+    ${corpo}
+    <div class="foot">InRegola — strumento organizzativo di supporto. Non sostituisce gli obblighi documentali di legge né la consulenza professionale. I dati provengono dall'archivio locale dell'utente.</div>
+    <button onclick="window.print()" style="margin-top:20px;padding:12px 20px;background:#1d4634;color:#fff;border:none;border-radius:8px;font-size:15px">Stampa / Salva PDF</button>
+    </body></html>`);
+  w.document.close();
+}
+function stampaControllo(eid){
+  const e=ENTE(eid),docs=docsLocale();
+  const inSlot=i=>docs.filter(d=>(d.slots||[]).includes(eid+':'+i));
+  let rows=e.items.map((it,i)=>{const l=inSlot(i);
+    const stato=l.length?'<span class="ok">Presente</span>':'<span class="ko">MANCANTE</span>';
+    const files=l.length?l.map(d=>esc(d.nome)+(d.scadenza?' (scad. '+fmtDate(d.scadenza)+')':'')).join('<br>'):'—';
+    return `<tr><td>${esc(it.t)}</td><td>${stato}</td><td>${files}</td><td style="font-size:10px;color:#666">${esc(it.n)}</td></tr>`;}).join('');
+  const corpo=`<div class="varea">${esc(e.sigla)} — ${esc(e.nome)}</div>
+    <table><thead><tr><th>Documento richiesto</th><th>Stato</th><th>File in archivio</th><th>Riferimento normativo</th></tr></thead><tbody>${rows}</tbody></table>`;
+  apriStampa('Checklist controllo — '+e.nome,corpo);
+}
 
 /* ---------- scadenze ---------- */
+// stato scadenza per una data string YYYY-MM-DD
+function scadStatoDate(ds){
+  if(!ds)return'ok';
+  const today=new Date();today.setHours(0,0,0,0);
+  const diff=(new Date(ds+'T00:00:00')-today)/86400000;
+  if(diff<0)return'exp';if(diff<=60)return'warn';return'ok';
+}
 function vScadenze(){
-  const docs=S.docs.filter(d=>d.scadenza).map(d=>({d,st:scadStato(d)}))
-    .sort((a,b)=>a.d.scadenza.localeCompare(b.d.scadenza));
-  const grp=(t,arr)=>arr.length?`<div class="sec-label">${t}</div><div class="scad-list">${arr.map(x=>docRowScad(x.d)).join('')}</div>`:'';
+  // unisco documenti con scadenza + scadenze libere in un'unica lista
+  const items=[];
+  S.docs.filter(d=>d.scadenza).forEach(d=>items.push({kind:'doc',ref:d,data:d.scadenza,nome:d.nome,locale:d.locale,st:scadStato(d)}));
+  S.scadenze.forEach(s=>items.push({kind:'free',ref:s,data:s.data,nome:s.nome,locale:s.locale,st:scadStatoDate(s.data)}));
+  items.sort((a,b)=>(a.data||'').localeCompare(b.data||''));
+  const grp=(t,arr)=>arr.length?`<div class="sec-label">${t}</div><div class="scad-list">${arr.map(scadRow).join('')}</div>`:'';
   return topbar()+`<div class="wrap">
     <div class="sec-label" style="margin-top:6px">Scadenziario &middot; tutti i locali</div>
-    ${docs.length?'':'<div class="empty">Nessun documento con scadenza impostata.<br>Aggiungi le date ai documenti per ricevere gli avvisi.</div>'}
-    ${grp('&#9888; Scaduti',docs.filter(x=>x.st==='exp'))}
-    ${grp('&#9203; Entro 60 giorni',docs.filter(x=>x.st==='warn'))}
-    ${grp('In regola',docs.filter(x=>x.st==='ok'))}
+    <button class="controllo-btn" style="background:var(--verde);margin-top:0;margin-bottom:14px" onclick="openScadModal()">+ Aggiungi scadenza</button>
+    ${items.length?'':'<div class="empty">Nessuna scadenza impostata.<br>Aggiungi una scadenza qui sopra, oppure metti una data ai documenti in Archivio.</div>'}
+    ${grp('&#9888; Scaduti',items.filter(x=>x.st==='exp'))}
+    ${grp('&#9203; Entro 60 giorni',items.filter(x=>x.st==='warn'))}
+    ${grp('In regola',items.filter(x=>x.st==='ok'))}
   </div>`+navBar();
 }
-function docRowScad(d){
-  const st=scadStato(d);
+function scadRow(it){
+  const st=it.st;
+  if(it.kind==='doc'){const d=it.ref;
+    return `<div class="doc-row">
+      <div class="d-ico">${(d.fileName||'').split('.').pop().toUpperCase().slice(0,4)||'DOC'}</div>
+      <div class="d-info"><div class="d-name">${esc(d.nome)}</div>
+        <div class="d-meta ${st==='exp'?'exp':st==='warn'?'warn':''}">${esc(S.locali[d.locale]||'?')} &middot; ${fmtDate(d.scadenza)}</div></div>
+      <button class="d-edit" onclick="openDocModal(${d.id})">&#9998;</button>
+      <button class="d-open" onclick="openDoc(${d.id})">Apri</button>
+    </div>`;}
+  const s=it.ref;
+  const docColl=s.docId?S.docs.find(x=>x.id===s.docId):null;
   return `<div class="doc-row">
-    <div class="d-ico">${(d.fileName||'').split('.').pop().toUpperCase().slice(0,4)||'DOC'}</div>
-    <div class="d-info"><div class="d-name">${esc(d.nome)}</div>
-      <div class="d-meta ${st==='exp'?'exp':st==='warn'?'warn':''}">${esc(S.locali[d.locale]||'?')} &middot; ${fmtDate(d.scadenza)}</div></div>
-    <button class="d-edit" onclick="openDocModal(${d.id})">&#9998;</button>
-    <button class="d-open" onclick="openDoc(${d.id})">Apri</button>
+    <div class="d-ico" style="border-style:dashed">&#9201;</div>
+    <div class="d-info"><div class="d-name">${esc(s.nome)}${s.ric?' &#8635;':''}</div>
+      <div class="d-meta ${st==='exp'?'exp':st==='warn'?'warn':''}">${esc(S.locali[s.locale]||'?')} &middot; ${fmtDate(s.data)}${s.ric?' &middot; ogni '+(s.ric==='6m'?'6 mesi':s.ric==='12m'?'anno':s.ric==='24m'?'2 anni':'')+'':''}</div></div>
+    ${docColl?`<button class="d-open" onclick="openDoc(${docColl.id})">Apri</button>`:''}
+    ${st!=='ok'&&s.ric?`<button class="d-open" style="background:var(--ambra)" onclick="rinnovaScad('${s.id}')">Fatto</button>`:''}
+    <button class="d-edit" onclick="openScadModal('${s.id}')">&#9998;</button>
   </div>`;
+}
+function openScadModal(sid){
+  const s=sid?S.scadenze.find(x=>x.id===sid):null;
+  $('#layer').innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <h3>${s?'Modifica scadenza':'Nuova scadenza'}</h3>
+    <div class="f-group"><label>Cosa scade</label>
+      <input type="text" id="scNome" value="${s?esc(s.nome):''}" placeholder="Es. Revisione estintori, Taratura termometri"></div>
+    <div class="f-group"><label>Data di scadenza</label>
+      <input type="date" id="scData" value="${s?s.data:''}"></div>
+    <div class="f-group"><label>Locale</label>
+      <select id="scLocale">${S.locali.map((l,i)=>`<option value="${i}" ${(s?s.locale:S.locale)===i?'selected':''}>${esc(l)}</option>`).join('')}</select></div>
+    <div class="f-group"><label>Si ripete</label>
+      <select id="scRic">
+        <option value="" ${s&&!s.ric?'selected':''}>No, scadenza singola</option>
+        <option value="6m" ${s&&s.ric==='6m'?'selected':''}>Ogni 6 mesi</option>
+        <option value="12m" ${s&&s.ric==='12m'?'selected':''}>Ogni anno</option>
+        <option value="24m" ${s&&s.ric==='24m'?'selected':''}>Ogni 2 anni</option>
+      </select></div>
+    <div class="f-group"><label>Collega un documento (facoltativo)</label>
+      <select id="scDoc"><option value="">Nessuno</option>
+        ${S.docs.map(d=>`<option value="${d.id}" ${s&&s.docId===d.id?'selected':''}>${esc(d.nome)}</option>`).join('')}</select></div>
+    <div class="m-actions">
+      ${s?`<button class="btn danger" onclick="delScad('${s.id}')">Elimina</button>`:''}
+      <button class="btn ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn primary" onclick="saveScad(${s?`'${s.id}'`:'null'})">Salva</button>
+    </div></div></div>`;
+}
+function saveScad(sid){
+  const nome=$('#scNome').value.trim();const data=$('#scData').value;
+  if(!nome)return toast('Scrivi cosa scade');
+  if(!data)return toast('Imposta la data');
+  const docId=$('#scDoc').value?parseInt($('#scDoc').value,10):null;
+  const obj={id:sid||uid(),nome,data,locale:parseInt($('#scLocale').value,10),ric:$('#scRic').value||null,docId};
+  if(sid){const i=S.scadenze.findIndex(x=>x.id===sid);S.scadenze[i]=obj;}
+  else S.scadenze.push(obj);
+  saveSettings();closeModal();render();toast('Scadenza salvata');
+}
+function delScad(sid){
+  if(!confirm('Eliminare questa scadenza?'))return;
+  S.scadenze=S.scadenze.filter(x=>x.id!==sid);saveSettings();closeModal();render();toast('Scadenza eliminata');
+}
+function rinnovaScad(sid){
+  const s=S.scadenze.find(x=>x.id===sid);if(!s||!s.ric)return;
+  const mesi=s.ric==='6m'?6:s.ric==='12m'?12:24;
+  const d=new Date(s.data+'T00:00:00');d.setMonth(d.getMonth()+mesi);
+  s.data=d.toISOString().slice(0,10);
+  saveSettings();render();toast('Rinnovata: prossima scadenza '+fmtDate(s.data));
 }
 
 /* ---------- registri compilabili ---------- */
@@ -545,8 +658,9 @@ function vRegistri(){
     <div class="set-card"><p style="margin-bottom:10px">Ogni registrazione ha data e ora automatiche, non modificabili. Scegli un mese ed esportalo per stamparlo o inviarlo al consulente (l'ASL può chiedere fino a 2 anni di registrazioni).</p>
       <div class="row" style="align-items:center">
         <select id="expMese" style="flex:1;border:1.5px solid var(--line2);border-radius:10px;padding:11px;background:#fff;font-size:15px">${mesiOptions}</select>
-        <button class="sm-btn green" onclick="exportRegistroCSV()">Esporta CSV</button>
-      </div></div>
+      </div>
+      <div class="row" style="margin-top:8px"><button class="sm-btn green" onclick="exportRegistroCSV()">Esporta CSV</button>
+        <button class="sm-btn" onclick="stampaRegistro()">&#128424; Stampa / PDF</button></div></div>
     ${storicoHTML(logsLoc)}
   </div>`+navBar();
 }
@@ -632,6 +746,40 @@ function exportRegistroCSV(){
   a.download='registro-'+S.locali[S.locale].toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+y+'-'+String(m).padStart(2,'0')+'.csv';
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
 }
+function stampaRegistro(){
+  const sel=document.getElementById('expMese');
+  const d0=new Date(),kDef=d0.getFullYear()+'-'+String(d0.getMonth()+1).padStart(2,'0');
+  const[y,m]=(sel&&sel.value?sel.value:kDef).split('-').map(Number);
+  const rows=S.logs.filter(l=>{const d=new Date(l.ts);return l.locale===S.locale&&d.getFullYear()===y&&d.getMonth()===m-1;}).sort((a,b)=>a.ts-b.ts);
+  if(!rows.length)return toast('Nessuna registrazione in quel mese');
+  const mese=new Date(y,m-1,1).toLocaleDateString('it-IT',{month:'long',year:'numeric'});
+  let tr=rows.map(l=>{const d=new Date(l.ts);
+    return `<tr><td>${d.toLocaleDateString('it-IT')}</td><td>${d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})}</td>
+    <td>${l.tipo==='temp'?'Temperatura':'Pulizia'}</td><td>${esc(l.punto||l.area||'')}</td>
+    <td>${l.tipo==='temp'?l.valore+' °C':'—'}</td>
+    <td>${l.tipo==='temp'?(l.conforme?'<span class="ok">conforme</span>':'<span class="ko">NON CONF.</span>'):'eseguita'}</td>
+    <td style="font-size:10px">${esc(l.azione||'')}</td><td>${esc(l.op||'')}</td></tr>`;}).join('');
+  const corpo=`<div class="varea">Registro di autocontrollo — ${mese}</div>
+    <table><thead><tr><th>Data</th><th>Ora</th><th>Tipo</th><th>Punto / Area</th><th>Valore</th><th>Esito</th><th>Azione correttiva</th><th>Op.</th></tr></thead>
+    <tbody>${tr}</tbody></table>`;
+  apriStampa('Registro autocontrollo — '+mese,corpo);
+}
+
+/* ---------- disclaimer ---------- */
+function renderDisclaimer(){
+  $('#layer').innerHTML=`<div class="lock" style="justify-content:flex-start;padding-top:60px;overflow-y:auto">
+    <h1 style="font-size:28px">InRegola</h1>
+    <p>Prima di iniziare</p>
+    <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:18px;max-width:440px;text-align:left;font-size:14px;line-height:1.6;margin-top:10px">
+      <p style="margin-bottom:12px"><b>InRegola è uno strumento organizzativo</b> per raccogliere documenti, registrazioni e scadenze e averli a portata di mano durante un controllo.</p>
+      <p style="margin-bottom:12px">Non sostituisce gli obblighi di legge, il manuale di autocontrollo HACCP, né la consulenza di un professionista (consulente sicurezza, RSPP, commercialista).</p>
+      <p style="margin-bottom:12px">La completezza e la correttezza dei documenti e dei dati inseriti restano responsabilità dell'utente. I riferimenti normativi sono indicativi e vanno verificati con il proprio consulente.</p>
+      <p>Tutti i dati restano sul tuo dispositivo: nulla viene inviato a server esterni.</p>
+    </div>
+    <button class="sm-btn green" style="margin-top:20px;padding:14px 28px" onclick="accettaDisclaimer()">Ho capito, inizia</button>
+  </div>`;
+}
+function accettaDisclaimer(){S.discOk=true;saveSettings();$('#layer').innerHTML='';render();}
 
 /* ---------- settings ---------- */
 function vSettings(){
@@ -642,7 +790,13 @@ function vSettings(){
       ${S.locali.length>1?`<button class="sm-btn red" onclick="removeLocale(${i})">Elimina</button>`:''}
     </div>
     <p style="margin:9px 0 8px;font-size:13px;color:var(--ink2)">${so.ragione?esc(so.ragione)+(so.piva?' &middot; P.IVA '+esc(so.piva):''):'Dati società non ancora inseriti'}</p>
-    <button class="sm-btn" onclick="openSocietaModal(${i})">${so.ragione?'Modifica dati società':'+ Inserisci dati società'}</button>
+    <div class="row" style="align-items:center;gap:10px">
+      ${S.loghi[i]?`<img src="${S.loghi[i]}" alt="logo" style="height:42px;width:42px;object-fit:contain;border:1px solid var(--line2);border-radius:8px;background:#fff;padding:2px">`:''}
+      <button class="sm-btn" onclick="openSocietaModal(${i})">${so.ragione?'Modifica dati società':'+ Inserisci dati società'}</button>
+      <button class="sm-btn" onclick="document.getElementById('logoIn_${i}').click()">${S.loghi[i]?'Cambia logo':'+ Logo'}</button>
+      ${S.loghi[i]?`<button class="sm-btn red" onclick="removeLogo(${i})">Rimuovi logo</button>`:''}
+      <input type="file" id="logoIn_${i}" accept="image/*" style="display:none" onchange="pickLogo(${i},this)">
+    </div>
     </div>`;}).join('')}
     <button class="sm-btn" onclick="addLocale()">+ Aggiungi locale</button>
 
@@ -661,6 +815,11 @@ function vSettings(){
       <button class="sm-btn" onclick="document.getElementById('importFile').click()">Ripristina backup</button>
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(this.files[0])"></div></div>
     <div class="set-card"><h4>Spazio utilizzato</h4><p id="storageInfo">Calcolo in corso…</p></div>
+
+    <div class="sec-label">Informazioni</div>
+    <div class="set-card"><h4>Note legali</h4>
+      <p>Rivedi come funziona InRegola e i suoi limiti.</p>
+      <button class="sm-btn" onclick="S.discOk=false;render()">Mostra note legali</button></div>
 
     <div class="sec-label">Zona pericolosa</div>
     <div class="set-card"><h4>Azzeramento totale</h4>
@@ -758,6 +917,18 @@ function openSocietaModal(i){
       <button class="btn primary" onclick="saveSocieta(${i})">Salva</button>
     </div></div></div>`;
 }
+function pickLogo(i,inp){
+  if(!inp.files.length)return;const file=inp.files[0];
+  const r=new FileReader();
+  r.onload=()=>{const img=new Image();img.onload=()=>{
+    const max=240,sc=Math.min(1,max/Math.max(img.width,img.height));
+    const c=document.createElement('canvas');c.width=img.width*sc;c.height=img.height*sc;
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    S.loghi[i]=c.toDataURL('image/png');saveSettings();render();toast('Logo caricato');
+  };img.src=r.result;};
+  r.readAsDataURL(file);
+}
+function removeLogo(i){if(confirm('Rimuovere il logo?')){S.loghi[i]=null;saveSettings();render();}}
 function saveSocieta(i){
   S.societa[i]={ragione:$('#soRag').value.trim(),indirizzo:$('#soInd').value.trim(),piva:$('#soPiva').value.trim(),
     rea:$('#soRea').value.trim(),pec:$('#soPec').value.trim(),email:$('#soEmail').value.trim(),sdi:$('#soSdi').value.trim()};
@@ -766,13 +937,13 @@ function saveSocieta(i){
 
 /* ---------- settings actions ---------- */
 function renameLocale(i,v){if(v.trim()){S.locali[i]=v.trim();saveSettings();render()}}
-function addLocale(){S.locali.push('Nuovo locale');S.societa.push({});saveSettings();render()}
+function addLocale(){S.locali.push('Nuovo locale');S.societa.push({});S.loghi.push(null);saveSettings();render()}
 async function removeLocale(i){
   const n=S.docs.filter(d=>d.locale===i).length;
   if(!confirm(`Eliminare «${S.locali[i]}»?${n?` Verranno eliminati anche ${n} documenti collegati.`:''}`))return;
   for(const d of S.docs.filter(x=>x.locale===i))await dbDel('docs',d.id);
   S.docs=(await dbAll('docs')).map(d=>{if(d.locale>i)d.locale--;dbPut('docs',d);return d});
-  S.locali.splice(i,1);S.societa.splice(i,1);if(S.locale>=S.locali.length)S.locale=0;
+  S.locali.splice(i,1);S.societa.splice(i,1);S.loghi.splice(i,1);if(S.locale>=S.locali.length)S.locale=0;
   saveSettings();render();
 }
 function setPin(){
@@ -797,7 +968,7 @@ async function exportBackup(){
     const{blob,...rest}=d;
     docs.push({...rest,fileData:blob?await blobToB64(blob):null});
   }
-  const data=JSON.stringify({v:2,exported:new Date().toISOString(),locali:S.locali,societa:S.societa,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op,docs,logs:S.logs});
+  const data=JSON.stringify({v:2,exported:new Date().toISOString(),locali:S.locali,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op,docs,logs:S.logs});
   const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
   const a=document.createElement('a');a.href=url;
   a.download='inregola-backup-'+new Date().toISOString().slice(0,10)+'.json';
@@ -820,6 +991,8 @@ async function importBackup(file){
     S.locali=data.locali||S.locali;S.pin=data.pin||'';
     S.punti=data.punti||[];S.aree=data.aree||[];S.op=data.op||'';
     S.societa=data.societa||S.locali.map(()=>({}));while(S.societa.length<S.locali.length)S.societa.push({});
+    S.loghi=data.loghi||S.locali.map(()=>null);while(S.loghi.length<S.locali.length)S.loghi.push(null);
+    S.scadenze=data.scadenze||[];S.discOk=!!data.discOk;
     await saveSettings();S.docs=await dbAll('docs');S.logs=await dbAll('logs');
     render();toast('Backup ripristinato');
   }catch(e){toast('File di backup non valido')}

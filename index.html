@@ -546,6 +546,7 @@ function scadRow(it){
       <div class="d-ico">${(d.fileName||'').split('.').pop().toUpperCase().slice(0,4)||'DOC'}</div>
       <div class="d-info"><div class="d-name">${esc(d.nome)}</div>
         <div class="d-meta ${st==='exp'?'exp':st==='warn'?'warn':''}">${esc(S.locali[d.locale]||'?')} &middot; ${fmtDate(d.scadenza)}</div></div>
+      <button class="d-edit" onclick="addScadCalendar('doc',${d.id})" aria-label="Aggiungi al calendario">&#128197;</button>
       <button class="d-edit" onclick="openDocModal(${d.id})">&#9998;</button>
       <button class="d-open" onclick="openDoc(${d.id})">Apri</button>
     </div>`;}
@@ -557,8 +558,51 @@ function scadRow(it){
       <div class="d-meta ${st==='exp'?'exp':st==='warn'?'warn':''}">${esc(S.locali[s.locale]||'?')} &middot; ${fmtDate(s.data)}${s.ric?' &middot; ogni '+(s.ric==='6m'?'6 mesi':s.ric==='12m'?'anno':s.ric==='24m'?'2 anni':'')+'':''}</div></div>
     ${docColl?`<button class="d-open" onclick="openDoc(${docColl.id})">Apri</button>`:''}
     ${st!=='ok'&&s.ric?`<button class="d-open" style="background:var(--ambra)" onclick="rinnovaScad('${s.id}')">Fatto</button>`:''}
+    <button class="d-edit" onclick="addScadCalendar('free','${s.id}')" aria-label="Aggiungi al calendario">&#128197;</button>
     <button class="d-edit" onclick="openScadModal('${s.id}')">&#9998;</button>
   </div>`;
+}
+// genera evento .ics e lo apre nel calendario del telefono
+function addScadCalendar(kind,id){
+  let nome,data,locale;
+  if(kind==='doc'){const d=S.docs.find(x=>x.id===id);if(!d)return;nome=d.nome;data=d.scadenza;locale=d.locale;}
+  else{const s=S.scadenze.find(x=>x.id===id);if(!s)return;nome=s.nome;data=s.data;locale=s.locale;}
+  if(!data)return toast('Manca la data di scadenza');
+  S._calPend={nome,data,locale};
+  $('#layer').innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <h3>Aggiungi al calendario</h3>
+    <p style="font-size:14px;color:var(--ink2);margin-bottom:14px">«${esc(nome)}» scade il ${fmtDate(data)}. Quando vuoi essere avvisato?</p>
+    <div class="f-group"><label>Promemoria</label>
+      <select id="calGiorni">
+        <option value="7">7 giorni prima</option>
+        <option value="30" selected>30 giorni prima</option>
+        <option value="60">60 giorni prima</option>
+      </select></div>
+    <div class="m-actions">
+      <button class="btn ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn primary" onclick="creaICS()">Aggiungi</button>
+    </div></div></div>`;
+}
+function creaICS(){
+  const p=S._calPend;if(!p)return;
+  const g=parseInt($('#calGiorni').value,10);
+  const d=p.data.replace(/-/g,'');
+  const dtNext=new Date(p.data+'T00:00:00');dtNext.setDate(dtNext.getDate()+1);
+  const dEnd=dtNext.toISOString().slice(0,10).replace(/-/g,'');
+  const uid=Date.now()+'@inregola';
+  const stamp=new Date().toISOString().replace(/[-:.]/g,'').slice(0,15)+'Z';
+  const titolo='Scadenza: '+p.nome+' ('+S.locali[p.locale]+')';
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//InRegola//IT','CALSCALE:GREGORIAN','METHOD:PUBLISH',
+    'BEGIN:VEVENT','UID:'+uid,'DTSTAMP:'+stamp,'DTSTART;VALUE=DATE:'+d,'DTEND;VALUE=DATE:'+dEnd,
+    'SUMMARY:'+titolo,'DESCRIPTION:Promemoria generato da InRegola.',
+    'BEGIN:VALARM','TRIGGER:-P'+g+'D','ACTION:DISPLAY','DESCRIPTION:'+titolo,'END:VALARM',
+    'END:VEVENT','END:VCALENDAR'].join('\r\n');
+  const blob=new Blob([ics],{type:'text/calendar'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=p.nome.replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.ics';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),30000);
+  S._calPend=null;closeModal();toast('Evento pronto: aprilo per aggiungerlo al calendario');
 }
 function openScadModal(sid){
   const s=sid?S.scadenze.find(x=>x.id===sid):null;

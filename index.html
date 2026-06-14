@@ -535,6 +535,61 @@ function apriStampa(titolo,corpo){
     </body></html>`);
   w.document.close();
 }
+// stampa etichetta a dimensione FISICA reale (mm), per stampantine termiche o PDF piccolo
+function apriStampaEtichetta(nome, righe, formato){
+  const dim={'57x76':[57,76],'50x30':[50,30],'100x50':[100,50]}[formato];
+  const w=window.open('','_blank');
+  if(!w)return toast('Consenti le finestre pop-up per stampare');
+  const corpoRighe=righe.map(r=>{
+    const big=r[2]==='big', small=r[2]==='small';
+    return `<div class="lr ${big?'big':''} ${small?'sm':''}">
+      <span class="k">${r[0]}</span><span class="v">${r[1]}</span></div>`;}).join('');
+  // dimensioni font scalate in base al formato
+  const isSmall = formato==='50x30';
+  const isWide = formato==='100x50';
+  let pageCss, baseFont, nomeFont, bigFont;
+  if(formato==='a4'){
+    pageCss='@page{size:A4;margin:14mm}';
+    baseFont='13px';nomeFont='22px';bigFont='20px';
+  } else {
+    pageCss=`@page{size:${dim[0]}mm ${dim[1]}mm;margin:0}`;
+    baseFont = isSmall?'7pt':isWide?'9pt':'8.5pt';
+    nomeFont = isSmall?'10pt':isWide?'14pt':'13pt';
+    bigFont  = isSmall?'11pt':isWide?'15pt':'14pt';
+  }
+  const wrapStyle = formato==='a4'
+    ? 'width:280px;margin:0 auto'
+    : `width:${dim[0]}mm;height:${dim[1]}mm;padding:2.5mm;display:flex;flex-direction:column;justify-content:center;overflow:hidden`;
+  w.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Etichetta ${esc(nome)}</title>
+    <style>
+    ${pageCss}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,Arial,sans-serif;color:#1b2420;font-size:${baseFont};line-height:1.25}
+    .lab{${wrapStyle};border:1.5px solid #1b2420;border-radius:2mm}
+    .lh{text-align:center;border-bottom:1.5px solid #1b2420;padding-bottom:1mm;margin-bottom:1mm}
+    .ln{font-size:${nomeFont};font-weight:800;text-transform:uppercase;line-height:1.05}
+    .lc{font-size:${isSmall?'6pt':'7.5pt'};font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.03em;margin-top:.3mm}
+    .lr{display:flex;justify-content:space-between;gap:2mm;padding:.5mm 0;border-bottom:.3pt solid #ccc}
+    .lr .k{font-weight:600;color:#444;white-space:nowrap}
+    .lr .v{font-weight:800;text-align:right}
+    .lr.big{padding:1mm 0}
+    .lr.big .v{font-size:${bigFont};color:#c93f2c}
+    .lr.sm{opacity:.65;font-size:${isSmall?'6pt':'7pt'}}
+    .lf{text-align:center;font-size:${isSmall?'5pt':'6pt'};font-weight:600;color:#999;margin-top:1mm}
+    @media print{.noprint{display:none}}
+    .noprint{margin:14px auto 0;display:block;padding:11px 18px;background:#137a4e;color:#fff;border:none;border-radius:8px;font-size:14px}
+    body.scr{padding:18px;background:#e9eae5}
+    </style></head>
+    <body class="scr">
+    <div class="lab">
+      <div class="lh"><div class="ln">${esc(nome)}</div><div class="lc">${esc(S.locali[S.locale])} \u00B7 Conservazione</div></div>
+      ${corpoRighe}
+      <div class="lf">Generato con InRegola \u00B7 ${new Date().toLocaleDateString('it-IT')}</div>
+    </div>
+    <button class="noprint" onclick="document.body.classList.remove('scr');window.print();setTimeout(()=>document.body.classList.add('scr'),500)">Stampa / Salva PDF</button>
+    </body></html>`);
+  w.document.close();
+}
 function stampaControllo(eid){
   const e=ENTE(eid),docs=docsLocale();
   const inSlot=i=>docs.filter(d=>(d.slots||[]).includes(eid+':'+i));
@@ -752,6 +807,13 @@ function apriEtichetta(pid){
       <input type="text" id="etLotto" placeholder="Es. L2026-0847"></div>
     <div class="f-group"><label>Fornitore</label>
       <input type="text" id="etForn" placeholder="Es. Ortofrutta Rossi"></div>
+    <div class="f-group"><label>Formato etichetta</label>
+      <select id="etFormato">
+        <option value="57x76">57 × 76 mm (consigliato — sta tutto)</option>
+        <option value="50x30">50 × 30 mm (piccola, essenziale)</option>
+        <option value="100x50">100 × 50 mm (larga)</option>
+        <option value="a4">Foglio A4 (senza stampantina etichette)</option>
+      </select></div>
     <div class="m-actions">
       <button class="btn ghost" onclick="closeModal()">Annulla</button>
       <button class="btn primary" onclick="stampaEtichetta('${pid}')">Genera etichetta</button>
@@ -784,19 +846,8 @@ function stampaEtichetta(pid){
   if(forn)righe.push(['Fornitore', forn]);
   if(p.cons)righe.push(['Conservazione', p.cons]);
   if(S.op.trim())righe.push(['Operatore', esc(S.op.trim())]);
-  const corpo=`<div style="max-width:340px;margin:0 auto;border:2px solid #1b2420;border-radius:10px;padding:18px">
-    <div style="text-align:center;border-bottom:2px solid #1b2420;padding-bottom:10px;margin-bottom:10px">
-      <div style="font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:.01em">${esc(p.nome)}</div>
-      <div style="font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.05em">${esc(S.locali[S.locale])} \u00B7 Conservazione</div>
-    </div>
-    ${righe.map(r=>{
-      const big=r[2]==='big', small=r[2]==='small';
-      return `<div style="display:flex;justify-content:space-between;gap:12px;padding:${big?'8px':'5px'} 0;${small?'opacity:.7;font-size:11px':''};border-bottom:1px solid #ddd">
-        <span style="font-weight:700;color:#555">${r[0]}</span>
-        <span style="font-weight:800;text-align:right;${big?'font-size:20px;color:#c93f2c':''}">${r[1]}</span></div>`;}).join('')}
-    <div style="text-align:center;font-size:10px;font-weight:700;color:#999;margin-top:10px">Generato con InRegola \u00B7 ${new Date().toLocaleDateString('it-IT')}</div>
-  </div>`;
-  apriStampa('Etichetta \u2014 '+p.nome, corpo);
+  const formato=($('#etFormato')&&$('#etFormato').value)||'57x76';
+  apriStampaEtichetta(p.nome, righe, formato);
   closeModal();
 }
 

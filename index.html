@@ -185,6 +185,13 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .h-row .h-nm{font-size:14.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .h-row .h-meta{font-size:11.5px;font-weight:600;color:var(--ink3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .h-row .h-day{font-size:11px;font-weight:800;color:var(--ink2);text-align:right;flex-shrink:0;line-height:1.3}
+.pick-ent{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--bg);border:none;border-radius:14px;padding:13px 14px;margin-bottom:9px}
+.pick-ent .pe-chk{width:24px;height:24px;border-radius:7px;border:2px solid var(--line2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:transparent;font-weight:900}
+.pick-ent.on .pe-chk{background:var(--verde);border-color:var(--verde);color:#fff}
+.pick-ent .pe-nm{flex:1}
+.pick-ent .pe-nm b{font-size:14.5px;font-weight:800;display:block}
+.pick-ent .pe-nm span{font-size:11.5px;color:var(--ink3);font-weight:600}
+.grp-ente{font-size:12.5px;font-weight:900;color:var(--rosso);text-transform:uppercase;letter-spacing:.03em;margin:20px 2px 11px;padding-bottom:6px;border-bottom:2px solid var(--rosso-soft)}
 @media(min-width:560px){.tiles{grid-template-columns:1fr 1fr 1fr}}
 </style>
 </head>
@@ -419,6 +426,7 @@ function vHome(){
       oninput="S.query=this.value;renderResultsOnly()" id="searchInput"></div>
     <div id="searchResults">${results}</div>
     ${alerts}
+    <button class="controllo-btn" style="margin-top:18px" onclick="pickControllo()"><span class="dot"></span> Modalità controllo</button>
     <div class="sec-label">Enti di controllo</div>
     <div class="tiles">${ENTI.map(e=>{
       const st=enteStats(e.id);
@@ -492,6 +500,53 @@ function vEnte(eid){
 }
 
 /* ---------- modalità controllo ---------- */
+// scelta enti presenti per il controllo multiplo
+function pickControllo(){
+  const sel=new Set();
+  $('#layer').innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <h3>Chi sta controllando?</h3>
+    <p style="font-size:13px;color:var(--ink2);font-weight:600;margin:-8px 0 14px">Seleziona gli enti presenti adesso.</p>
+    <div id="pickEnti">${ENTI.map(e=>`<button class="pick-ent" data-eid="${e.id}" onclick="this.classList.toggle('on')">
+        <span class="pe-chk">&#10003;</span>
+        <span class="pe-nm"><b>${esc(e.sigla)}</b><span>${esc(e.nome)}</span></span>
+      </button>`).join('')}</div>
+    <div class="m-actions">
+      <button class="btn ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn primary" style="background:var(--rosso)" onclick="avviaControlloMulti()">Avvia controllo</button>
+    </div></div></div>`;
+}
+function avviaControlloMulti(){
+  const eids=[...document.querySelectorAll('.pick-ent.on')].map(b=>b.dataset.eid);
+  if(!eids.length)return toast('Seleziona almeno un ente');
+  closeModal();
+  startControlloMulti(eids);
+}
+function startControlloMulti(eids){
+  const docs=docsLocale();
+  const inSlot=(eid,i)=>docs.filter(d=>(d.slots||[]).includes(eid+':'+i));
+  const sigle=eids.map(id=>ENTE(id).sigla).join(' · ');
+  const div=document.createElement('div');div.className='controllo-screen';div.id='controlloScreen';
+  const so=S.societa[S.locale]||{};
+  let corpo='';
+  eids.forEach(eid=>{
+    const e=ENTE(eid);
+    corpo+=`<div class="grp-ente">${esc(e.sigla)} · ${esc(e.nome)}</div>`;
+    corpo+=e.items.map((it,i)=>{const l=inSlot(eid,i);
+      return `<div class="check-item"><div class="ci-top"><h4>${esc(it.t)}</h4>
+        ${l.length?'':'<span class="badge manca">Manca</span>'}</div>
+        <div class="ci-norma">${esc(it.n)}</div>
+        ${l.map(docRow).join('')}
+        ${eid==='nas'&&(i===3||i===4)?`<button class="link-btn" onclick="document.getElementById('controlloScreen').remove();go('registri')">&#128202; Apri il registro digitale compilabile</button>`:''}</div>`;}).join('');
+  });
+  div.innerHTML=`<div class="controllo-head">
+    <button class="ch-close" onclick="document.getElementById('controlloScreen').remove()">Chiudi</button>
+    <div class="ch-tag"><span class="dot"></span> Controllo in corso</div>
+    <h2>${esc(sigle)}</h2><div class="ch-loc">${esc(S.locali[S.locale])} &middot; ${new Date().toLocaleDateString('it-IT')}</div>
+    ${so.ragione?`<div class="ch-loc" style="font-size:12.5px;opacity:.85">${esc(so.ragione)}${so.piva?' &middot; P.IVA '+esc(so.piva):''}${so.indirizzo?'<br>'+esc(so.indirizzo):''}</div>`:''}
+  </div>
+  <div class="controllo-body">${corpo}</div>`;
+  document.body.appendChild(div);
+}
 function startControllo(eid){
   const e=ENTE(eid),docs=docsLocale();
   const inSlot=i=>docs.filter(d=>(d.slots||[]).includes(eid+':'+i));

@@ -192,6 +192,10 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .pick-ent .pe-nm b{font-size:14.5px;font-weight:800;display:block}
 .pick-ent .pe-nm span{font-size:11.5px;color:var(--ink3);font-weight:600}
 .grp-ente{font-size:12.5px;font-weight:900;color:var(--rosso);text-transform:uppercase;letter-spacing:.03em;margin:20px 2px 11px;padding-bottom:6px;border-bottom:2px solid var(--rosso-soft)}
+.slot-confirm{display:flex;align-items:center;gap:10px;background:var(--verde-soft);border-radius:12px;padding:13px 14px;margin-bottom:10px}
+.slot-confirm .sc-ck{width:24px;height:24px;border-radius:50%;background:var(--verde);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0}
+.slot-confirm .sc-tx{font-size:13px;font-weight:700;line-height:1.35}
+.slot-confirm .sc-tx b{display:block;font-size:14px}
 @media(min-width:560px){.tiles{grid-template-columns:1fr 1fr 1fr}}
 </style>
 </head>
@@ -1255,6 +1259,16 @@ function vSettings(){
 
 /* ---------- modale documento ---------- */
 let modalFile=null;
+function slotLabel(k){
+  const[eid,i]=k.split(':');const e=ENTE(eid);if(!e)return k;
+  const it=e.items[parseInt(i,10)];return (it?it.t:'')+' · '+e.sigla;
+}
+function slotConfirmHTML(preSlot,d){
+  if(!preSlot||d)return ''; // solo per NUOVO documento aperto da una voce specifica
+  return `<div class="slot-confirm"><span class="sc-ck">\u2713</span>
+    <span class="sc-tx">Sar\u00E0 collegato a:<b>${esc(slotLabel(preSlot))}</b></span></div>
+    <button class="link-btn" style="margin:-4px 0 14px" onclick="document.getElementById('slotPickerGroup').style.display='block';this.style.display='none'">+ Collega anche ad altre voci (facoltativo)</button>`;
+}
 function openDocModal(docId=null,preSlot=null){
   const d=docId?S.docs.find(x=>x.id===docId):null;
   modalFile=null;
@@ -1274,7 +1288,9 @@ function openDocModal(docId=null,preSlot=null){
       <select id="docLocale">${S.locali.map((l,i)=>`<option value="${i}" ${ (d?d.locale:S.locale)===i?'selected':''}>${esc(l)}</option>`).join('')}</select></div>
     <div class="f-group"><label>Scadenza (facoltativa)</label>
       <input type="date" id="docScad" value="${d&&d.scadenza?d.scadenza:''}"></div>
-    <div class="f-group"><label>Collega alle voci della checklist</label>
+    ${slotConfirmHTML(preSlot,d)}
+    <div class="f-group" id="slotPickerGroup" style="${(preSlot&&!d)?'display:none':''}">
+      <label>${(preSlot&&!d)?'Collega anche ad altre voci della checklist':'Collega alle voci della checklist'}</label>
       <div style="max-height:230px;overflow-y:auto;border:1.5px solid var(--line2);border-radius:10px;padding:10px;background:#fff">
       ${ENTI.map(e=>`<div class="slot-group"><div class="sg-name">${e.sigla}</div>
         ${e.items.map((it,i)=>{const k=e.id+':'+i;

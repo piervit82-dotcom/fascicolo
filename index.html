@@ -283,16 +283,16 @@ const dbClear=s=>new Promise(r=>{const q=tx(s,'readwrite').clear();q.onsuccess=(
 /* ---------- stato ---------- */
 let S={locali:['Il Fionco','La Fornace'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],op:'',
   societa:[{ragione:'MASTERPLAN GROUP SRL',indirizzo:'Via Francesco Baracca, 10 - 35019 Tombolo (PD)',piva:'05662050284',rea:'PD 483354',pec:'masterplangroup@pec.it',email:'info@masterplangroup.it',sdi:'X2PH38J'},{}],
-  loghi:[null,null],scadenze:[],discOk:false};
+  loghi:[null,null],scadenze:[],discOk:false,opPin:'',lockMin:5,role:null,lastActive:Date.now()};
 async function loadState(){
   const st=await dbGet('settings','app');
-  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];S.op=st.op||'';if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;}
+  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];S.op=st.op||'';if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.opPin=st.opPin||'';S.lockMin=(st.lockMin!==undefined?st.lockMin:5);}
   while(S.societa.length<S.locali.length)S.societa.push({});
   while(S.loghi.length<S.locali.length)S.loghi.push(null);
   S.docs=await dbAll('docs');
   S.logs=await dbAll('logs');
 }
-const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk});
+const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,opPin:S.opPin,lockMin:S.lockMin});
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -331,7 +331,9 @@ async function openDoc(id){
    ========================================================= */
 function render(){
   if(!S.discOk)return renderDisclaimer();
-  if(S.pin&&!S.unlocked)return renderLock();
+  if(S.pin&&!S.role)return renderLock();
+  // operatore: solo registri, niente accesso al resto
+  if(S.role==='op'&&S.screen!=='registri')S.screen='registri';
   const app=$('#app');
   if(S.screen==='home')app.innerHTML=vHome();
   else if(S.screen==='ente')app.innerHTML=vEnte(S.ente);
@@ -342,6 +344,15 @@ function render(){
 }
 
 function topbar(){
+  if(S.role==='op'){
+    return `<div class="topbar-block"><div class="topbar">
+      <div class="brand">InRegola<small>modalità operatore</small></div>
+      <button class="icon-btn" onclick="lockNow()" aria-label="Esci">&#128274;</button>
+    </div>
+    <div class="locale-bar">${S.locali.map((l,i)=>
+      `<button class="locale-chip ${i===S.locale?'active':''}" onclick="setLocale(${i})">${esc(l)}</button>`).join('')}
+    </div></div>`;
+  }
   return `<div class="topbar-block">
     <div class="topbar">
       <div class="brand">InRegola<small>pronti a ogni controllo</small></div>
@@ -354,6 +365,12 @@ function topbar(){
 }
 
 function navBar(){
+  if(S.role==='op'){
+    return `<div class="bottom-nav">
+      <button class="active"><span class="n-ico">&#127777;</span>Registri</button>
+      <button onclick="lockNow()"><span class="n-ico">&#128274;</span>Esci</button>
+    </div>`;
+  }
   const n=[['home','&#127968;','Archivio'],['registri','&#127777;','Registri'],['scadenze','&#9200;','Scadenze'],['settings','&#9881;','Impostazioni']];
   return `<div class="bottom-nav">${n.map(([id,ico,lab])=>
     `<button class="${S.screen===id?'active':''}" onclick="go('${id}')"><span class="n-ico">${ico}</span>${lab}</button>`).join('')}</div>
@@ -853,12 +870,27 @@ function vSettings(){
     <button class="sm-btn" onclick="addLocale()">+ Aggiungi locale</button>
 
     <div class="sec-label">Sicurezza</div>
-    <div class="set-card"><h4>PIN di sblocco</h4>
-      <p>${S.pin?'PIN attivo: l\u2019app chiede il codice all\u2019apertura.':'Nessun PIN impostato.'}</p>
+    <div class="set-card"><h4>PIN titolare</h4>
+      <p>${S.pin?'PIN attivo: l\u2019app chiede il codice all\u2019apertura. Il titolare vede tutto.':'Nessun PIN impostato. Imposta il PIN titolare per attivare anche il codice operatore e il blocco automatico.'}</p>
       <div class="row">
         <button class="sm-btn green" onclick="setPin()">${S.pin?'Cambia PIN':'Imposta PIN'}</button>
         ${S.pin?'<button class="sm-btn red" onclick="clearPin()">Rimuovi</button>':''}
       </div></div>
+    ${S.pin?`<div class="set-card"><h4>Codice operatore</h4>
+      <p>${S.opPin?'Attivo. Chi entra con questo codice vede solo i Registri (temperature e pulizie), non i documenti n\u00E9 le impostazioni.':'Crea un codice separato per i dipendenti: potranno solo registrare temperature e pulizie, senza accedere ai documenti.'}</p>
+      <div class="row">
+        <button class="sm-btn green" onclick="setOpPin()">${S.opPin?'Cambia codice':'Imposta codice operatore'}</button>
+        ${S.opPin?'<button class="sm-btn red" onclick="clearOpPin()">Rimuovi</button>':''}
+      </div></div>
+    <div class="set-card"><h4>Blocco automatico</h4>
+      <p>Dopo un periodo di inattivit\u00E0 l\u2019app si riblocca da sola e richiede di nuovo il codice.</p>
+      <select onchange="setLockMin(this.value)" style="width:100%;border:none;border-radius:14px;padding:13px 15px;background:var(--bg);font-weight:600">
+        <option value="0" ${S.lockMin==0?'selected':''}>Subito alla chiusura</option>
+        <option value="1" ${S.lockMin==1?'selected':''}>Dopo 1 minuto</option>
+        <option value="5" ${S.lockMin==5?'selected':''}>Dopo 5 minuti</option>
+        <option value="15" ${S.lockMin==15?'selected':''}>Dopo 15 minuti</option>
+        <option value="-1" ${S.lockMin==-1?'selected':''}>Mai (solo manuale)</option>
+      </select></div>`:''}
 
     <div class="sec-label">Backup</div>
     <div class="set-card"><h4>Esporta tutto</h4>
@@ -1003,7 +1035,16 @@ function setPin(){
   if(p&&/^\d{4,8}$/.test(p)){S.pin=p;saveSettings();render();toast('PIN impostato')}
   else if(p!==null)toast('PIN non valido: solo cifre, da 4 a 8');
 }
-function clearPin(){if(confirm('Rimuovere il PIN?')){S.pin='';saveSettings();render()}}
+function clearPin(){if(confirm('Rimuovere il PIN? Verranno disattivati anche il codice operatore e il blocco automatico.')){S.pin='';S.opPin='';saveSettings();render()}}
+function setOpPin(){
+  const p=prompt('Codice operatore (4-8 cifre), diverso dal PIN titolare:');
+  if(p===null)return;
+  if(!/^\d{4,8}$/.test(p))return toast('Codice non valido: solo cifre, da 4 a 8');
+  if(p===S.pin)return toast('Deve essere diverso dal PIN titolare');
+  S.opPin=p;saveSettings();render();toast('Codice operatore impostato');
+}
+function clearOpPin(){if(confirm('Rimuovere il codice operatore?')){S.opPin='';saveSettings();render()}}
+function setLockMin(v){S.lockMin=parseInt(v,10);S.lastActive=Date.now();saveSettings();toast('Blocco automatico aggiornato');}
 async function resetAll(){
   if(!confirm('ATTENZIONE: verranno cancellati TUTTI i documenti. Continuare?'))return;
   if(!confirm('Confermi la cancellazione definitiva?'))return;
@@ -1020,7 +1061,7 @@ async function exportBackup(){
     const{blob,...rest}=d;
     docs.push({...rest,fileData:blob?await blobToB64(blob):null});
   }
-  const data=JSON.stringify({v:2,exported:new Date().toISOString(),locali:S.locali,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op,docs,logs:S.logs});
+  const data=JSON.stringify({v:2,exported:new Date().toISOString(),locali:S.locali,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,pin:S.pin,opPin:S.opPin,lockMin:S.lockMin,punti:S.punti,aree:S.aree,op:S.op,docs,logs:S.logs});
   const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
   const a=document.createElement('a');a.href=url;
   a.download='inregola-backup-'+new Date().toISOString().slice(0,10)+'.json';
@@ -1040,7 +1081,7 @@ async function importBackup(file){
     }
     await dbClear('logs');
     for(const l of(data.logs||[])){const{id,...r}=l;await dbPut('logs',r);}
-    S.locali=data.locali||S.locali;S.pin=data.pin||'';
+    S.locali=data.locali||S.locali;S.pin=data.pin||'';S.opPin=data.opPin||'';S.lockMin=(data.lockMin!==undefined?data.lockMin:5);
     S.punti=data.punti||[];S.aree=data.aree||[];S.op=data.op||'';
     S.societa=data.societa||S.locali.map(()=>({}));while(S.societa.length<S.locali.length)S.societa.push({});
     S.loghi=data.loghi||S.locali.map(()=>null);while(S.loghi.length<S.locali.length)S.loghi.push(null);
@@ -1060,22 +1101,44 @@ async function showStorage(){
 /* ---------- lock ---------- */
 function renderLock(){
   $('#app').innerHTML='';
+  const maxlen=Math.max(String(S.pin).length,String(S.opPin||'').length,8);
   $('#layer').innerHTML=`<div class="lock">
-    <h1>InRegola</h1><p>Archivio protetto</p>
-    <input type="password" inputmode="numeric" maxlength="8" id="pinInput" autofocus
-      onkeydown="if(event.key==='Enter')tryPin()" oninput="if(this.value.length>=String(S.pin).length)tryPin()">
+    <h1>InRegola</h1><p>Inserisci il codice</p>
+    <input type="password" inputmode="numeric" maxlength="${maxlen}" id="pinInput" autofocus
+      onkeydown="if(event.key==='Enter')tryPin()" oninput="maybeTryPin(this)">
     <div class="lk-err" id="pinErr"></div>
+    ${S.opPin?'<p style="margin-top:22px;opacity:.7;font-size:11px">Codice titolare o codice operatore</p>':''}
   </div>`;
   setTimeout(()=>{const i=$('#pinInput');if(i)i.focus()},150);
 }
+// prova automatica quando la lunghezza raggiunge uno dei due codici
+function maybeTryPin(inp){
+  const L=inp.value.length;
+  if(L>=String(S.pin).length || (S.opPin && L>=String(S.opPin).length))tryPin();
+}
 function tryPin(){
-  const i=$('#pinInput');
-  if(i.value===S.pin){S.unlocked=true;$('#layer').innerHTML='';render()}
-  else{$('#pinErr').textContent='PIN errato';i.value='';}
+  const i=$('#pinInput');const v=i.value;
+  if(v===S.pin){S.role='owner';S.lastActive=Date.now();$('#layer').innerHTML='';render()}
+  else if(S.opPin&&v===S.opPin){S.role='op';S.screen='registri';S.lastActive=Date.now();$('#layer').innerHTML='';render()}
+  else if(v.length>=String(S.pin).length){$('#pinErr').textContent='Codice errato';i.value='';}
+}
+function lockNow(){S.role=null;S.unlocked=false;render()}
+// autoblocco per inattività: controllo al rientro e a ogni interazione
+function touchActivity(){
+  if(!S.pin||!S.role)return;
+  const now=Date.now();
+  if(S.lockMin>0 && now-S.lastActive > S.lockMin*60000){lockNow();return;}
+  S.lastActive=now;
+}
+function startLockWatch(){
+  ['click','keydown','touchstart','visibilitychange'].forEach(ev=>
+    document.addEventListener(ev,()=>{
+      if(document.visibilityState==='visible'||ev!=='visibilitychange')touchActivity();
+    },true));
 }
 
 /* ---------- nav ---------- */
-function go(screen,ente){S.screen=screen;S.ente=ente||null;S.query='';render();window.scrollTo(0,0);if(screen==='settings')showStorage()}
+function go(screen,ente){if(S.role==='op'&&screen!=='registri')return;S.screen=screen;S.ente=ente||null;S.query='';render();window.scrollTo(0,0);if(screen==='settings')showStorage()}
 function setLocale(i){S.locale=i;render()}
 function bindNav(){}
 
@@ -1083,6 +1146,7 @@ function bindNav(){}
 (async()=>{
   await openDB();
   await loadState();
+  startLockWatch();
   render();
 })();
 </script>

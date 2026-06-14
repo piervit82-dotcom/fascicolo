@@ -842,6 +842,7 @@ function clearStorico(){
   const n=S.etStorico.filter(e=>e.locale===S.locale).length;
   if(!n)return toast('Storico gi\u00E0 vuoto');
   if(!confirm(`Cancellare le ${n} etichette dello storico di questo locale? Conviene prima esportare il CSV.`))return;
+  if(!chiediPinTitolare())return;
   S.etStorico=S.etStorico.filter(e=>e.locale!==S.locale);
   saveSettings();render();toast('Storico cancellato');
 }
@@ -1310,10 +1311,18 @@ function addLocale(){S.locali.push('Nuovo locale');S.societa.push({});S.loghi.pu
 async function removeLocale(i){
   const n=S.docs.filter(d=>d.locale===i).length;
   if(!confirm(`Eliminare «${S.locali[i]}»?${n?` Verranno eliminati anche ${n} documenti collegati.`:''}`))return;
+  if(!chiediPinTitolare())return;
   for(const d of S.docs.filter(x=>x.locale===i))await dbDel('docs',d.id);
   S.docs=(await dbAll('docs')).map(d=>{if(d.locale>i)d.locale--;dbPut('docs',d);return d});
   S.locali.splice(i,1);S.societa.splice(i,1);S.loghi.splice(i,1);if(S.locale>=S.locali.length)S.locale=0;
   saveSettings();render();
+}
+function chiediPinTitolare(){
+  if(!S.pin)return true; // nessun PIN impostato: nessuna verifica possibile
+  const p=prompt('Per procedere inserisci il PIN del titolare:');
+  if(p===null)return false;
+  if(p===S.pin)return true;
+  toast('PIN titolare errato');return false;
 }
 function setPin(){
   const p=prompt('Nuovo PIN (4-8 cifre):');
@@ -1333,6 +1342,7 @@ function setLockMin(v){S.lockMin=parseInt(v,10);S.lastActive=Date.now();saveSett
 async function resetAll(){
   if(!confirm('ATTENZIONE: verranno cancellati TUTTI i documenti. Continuare?'))return;
   if(!confirm('Confermi la cancellazione definitiva?'))return;
+  if(!chiediPinTitolare())return;
   await dbClear('docs');await dbClear('settings');location.reload();
 }
 

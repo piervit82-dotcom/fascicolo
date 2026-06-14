@@ -535,57 +535,69 @@ function apriStampa(titolo,corpo){
     </body></html>`);
   w.document.close();
 }
-// stampa etichetta a dimensione FISICA reale (mm), per stampantine termiche o PDF piccolo
-function apriStampaEtichetta(nome, righe, formato){
-  const dim={'57x76':[57,76],'50x30':[50,30],'100x50':[100,50]}[formato];
+// stampa etichetta a dimensione fisica reale (mm), layout stile banco
+function apriStampaEtichetta2(d, formato){
+  const dim={'50x80':[50,80],'57x76':[57,76],'100x50':[100,50]}[formato];
   const w=window.open('','_blank');
   if(!w)return toast('Consenti le finestre pop-up per stampare');
-  const corpoRighe=righe.map(r=>{
-    const big=r[2]==='big', small=r[2]==='small';
-    return `<div class="lr ${big?'big':''} ${small?'sm':''}">
-      <span class="k">${r[0]}</span><span class="v">${r[1]}</span></div>`;}).join('');
-  // dimensioni font scalate in base al formato
-  const isSmall = formato==='50x30';
-  const isWide = formato==='100x50';
-  let pageCss, baseFont, nomeFont, bigFont;
-  if(formato==='a4'){
-    pageCss='@page{size:A4;margin:14mm}';
-    baseFont='13px';nomeFont='22px';bigFont='20px';
+  const isWide=formato==='100x50';
+  const isA4=formato==='a4';
+  // dimensioni base
+  let pageCss, baseFont, nomeFont, entroFont, dataFont;
+  if(isA4){
+    pageCss='@page{size:A4;margin:14mm}'; baseFont='14px'; nomeFont='20px'; entroFont='20px'; dataFont='20px';
   } else {
     pageCss=`@page{size:${dim[0]}mm ${dim[1]}mm;margin:0}`;
-    baseFont = isSmall?'7pt':isWide?'9pt':'8.5pt';
-    nomeFont = isSmall?'10pt':isWide?'14pt':'13pt';
-    bigFont  = isSmall?'11pt':isWide?'15pt':'14pt';
+    baseFont = isWide?'9pt':'9.5pt';
+    nomeFont = isWide?'13pt':'14pt';
+    entroFont= isWide?'11pt':'12pt';
+    dataFont = isWide?'13pt':'15pt';
   }
-  const wrapStyle = formato==='a4'
-    ? 'width:280px;margin:0 auto'
-    : `width:${dim[0]}mm;height:${dim[1]}mm;padding:2.5mm;display:flex;flex-direction:column;justify-content:center;overflow:hidden`;
-  w.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Etichetta ${esc(nome)}</title>
+  const wrapStyle = isA4
+    ? 'width:300px;margin:0 auto'
+    : `width:${dim[0]}mm;height:${dim[1]}mm;padding:3mm;display:flex;flex-direction:column;overflow:hidden`;
+  // riga generica: etichetta + valore (o linea vuota se a mano)
+  const linea='_______________________';
+  const lineaC='_________';
+  const R=(k,v,vEmpty)=>`<div class="row"><span class="k">${k}</span><span class="v">${d.hand?'<span class=ln>'+(vEmpty||linea)+'</span>':(v||'')}</span></div>`;
+  // blocco "da utilizzare entro" in rosso
+  const entroVal = d.hand?'<span class=ln>___/___/_____</span>':(d.comanda?fmtDate(d.comanda):'');
+  const body=`
+    <div class="nome">${esc(d.nome||(d.hand?'':''))}${d.hand&&!d.nome?'<span class=ln>'+linea+'</span>':''}</div>
+    <div class="loc">${esc(S.locali[S.locale])} \u00B7 Conservazione</div>
+    <div class="sep"></div>
+    ${R('Aperto / preparato', d.aperto?fmtDate(d.aperto):'', '___/___/_____')}
+    ${R('Ora', d.ora||'', '__:__')}
+    ${R('Lotto', esc(d.lotto||''), lineaC)}
+    ${R('Fornitore', esc(d.forn||''), lineaC)}
+    ${(d.qta||d.hand)?R('Quantit\u00E0', esc(d.qta||''), '_____'):''}
+    ${(d.cons||d.hand)?R('Conservazione', esc(d.cons||''), lineaC):''}
+    ${(d.scadConf||d.hand)?R('Scad. confezione', d.scadConf?fmtDate(d.scadConf):'', '___/___/_____'):''}
+    <div class="entro"><span class="ek">DA UTILIZZARE ENTRO</span><span class="ev">${entroVal}</span></div>
+    ${R('Operatore', esc(d.op||''), linea)}
+  `;
+  w.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Etichetta ${esc(d.nome||'')}</title>
     <style>
     ${pageCss}
     *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:-apple-system,Arial,sans-serif;color:#1b2420;font-size:${baseFont};line-height:1.25}
-    .lab{${wrapStyle};border:1.5px solid #1b2420;border-radius:2mm}
-    .lh{text-align:center;border-bottom:1.5px solid #1b2420;padding-bottom:1mm;margin-bottom:1mm}
-    .ln{font-size:${nomeFont};font-weight:800;text-transform:uppercase;line-height:1.05}
-    .lc{font-size:${isSmall?'6pt':'7.5pt'};font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.03em;margin-top:.3mm}
-    .lr{display:flex;justify-content:space-between;gap:2mm;padding:.5mm 0;border-bottom:.3pt solid #ccc}
-    .lr .k{font-weight:600;color:#444;white-space:nowrap}
-    .lr .v{font-weight:800;text-align:right}
-    .lr.big{padding:1mm 0}
-    .lr.big .v{font-size:${bigFont};color:#c93f2c}
-    .lr.sm{opacity:.65;font-size:${isSmall?'6pt':'7pt'}}
-    .lf{text-align:center;font-size:${isSmall?'5pt':'6pt'};font-weight:600;color:#999;margin-top:1mm}
+    body{font-family:-apple-system,Arial,sans-serif;color:#111;font-size:${baseFont};line-height:1.3}
+    .lab{${wrapStyle};border:1.5px solid #111;border-radius:2mm}
+    .nome{font-size:${nomeFont};font-weight:800;text-transform:uppercase;text-align:center;line-height:1.05;letter-spacing:.01em}
+    .loc{font-size:7pt;font-weight:700;color:#555;text-transform:uppercase;text-align:center;letter-spacing:.04em;margin-top:.4mm}
+    .sep{border-top:1.5px solid #111;margin:1.5mm 0}
+    .row{display:flex;justify-content:space-between;align-items:baseline;gap:2mm;padding:.7mm 0}
+    .row .k{font-weight:600;color:#222;white-space:nowrap}
+    .row .v{font-weight:800;text-align:right;flex:1;min-width:0}
+    .row .ln{font-weight:400;color:#999;letter-spacing:.02em}
+    .entro{display:flex;justify-content:space-between;align-items:baseline;gap:2mm;background:#fde8e4;border-radius:1.5mm;padding:1.2mm 1.5mm;margin:1.2mm 0}
+    .entro .ek{font-size:${entroFont};font-weight:900;color:#c1271b;white-space:nowrap}
+    .entro .ev{font-size:${dataFont};font-weight:900;color:#c1271b;text-align:right}
     @media print{.noprint{display:none}}
     .noprint{margin:14px auto 0;display:block;padding:11px 18px;background:#137a4e;color:#fff;border:none;border-radius:8px;font-size:14px}
     body.scr{padding:18px;background:#e9eae5}
     </style></head>
     <body class="scr">
-    <div class="lab">
-      <div class="lh"><div class="ln">${esc(nome)}</div><div class="lc">${esc(S.locali[S.locale])} \u00B7 Conservazione</div></div>
-      ${corpoRighe}
-      <div class="lf">Generato con InRegola \u00B7 ${new Date().toLocaleDateString('it-IT')}</div>
-    </div>
+    <div class="lab">${body}</div>
     <button class="noprint" onclick="document.body.classList.remove('scr');window.print();setTimeout(()=>document.body.classList.add('scr'),500)">Stampa / Salva PDF</button>
     </body></html>`);
   w.document.close();
@@ -742,13 +754,15 @@ function rinnovaScad(sid){
 /* ---------- etichette di conservazione ---------- */
 function vEtichette(){
   const prod=S.prodotti.filter(p=>p.locale===S.locale);
-  const lista=prod.length?prod.map(p=>`
-    <button class="prod-row" onclick="apriEtichetta('${p.id}')">
+  const lista=prod.length?prod.map(p=>{
+    const last=p.last||{};
+    const sub='conserva '+p.giorni+' '+(p.giorni==1?'giorno':'giorni')+(p.cons?' \u00B7 '+esc(p.cons):'')+(last.forn?' \u00B7 '+esc(last.forn):'');
+    return `<button class="prod-row" onclick="apriEtichetta('${p.id}')">
       <div class="pr-emo">&#127991;</div>
       <div class="pr-info"><div class="pr-name">${esc(p.nome)}</div>
-        <div class="pr-sub">conserva ${p.giorni} ${p.giorni==1?'giorno':'giorni'}${p.cons?' \u00B7 '+esc(p.cons):''}</div></div>
+        <div class="pr-sub">${sub}</div></div>
       <div class="pr-go">&#8250;</div>
-    </button>`).join(''):'<div class="empty">Nessun prodotto configurato.<br>Aggiungi i prodotti che etichetti pi\u00F9 spesso (es. ragù, besciamella, funghi) con i loro giorni di conservazione.</div>';
+    </button>`;}).join(''):'<div class="empty">Nessun prodotto configurato.<br>Aggiungi i prodotti che etichetti pi\u00F9 spesso (es. rag\u00F9, besciamella, funghi).</div>';
   return topbar()+`<div class="wrap">
     <div class="sec-label" style="margin-top:6px">Etichette di conservazione &middot; ${esc(S.locali[S.locale])}</div>
     ${lista}
@@ -764,8 +778,10 @@ function openProdModal(pid){
       <input type="text" id="prNome" value="${p?esc(p.nome):''}" placeholder="Es. Funghi porcini"></div>
     <div class="f-group"><label>Giorni di conservazione dopo apertura</label>
       <input type="number" id="prGiorni" inputmode="numeric" value="${p?p.giorni:'2'}" min="0" max="365"></div>
-    <div class="f-group"><label>Conservazione (facoltativo)</label>
-      <input type="text" id="prCons" value="${p?esc(p.cons||''):''}" placeholder="Es. Frigo 0\u20134\u00B0C"></div>
+    <div class="f-group"><label>Conservazione</label>
+      <select id="prCons">
+        ${['','Frigo 0\u20134\u00B0C','Frigo 0\u20138\u00B0C','Freezer -18\u00B0C','Temperatura ambiente'].map(c=>`<option value="${esc(c)}" ${(p&&p.cons===c)?'selected':''}>${c||'\u2014 non specificata \u2014'}</option>`).join('')}
+      </select></div>
     <div class="m-actions">
       ${p?`<button class="btn danger" onclick="delProd('${p.id}')">Elimina</button>`:''}
       <button class="btn ghost" onclick="closeModal()">Annulla</button>
@@ -777,42 +793,55 @@ function saveProd(pid){
   const giorni=parseInt($('#prGiorni').value,10);
   if(!nome)return toast('Dai un nome al prodotto');
   if(isNaN(giorni)||giorni<0)return toast('Indica i giorni di conservazione');
-  const obj={id:pid||uid(),locale:S.locale,nome,giorni,cons:$('#prCons').value.trim()};
-  if(pid){const i=S.prodotti.findIndex(x=>x.id===pid);S.prodotti[i]=obj;}
-  else S.prodotti.push(obj);
+  if(pid){const i=S.prodotti.findIndex(x=>x.id===pid);
+    S.prodotti[i]={...S.prodotti[i],nome,giorni,cons:$('#prCons').value};}
+  else S.prodotti.push({id:uid(),locale:S.locale,nome,giorni,cons:$('#prCons').value,last:{}});
   saveSettings();closeModal();render();toast('Prodotto salvato');
 }
 function delProd(pid){
   if(!confirm('Eliminare questo prodotto?'))return;
   S.prodotti=S.prodotti.filter(x=>x.id!==pid);saveSettings();closeModal();render();toast('Prodotto eliminato');
 }
-// schermata compilazione etichetta per un prodotto
+// compilazione etichetta: precompila con l'ultima etichetta fatta per questo prodotto
 function apriEtichetta(pid){
   const p=S.prodotti.find(x=>x.id===pid);if(!p)return;
+  const last=p.last||{};
   const oggi=new Date();
   const isoOggi=oggi.toISOString().slice(0,10);
-  const scadAuto=new Date(oggi);scadAuto.setDate(scadAuto.getDate()+p.giorni);
+  const giorni=(last.giorni!==undefined?last.giorni:p.giorni);
+  const scadAuto=new Date(oggi);scadAuto.setDate(scadAuto.getDate()+giorni);
   const isoAuto=scadAuto.toISOString().slice(0,10);
+  const oraOra=oggi.toTimeString().slice(0,5);
   $('#layer').innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
     <h3>${esc(p.nome)}</h3>
+    ${last.forn||last.lotto?'<p style="font-size:12.5px;color:var(--ink2);margin:-6px 0 14px;font-weight:600">Campi precompilati dall\u2019ultima etichetta. Modifica solo ci\u00F2 che cambia.</p>':''}
     <div class="f-group"><label>Aperto / preparato il</label>
-      <input type="date" id="etAperto" value="${isoOggi}"></div>
+      <input type="date" id="etAperto" value="${isoOggi}" onchange="ricalcEt()"></div>
+    <div class="f-group"><label>Ora</label>
+      <input type="text" id="etOra" value="${oraOra}" placeholder="hh:mm"></div>
     <div class="f-group"><label>Giorni conservazione (autocontrollo)</label>
-      <input type="number" id="etGiorni" inputmode="numeric" value="${p.giorni}" min="0" max="365" oninput="ricalcEt()"></div>
-    <div class="f-group"><label>Scadenza autocontrollo (calcolata)</label>
+      <input type="number" id="etGiorni" inputmode="numeric" value="${giorni}" min="0" max="365" oninput="ricalcEt()"></div>
+    <div class="f-group"><label>Da utilizzare entro (autocontrollo, calcolata)</label>
       <input type="date" id="etScadAuto" value="${isoAuto}" readonly style="opacity:.85"></div>
     <div class="f-group"><label>Scadenza confezione (dal produttore)</label>
-      <input type="date" id="etScadConf" value=""></div>
+      <input type="date" id="etScadConf" value="${last.scadConf||''}"></div>
     <div class="f-group"><label>Lotto (dalla confezione)</label>
-      <input type="text" id="etLotto" placeholder="Es. L2026-0847"></div>
+      <input type="text" id="etLotto" value="${esc(last.lotto||'')}" placeholder="Es. L2026-0847"></div>
     <div class="f-group"><label>Fornitore</label>
-      <input type="text" id="etForn" placeholder="Es. Ortofrutta Rossi"></div>
+      <input type="text" id="etForn" value="${esc(last.forn||'')}" placeholder="Es. Ortofrutta Rossi"></div>
+    <div class="f-group"><label>Quantit\u00E0 (facoltativo)</label>
+      <input type="text" id="etQta" value="${esc(last.qta||'')}" placeholder="Es. 3 kg, 2 vaschette"></div>
+    <div class="f-group"><label>Tipo etichetta</label>
+      <select id="etTipo">
+        <option value="full">Compilata (date gi\u00E0 scritte)</option>
+        <option value="hand">Da scrivere a mano (righe vuote)</option>
+      </select></div>
     <div class="f-group"><label>Formato etichetta</label>
       <select id="etFormato">
-        <option value="57x76">57 × 76 mm (consigliato — sta tutto)</option>
-        <option value="50x30">50 × 30 mm (piccola, essenziale)</option>
-        <option value="100x50">100 × 50 mm (larga)</option>
-        <option value="a4">Foglio A4 (senza stampantina etichette)</option>
+        <option value="50x80">50 \u00D7 80 mm (standard banco)</option>
+        <option value="57x76">57 \u00D7 76 mm</option>
+        <option value="100x50">100 \u00D7 50 mm (larga)</option>
+        <option value="a4">Foglio A4 (senza stampantina)</option>
       </select></div>
     <div class="m-actions">
       <button class="btn ghost" onclick="closeModal()">Annulla</button>
@@ -828,29 +857,32 @@ function ricalcEt(){
 function stampaEtichetta(pid){
   const p=S.prodotti.find(x=>x.id===pid);if(!p)return;
   const aperto=$('#etAperto').value;
+  const ora=$('#etOra').value.trim();
+  const giorni=parseInt($('#etGiorni').value,10);
   const scadAuto=$('#etScadAuto').value;
   const scadConf=$('#etScadConf').value;
   const lotto=$('#etLotto').value.trim();
   const forn=$('#etForn').value.trim();
-  if(!aperto)return toast('Indica la data di apertura');
-  // determino la scadenza che comanda: la pi\u00F9 vicina tra autocontrollo e confezione
-  let comanda=scadAuto, altra=scadConf, etichettaComanda='autocontrollo';
-  if(scadConf && scadConf<scadAuto){comanda=scadConf;altra=scadAuto;etichettaComanda='confezione';}
-  const so=S.societa[S.locale]||{},logo=S.loghi[S.locale];
-  const righe=[];
-  righe.push(['Aperto / preparato', fmtDate(aperto)]);
-  righe.push(['CONSUMARE ENTRO', fmtDate(comanda), 'big']);
-  if(scadConf)righe.push([etichettaComanda==='autocontrollo'?'Scad. confezione':'Scad. autocontrollo', fmtDate(altra),'small']);
-  else righe.push(['Scad. autocontrollo', fmtDate(scadAuto),'small']);
-  if(lotto)righe.push(['Lotto origine', lotto]);
-  if(forn)righe.push(['Fornitore', forn]);
-  if(p.cons)righe.push(['Conservazione', p.cons]);
-  if(S.op.trim())righe.push(['Operatore', esc(S.op.trim())]);
-  const formato=($('#etFormato')&&$('#etFormato').value)||'57x76';
-  apriStampaEtichetta(p.nome, righe, formato);
+  const qta=$('#etQta').value.trim();
+  const tipo=$('#etTipo').value;
+  const formato=$('#etFormato').value;
+  if(tipo==='full'&&!aperto)return toast('Indica la data di apertura');
+  // memorizzo l'ultima etichetta nel prodotto
+  const i=S.prodotti.findIndex(x=>x.id===pid);
+  S.prodotti[i].last={giorni,scadConf,lotto,forn,qta};
+  saveSettings();
+  // scadenza che comanda: la pi\u00F9 vicina
+  let comanda=scadAuto;
+  if(scadConf && scadConf<scadAuto)comanda=scadConf;
+  const dati={
+    nome:p.nome, aperto:tipo==='full'?aperto:'', ora:tipo==='full'?ora:'',
+    lotto:tipo==='full'?lotto:'', forn:tipo==='full'?forn:'', qta:tipo==='full'?qta:'',
+    cons:p.cons, scadConf:tipo==='full'?scadConf:'', comanda:tipo==='full'?comanda:'',
+    op:tipo==='full'?S.op.trim():'', hand:tipo==='hand'
+  };
+  apriStampaEtichetta2(dati, formato);
   closeModal();
 }
-
 /* ---------- registri compilabili ---------- */
 function vRegistri(){
   const punti=S.punti.filter(p=>p.locale===S.locale);

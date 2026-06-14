@@ -551,13 +551,17 @@ function apriStampaEtichetta2(d, formato){
   const R=(k,v,vEmpty)=>`<div class="row"><span class="k">${k}</span><span class="v">${d.hand?'<span class=ln>'+(vEmpty||linea)+'</span>':(v||'')}</span></div>`;
   const entroVal=d.hand?'<span class=ln>'+lineaData+'</span>':(d.comanda?fmtDate(d.comanda):'');
   const nomeVal=d.hand?(d.nome||'<span class=ln>______________</span>'):esc(d.nome||'');
-  // scala di stampa: dimensiono i font in mm così la resa fisica è prevedibile
+  // lotto + scadenza confezione (piccola) sulla stessa riga
+  let lottoV;
+  if(d.hand){lottoV='<span class=ln>'+linea+' \u00B7 scad. __/__/__</span>';}
+  else{lottoV=esc(d.lotto||'')+(d.scadConf?' <span class="sc">\u00B7 scad. '+fmtDate(d.scadConf)+'</span>':'');}
   const body=`
     <div class="lab">
+      <div class="loc">${esc(d.locale||'')}</div>
       <div class="nome">${nomeVal}</div>
       <div class="sep"></div>
       ${R('Aperto il', d.aperto?fmtDate(d.aperto):'', lineaData)}
-      ${R('Lotto', esc(d.lotto||''), linea)}
+      <div class="row"><span class="k">Lotto</span><span class="v">${lottoV}</span></div>
       ${R('Fornitore', esc(d.forn||''), linea)}
       ${(d.qta||d.hand)?R('Quantit\u00E0', esc(d.qta||''), '______'):''}
       <div class="entro"><span class="ek">ENTRO IL</span><span class="ev">${entroVal}</span></div>
@@ -571,15 +575,17 @@ function apriStampaEtichetta2(d, formato){
     body.scr{padding:16px;background:#e9eae5;display:flex;flex-direction:column;align-items:center}
     /* etichetta: in stampa usa i mm reali; a schermo la scaliamo per vederla bene */
     .lab{width:${wmm}mm;height:${hmm}mm;border:0.5mm solid #111;border-radius:1.5mm;padding:2mm 3mm;display:flex;flex-direction:column;overflow:hidden;background:#fff}
-    .nome{font-size:6mm;font-weight:900;text-transform:uppercase;text-align:center;line-height:1;letter-spacing:-.02mm}
-    .sep{border-top:0.5mm solid #111;margin:1.4mm 0 1mm}
+    .loc{font-size:2.8mm;font-weight:800;color:#666;text-transform:uppercase;letter-spacing:.15mm;text-align:center}
+    .nome{font-size:5.6mm;font-weight:900;text-transform:uppercase;text-align:center;line-height:1;letter-spacing:-.02mm}
+    .sep{border-top:0.5mm solid #111;margin:1.2mm 0 0.9mm}
+    .sc{font-size:2.7mm;font-weight:700;color:#888}
     .row{display:flex;justify-content:space-between;align-items:baseline;gap:2mm;padding:0.5mm 0}
     .row .k{font-size:3.6mm;font-weight:700;color:#222;white-space:nowrap}
     .row .v{font-size:3.8mm;font-weight:800;text-align:right}
     .row .ln{font-weight:400;color:#999}
-    .entro{display:flex;justify-content:space-between;align-items:center;gap:2mm;background:#fde6e1;border-radius:1.2mm;padding:1mm 2.5mm;margin:1.2mm 0}
+    .entro{display:flex;justify-content:space-between;align-items:baseline;gap:2mm;padding:0.8mm 0;border-top:0.3mm solid #eee;margin-top:0.4mm}
     .entro .ek{font-size:3.6mm;font-weight:900;color:#c1271b;white-space:nowrap;letter-spacing:.02mm}
-    .entro .ev{font-size:5.4mm;font-weight:900;color:#c1271b;line-height:1;text-align:right}
+    .entro .ev{font-size:4.2mm;font-weight:900;color:#c1271b;line-height:1;text-align:right}
     .entro .ln{font-weight:400}
     /* a schermo: ingrandisco l'etichetta x3 per renderla leggibile in anteprima */
     @media screen{.lab{transform:scale(3);transform-origin:top center;margin-bottom:${hmm*2.2}mm;box-shadow:0 4px 16px rgba(0,0,0,.2)}}
@@ -820,6 +826,8 @@ function apriEtichetta(pid){
       <input type="text" id="etForn" value="${esc(last.forn||'')}" placeholder="Es. Ortofrutta Rossi"></div>
     <div class="f-group"><label>Quantit\u00E0 (facoltativo)</label>
       <input type="text" id="etQta" value="${esc(last.qta||'')}" placeholder="Es. 3 kg, 2 vaschette"></div>
+    <div class="f-group"><label>Operatore</label>
+      <input type="text" id="etOp" value="${esc(last.op||S.op||'')}" placeholder="Sigla o nome (es. PV)"></div>
     <div class="f-group"><label>Tipo etichetta</label>
       <select id="etTipo">
         <option value="full">Compilata (date gi\u00E0 scritte)</option>
@@ -851,21 +859,22 @@ function stampaEtichetta(pid){
   const lotto=$('#etLotto').value.trim();
   const forn=$('#etForn').value.trim();
   const qta=$('#etQta').value.trim();
+  const op=$('#etOp').value.trim();
   const tipo=$('#etTipo').value;
   const formato=$('#etFormato').value;
   if(tipo==='full'&&!aperto)return toast('Indica la data di apertura');
   // memorizzo l'ultima etichetta nel prodotto
   const i=S.prodotti.findIndex(x=>x.id===pid);
-  S.prodotti[i].last={giorni,scadConf,lotto,forn,qta};
+  S.prodotti[i].last={giorni,scadConf,lotto,forn,qta,op};
   saveSettings();
   // scadenza che comanda: la pi\u00F9 vicina
   let comanda=scadAuto;
   if(scadConf && scadConf<scadAuto)comanda=scadConf;
   const dati={
-    nome:p.nome, aperto:tipo==='full'?aperto:'',
+    nome:p.nome, locale:S.locali[S.locale], aperto:tipo==='full'?aperto:'',
     lotto:tipo==='full'?lotto:'', forn:tipo==='full'?forn:'', qta:tipo==='full'?qta:'',
-    comanda:tipo==='full'?comanda:'',
-    op:tipo==='full'?S.op.trim():'', hand:tipo==='hand'
+    scadConf:tipo==='full'?scadConf:'', comanda:tipo==='full'?comanda:'',
+    op:tipo==='full'?op:'', hand:tipo==='hand'
   };
   apriStampaEtichetta2(dati, formato);
   closeModal();

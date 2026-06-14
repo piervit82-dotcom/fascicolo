@@ -176,6 +176,15 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .prod-row .pr-name{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .prod-row .pr-sub{font-size:12px;font-weight:600;color:var(--ink3);margin-top:1px}
 .prod-row .pr-go{font-size:22px;color:var(--ink3);font-weight:700;flex-shrink:0}
+.et-seg{display:flex;gap:7px;margin-bottom:14px}
+.et-seg button{flex:1;border:none;background:var(--card);color:var(--ink2);border-radius:99px;padding:10px;font-size:13.5px;font-weight:800;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.et-seg button.on{background:var(--verde);color:#fff}
+.h-row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:12px 14px;margin-bottom:9px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.h-row .h-emo{width:40px;height:40px;border-radius:12px;background:var(--verde-soft);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.h-row .h-info{flex:1;min-width:0}
+.h-row .h-nm{font-size:14.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h-row .h-meta{font-size:11.5px;font-weight:600;color:var(--ink3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h-row .h-day{font-size:11px;font-weight:800;color:var(--ink2);text-align:right;flex-shrink:0;line-height:1.3}
 @media(min-width:560px){.tiles{grid-template-columns:1fr 1fr 1fr}}
 </style>
 </head>
@@ -289,16 +298,16 @@ const dbClear=s=>new Promise(r=>{const q=tx(s,'readwrite').clear();q.onsuccess=(
 /* ---------- stato ---------- */
 let S={locali:['Il Fionco','La Fornace'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],op:'',
   societa:[{ragione:'MASTERPLAN GROUP SRL',indirizzo:'Via Francesco Baracca, 10 - 35019 Tombolo (PD)',piva:'05662050284',rea:'PD 483354',pec:'masterplangroup@pec.it',email:'info@masterplangroup.it',sdi:'X2PH38J'},{}],
-  loghi:[null,null],scadenze:[],discOk:false,opPin:'',lockMin:5,role:null,lastActive:Date.now(),prodotti:[]};
+  loghi:[null,null],scadenze:[],discOk:false,opPin:'',lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti'};
 async function loadState(){
   const st=await dbGet('settings','app');
-  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];S.op=st.op||'';if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.opPin=st.opPin||'';S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];}
+  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];S.op=st.op||'';if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.opPin=st.opPin||'';S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];}
   while(S.societa.length<S.locali.length)S.societa.push({});
   while(S.loghi.length<S.locali.length)S.loghi.push(null);
   S.docs=await dbAll('docs');
   S.logs=await dbAll('logs');
 }
-const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,opPin:S.opPin,lockMin:S.lockMin,prodotti:S.prodotti});
+const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,opPin:S.opPin,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico});
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -535,7 +544,7 @@ function apriStampa(titolo,corpo){
     </body></html>`);
   w.document.close();
 }
-// stampa etichetta ORIZZONTALE a dimensione fisica reale, caratteri grandi
+// stampa etichetta ORIZZONTALE a dimensione fisica reale, layout definitivo
 function apriStampaEtichetta2(d, formato){
   const dim={'80x50':[80,50],'100x50':[100,50]}[formato]||null;
   const w=window.open('','_blank');
@@ -545,50 +554,56 @@ function apriStampaEtichetta2(d, formato){
   let pageCss;
   if(isA4){pageCss='@page{size:A4 landscape;margin:14mm}';}
   else{pageCss=`@page{size:${wmm}mm ${hmm}mm;margin:0}`;}
-  // riga generica
-  const linea='__________';
-  const lineaData='___/___/______';
-  const R=(k,v,vEmpty)=>`<div class="row"><span class="k">${k}</span><span class="v">${d.hand?'<span class=ln>'+(vEmpty||linea)+'</span>':(v||'')}</span></div>`;
-  const entroVal=d.hand?'<span class=ln>'+lineaData+'</span>':(d.comanda?fmtDate(d.comanda):'');
-  const nomeVal=d.hand?(d.nome||'<span class=ln>______________</span>'):esc(d.nome||'');
-  // lotto + scadenza confezione (piccola) sulla stessa riga
-  let lottoV;
-  if(d.hand){lottoV='<span class=ln>'+linea+' \u00B7 scad. __/__/__</span>';}
-  else{lottoV=esc(d.lotto||'')+(d.scadConf?' <span class="sc">\u00B7 scad. '+fmtDate(d.scadConf)+'</span>':'');}
-  const body=`
-    <div class="lab">
+  // riga compilata: etichetta a sx (compatta), valore a dx che usa tutto lo spazio
+  const R=(k,v)=>`<div class="row"><span class="k">${k}</span><span class="v">${v||''}</span></div>`;
+  // riga a mano: linea lunga fino al bordo
+  const RL=(k)=>`<div class="row"><span class="k">${k}</span><span class="v"><span class="line"></span></span></div>`;
+  let righe, entroRow, nomeBlock;
+  if(d.hand){
+    nomeBlock=`<div class="nome empty"></div>`;
+    righe=[RL('Aperto il'),RL('Lotto'),RL('Fornitore'),RL('Quantit\u00E0')].join('');
+    entroRow=`<div class="entro"><span class="ek">ENTRO IL</span><span class="ev"><span class="line r"></span></span></div>`;
+    righe+=entroRow+RL('Operatore');
+  } else {
+    nomeBlock=`<div class="nome">${esc(d.nome||'')}</div>`;
+    const lottoV=esc(d.lotto||'')+(d.scadConf?' <span class="sc">\u00B7 scad. '+fmtDate(d.scadConf)+'</span>':'');
+    let rows=R('Aperto il', d.aperto?fmtDate(d.aperto):'');
+    rows+=`<div class="row"><span class="k">Lotto</span><span class="v">${lottoV}</span></div>`;
+    rows+=R('Fornitore', esc(d.forn||''));
+    if(d.qta)rows+=R('Quantit\u00E0', esc(d.qta||''));
+    entroRow=`<div class="entro"><span class="ek">ENTRO IL</span><span class="ev">${d.comanda?fmtDate(d.comanda):''}</span></div>`;
+    rows+=entroRow;
+    rows+=R('Operatore', esc(d.op||''));
+    righe=rows;
+  }
+  const body=`<div class="lab"><div class="pad">
       <div class="loc">${esc(d.locale||'')}</div>
-      <div class="nome">${nomeVal}</div>
+      ${nomeBlock}
       <div class="sep"></div>
-      ${R('Aperto il', d.aperto?fmtDate(d.aperto):'', lineaData)}
-      <div class="row"><span class="k">Lotto</span><span class="v">${lottoV}</span></div>
-      ${R('Fornitore', esc(d.forn||''), linea)}
-      ${(d.qta||d.hand)?R('Quantit\u00E0', esc(d.qta||''), '______'):''}
-      <div class="entro"><span class="ek">ENTRO IL</span><span class="ev">${entroVal}</span></div>
-      ${R('Operatore', esc(d.op||''), linea)}
-    </div>`;
+      ${righe}
+    </div></div>`;
   w.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Etichetta ${esc(d.nome||'')}</title>
     <style>
     ${pageCss}
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{font-family:-apple-system,Arial,sans-serif;color:#111}
     body.scr{padding:16px;background:#e9eae5;display:flex;flex-direction:column;align-items:center}
-    /* etichetta: in stampa usa i mm reali; a schermo la scaliamo per vederla bene */
-    .lab{width:${wmm}mm;height:${hmm}mm;border:0.5mm solid #111;border-radius:1.5mm;padding:2mm 3mm;display:flex;flex-direction:column;overflow:hidden;background:#fff}
-    .loc{font-size:2.8mm;font-weight:800;color:#666;text-transform:uppercase;letter-spacing:.15mm;text-align:center}
-    .nome{font-size:5.6mm;font-weight:900;text-transform:uppercase;text-align:center;line-height:1;letter-spacing:-.02mm}
-    .sep{border-top:0.5mm solid #111;margin:1.2mm 0 0.9mm}
-    .sc{font-size:2.7mm;font-weight:700;color:#888}
-    .row{display:flex;justify-content:space-between;align-items:baseline;gap:2mm;padding:0.5mm 0}
-    .row .k{font-size:3.6mm;font-weight:700;color:#222;white-space:nowrap}
-    .row .v{font-size:3.8mm;font-weight:800;text-align:right}
-    .row .ln{font-weight:400;color:#999}
-    .entro{display:flex;justify-content:space-between;align-items:baseline;gap:2mm;padding:0.8mm 0;border-top:0.3mm solid #eee;margin-top:0.4mm}
-    .entro .ek{font-size:3.6mm;font-weight:900;color:#c1271b;white-space:nowrap;letter-spacing:.02mm}
-    .entro .ev{font-size:4.2mm;font-weight:900;color:#c1271b;line-height:1;text-align:right}
-    .entro .ln{font-weight:400}
-    /* a schermo: ingrandisco l'etichetta x3 per renderla leggibile in anteprima */
-    @media screen{.lab{transform:scale(3);transform-origin:top center;margin-bottom:${hmm*2.2}mm;box-shadow:0 4px 16px rgba(0,0,0,.2)}}
+    .lab{width:${wmm}mm;height:${hmm}mm;border:0.5mm solid #111;border-radius:1.5mm;overflow:hidden;background:#fff}
+    .pad{width:100%;height:100%;display:flex;flex-direction:column;padding:2.6mm 3.4mm 2.6mm}
+    .loc{font-size:2.7mm;font-weight:800;color:#666;text-transform:uppercase;letter-spacing:.12mm;text-align:center}
+    .nome{font-size:4.6mm;font-weight:900;text-transform:uppercase;text-align:center;line-height:1.05;min-height:1.05em}
+    .nome.empty{border-bottom:0.4mm solid #bbb;width:65%;margin:0.6mm auto 0;min-height:1.2em}
+    .sep{border-top:0.5mm solid #111;margin:1.1mm 0 0.8mm}
+    .row{display:flex;justify-content:space-between;align-items:baseline;gap:3mm;padding:0.25mm 0}
+    .row .k{font-size:3.5mm;font-weight:700;color:#222;white-space:nowrap;flex-shrink:0}
+    .row .v{font-size:3.7mm;font-weight:800;text-align:right;flex:1;min-width:0}
+    .row .sc{font-size:2.7mm;font-weight:700;color:#888}
+    .row .line{display:block;border-bottom:0.4mm solid #bbb;height:1.05em;width:100%}
+    .entro{display:flex;justify-content:space-between;align-items:baseline;gap:3mm;padding:0.5mm 0;border-top:0.3mm solid #eee;margin-top:0.4mm}
+    .entro .ek{font-size:3.5mm;font-weight:900;color:#c1271b;white-space:nowrap;flex-shrink:0}
+    .entro .ev{font-size:4mm;font-weight:900;color:#c1271b;text-align:right;flex:1}
+    .entro .line.r{display:block;border-bottom:0.4mm solid #e0b3ab;height:1.05em;width:100%}
+    @media screen{.lab{transform:scale(2.8);transform-origin:top center;margin-bottom:${hmm*2}mm;box-shadow:0 4px 16px rgba(0,0,0,.2)}}
     @media print{.noprint{display:none}}
     .noprint{margin-top:22px;padding:11px 18px;background:#137a4e;color:#fff;border:none;border-radius:8px;font-size:14px;font-family:-apple-system,Arial}
     .hint{margin-top:14px;font-size:12px;color:#555;max-width:300px;text-align:center;font-family:-apple-system,Arial;line-height:1.5}
@@ -751,22 +766,84 @@ function rinnovaScad(sid){
 
 /* ---------- etichette di conservazione ---------- */
 function vEtichette(){
-  const prod=S.prodotti.filter(p=>p.locale===S.locale);
-  const lista=prod.length?prod.map(p=>{
-    const last=p.last||{};
-    const sub='conserva '+p.giorni+' '+(p.giorni==1?'giorno':'giorni')+(p.cons?' \u00B7 '+esc(p.cons):'')+(last.forn?' \u00B7 '+esc(last.forn):'');
-    return `<button class="prod-row" onclick="apriEtichetta('${p.id}')">
-      <div class="pr-emo">&#127991;</div>
-      <div class="pr-info"><div class="pr-name">${esc(p.nome)}</div>
-        <div class="pr-sub">${sub}</div></div>
-      <div class="pr-go">&#8250;</div>
-    </button>`;}).join(''):'<div class="empty">Nessun prodotto configurato.<br>Aggiungi i prodotti che etichetti pi\u00F9 spesso (es. rag\u00F9, besciamella, funghi).</div>';
+  const tab=S.etTab||'prodotti';
+  const seg=`<div class="et-seg">
+    <button class="${tab==='prodotti'?'on':''}" onclick="S.etTab='prodotti';render()">Prodotti</button>
+    <button class="${tab==='storico'?'on':''}" onclick="S.etTab='storico';render()">Storico</button>
+  </div>`;
+  let corpo;
+  if(tab==='prodotti'){
+    const prod=S.prodotti.filter(p=>p.locale===S.locale);
+    const lista=prod.length?prod.map(p=>{
+      const last=p.last||{};
+      const sub='conserva '+p.giorni+' '+(p.giorni==1?'giorno':'giorni')+(p.cons?' \u00B7 '+esc(p.cons):'')+(last.forn?' \u00B7 '+esc(last.forn):'');
+      return `<button class="prod-row" onclick="apriEtichetta('${p.id}')">
+        <div class="pr-emo">&#127991;</div>
+        <div class="pr-info"><div class="pr-name">${esc(p.nome)}</div>
+          <div class="pr-sub">${sub}</div></div>
+        <div class="pr-go">&#8250;</div>
+      </button>`;}).join(''):'<div class="empty">Nessun prodotto configurato.<br>Aggiungi i prodotti che etichetti pi\u00F9 spesso (es. rag\u00F9, besciamella, funghi).</div>';
+    corpo=`${lista}
+      <button class="link-btn" onclick="openProdModal()">+ Aggiungi un prodotto</button>
+      <div class="set-card" style="margin-top:18px"><p style="margin:0">I giorni di conservazione dopo l\u2019apertura li stabilisci tu in base al tuo piano di autocontrollo HACCP. InRegola calcola la data, ma la responsabilit\u00E0 del valore resta del manuale del locale.</p></div>`;
+  } else {
+    corpo=vStoricoEtichette();
+  }
   return topbar()+`<div class="wrap">
-    <div class="sec-label" style="margin-top:6px">Etichette di conservazione &middot; ${esc(S.locali[S.locale])}</div>
-    ${lista}
-    <button class="link-btn" onclick="openProdModal()">+ Aggiungi un prodotto</button>
-    <div class="set-card" style="margin-top:18px"><p style="margin:0">I giorni di conservazione dopo l\u2019apertura li stabilisci tu in base al tuo piano di autocontrollo HACCP. InRegola calcola la data, ma la responsabilit\u00E0 del valore resta del manuale del locale.</p></div>
+    <div class="sec-label" style="margin-top:6px">Etichette &middot; ${esc(S.locali[S.locale])}</div>
+    ${seg}
+    ${corpo}
   </div>`+navBar();
+}
+function vStoricoEtichette(){
+  const items=S.etStorico.filter(e=>e.locale===S.locale).sort((a,b)=>b.ts-a.ts);
+  if(!items.length)return '<div class="empty">Nessuna etichetta ancora generata.<br>Le etichette che stampi compariranno qui come registro di tracciabilit\u00E0.</div>';
+  // raggruppo per giorno
+  const oggi=new Date();oggi.setHours(0,0,0,0);
+  const ieri=new Date(oggi);ieri.setDate(ieri.getDate()-1);
+  const etich=d=>{const x=new Date(d);x.setHours(0,0,0,0);
+    if(x.getTime()===oggi.getTime())return 'Oggi';
+    if(x.getTime()===ieri.getTime())return 'Ieri';
+    return x.toLocaleDateString('it-IT',{day:'2-digit',month:'long'});};
+  let html='',cur=null;
+  items.forEach(e=>{
+    const g=etich(e.ts);
+    if(g!==cur){html+=`<div class="sec-label" style="margin-top:16px">${g}</div>`;cur=g;}
+    const dt=new Date(e.ts);
+    const ora=String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0');
+    const giorno=String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0');
+    const meta=[e.lotto?'Lotto '+esc(e.lotto):'',e.forn?esc(e.forn):'',e.comanda?'entro '+fmtDate(e.comanda).slice(0,5):''].filter(Boolean).join(' \u00B7 ');
+    html+=`<div class="h-row"><div class="h-emo">&#127991;</div>
+      <div class="h-info"><div class="h-nm">${esc(e.nome)}</div><div class="h-meta">${meta||'\u2014'}</div></div>
+      <div class="h-day">${giorno}<br>${ora}</div></div>`;
+  });
+  html+=`<div class="row" style="display:flex;gap:8px;margin-top:16px">
+    <button class="sm-btn green" style="flex:1" onclick="exportStorico()">Esporta CSV</button>
+    ${S.role!=='op'?'<button class="sm-btn red" onclick="clearStorico()">Cancella storico</button>':''}
+  </div>`;
+  return html;
+}
+function exportStorico(){
+  const items=S.etStorico.filter(e=>e.locale===S.locale).sort((a,b)=>a.ts-b.ts);
+  if(!items.length)return toast('Nessuna etichetta da esportare');
+  const head='Data;Ora;Prodotto;Lotto;Fornitore;Quantita;Aperto il;Da utilizzare entro;Operatore';
+  const rows=items.map(e=>{const dt=new Date(e.ts);
+    const data=dt.toLocaleDateString('it-IT'),ora=String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0');
+    return [data,ora,e.nome,e.lotto||'',e.forn||'',e.qta||'',e.aperto?fmtDate(e.aperto):'',e.comanda?fmtDate(e.comanda):'',e.op||''].map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(';');});
+  const csv='\ufeff'+head+'\n'+rows.join('\n');
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  const a=document.createElement('a');a.href=url;
+  a.download='storico-etichette-'+esc(S.locali[S.locale]).replace(/[^a-z0-9]/gi,'_')+'-'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),30000);
+  toast('Storico esportato');
+}
+function clearStorico(){
+  const n=S.etStorico.filter(e=>e.locale===S.locale).length;
+  if(!n)return toast('Storico gi\u00E0 vuoto');
+  if(!confirm(`Cancellare le ${n} etichette dello storico di questo locale? Conviene prima esportare il CSV.`))return;
+  S.etStorico=S.etStorico.filter(e=>e.locale!==S.locale);
+  saveSettings();render();toast('Storico cancellato');
 }
 function openProdModal(pid){
   const p=pid?S.prodotti.find(x=>x.id===pid):null;
@@ -870,6 +947,12 @@ function stampaEtichetta(pid){
   // scadenza che comanda: la pi\u00F9 vicina
   let comanda=scadAuto;
   if(scadConf && scadConf<scadAuto)comanda=scadConf;
+  // scadenza che comanda
+  // registro nello storico (solo etichetta compilata)
+  if(tipo==='full'){
+    S.etStorico.push({id:uid(),locale:S.locale,ts:Date.now(),nome:p.nome,lotto,forn,qta,aperto,comanda,op});
+    saveSettings();
+  }
   const dati={
     nome:p.nome, locale:S.locali[S.locale], aperto:tipo==='full'?aperto:'',
     lotto:tipo==='full'?lotto:'', forn:tipo==='full'?forn:'', qta:tipo==='full'?qta:'',
@@ -1263,7 +1346,7 @@ async function exportBackup(){
     const{blob,...rest}=d;
     docs.push({...rest,fileData:blob?await blobToB64(blob):null});
   }
-  const data=JSON.stringify({v:2,exported:new Date().toISOString(),locali:S.locali,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,pin:S.pin,opPin:S.opPin,lockMin:S.lockMin,prodotti:S.prodotti,punti:S.punti,aree:S.aree,op:S.op,docs,logs:S.logs});
+  const data=JSON.stringify({v:2,exported:new Date().toISOString(),locali:S.locali,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,pin:S.pin,opPin:S.opPin,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico,punti:S.punti,aree:S.aree,op:S.op,docs,logs:S.logs});
   const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
   const a=document.createElement('a');a.href=url;
   a.download='inregola-backup-'+new Date().toISOString().slice(0,10)+'.json';
@@ -1283,7 +1366,7 @@ async function importBackup(file){
     }
     await dbClear('logs');
     for(const l of(data.logs||[])){const{id,...r}=l;await dbPut('logs',r);}
-    S.locali=data.locali||S.locali;S.pin=data.pin||'';S.opPin=data.opPin||'';S.lockMin=(data.lockMin!==undefined?data.lockMin:5);S.prodotti=data.prodotti||[];
+    S.locali=data.locali||S.locali;S.pin=data.pin||'';S.opPin=data.opPin||'';S.lockMin=(data.lockMin!==undefined?data.lockMin:5);S.prodotti=data.prodotti||[];S.etStorico=data.etStorico||[];
     S.punti=data.punti||[];S.aree=data.aree||[];S.op=data.op||'';
     S.societa=data.societa||S.locali.map(()=>({}));while(S.societa.length<S.locali.length)S.societa.push({});
     S.loghi=data.loghi||S.locali.map(()=>null);while(S.loghi.length<S.locali.length)S.loghi.push(null);

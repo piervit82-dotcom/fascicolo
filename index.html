@@ -215,76 +215,76 @@ const ENTI=[
  {id:'nas',sigla:'NAS · ULSS',nome:'Igienico-sanitario',
   nota:'Controlli ufficiali: Reg. UE 2017/625. Sanzioni HACCP: D.Lgs 193/2007 (1.000\u20136.000 \u20AC); rintracciabilit\u00E0: D.Lgs 190/2006; etichettatura/allergeni: D.Lgs 231/2017.',
   items:[
-  {t:'Manuale HACCP / piano di autocontrollo',n:'Reg. CE 852/2004 art. 5 \u00B7 D.Lgs 193/2007'},
-  {t:'Registrazione sanitaria (SCIA / notifica ai fini registrazione)',n:'Reg. CE 852/2004 art. 6 \u00B7 DGR regionale'},
-  {t:'Attestati formazione alimentaristi',n:'Reg. CE 852/2004 All. II cap. XII \u00B7 normativa regionale (Veneto: L.R. 2/2013)'},
-  {t:'Schede registrazione temperature frigoriferi',n:'Reg. CE 852/2004 All. II cap. IX \u00B7 Reg. CE 853/2004'},
-  {t:'Registro pulizie e sanificazione',n:'Reg. CE 852/2004 All. II capp. I-II'},
-  {t:'Contratto e verbali disinfestazione / derattizzazione',n:'Reg. CE 852/2004 All. II cap. IX'},
-  {t:'Tracciabilit\u00E0 fornitori (DDT, elenco fornitori)',n:'Reg. CE 178/2002 art. 18 \u00B7 D.Lgs 190/2006'},
-  {t:'Libro ingredienti / gestione allergeni',n:'Reg. UE 1169/2011 \u00B7 D.Lgs 231/2017'},
-  {t:'Schede tecniche prodotti',n:'Reg. CE 178/2002 \u00B7 Reg. UE 1169/2011'},
-  {t:'Analisi potabilit\u00E0 acqua (se applicabile)',n:'D.Lgs 18/2023'},
-  {t:'Gestione congelati / abbattimento (cartello prodotti surgelati)',n:'Reg. CE 852/2004 \u00B7 Reg. CE 853/2004 \u00B7 D.Lgs 110/1992'}]},
+  {id:'haccp',t:'Manuale HACCP / piano di autocontrollo',n:'Reg. CE 852/2004 art. 5 \u00B7 D.Lgs 193/2007'},
+  {id:'scia-sanitaria',t:'Registrazione sanitaria (SCIA / notifica ai fini registrazione)',n:'Reg. CE 852/2004 art. 6 \u00B7 DGR regionale'},
+  {id:'formazione-alimentaristi',t:'Attestati formazione alimentaristi',n:'Reg. CE 852/2004 All. II cap. XII \u00B7 normativa regionale (Veneto: L.R. 2/2013)'},
+  {id:'temperature',t:'Schede registrazione temperature frigoriferi',n:'Reg. CE 852/2004 All. II cap. IX \u00B7 Reg. CE 853/2004'},
+  {id:'pulizie',t:'Registro pulizie e sanificazione',n:'Reg. CE 852/2004 All. II capp. I-II'},
+  {id:'disinfestazione',t:'Contratto e verbali disinfestazione / derattizzazione',n:'Reg. CE 852/2004 All. II cap. IX'},
+  {id:'tracciabilita',t:'Tracciabilit\u00E0 fornitori (DDT, elenco fornitori)',n:'Reg. CE 178/2002 art. 18 \u00B7 D.Lgs 190/2006'},
+  {id:'allergeni',t:'Libro ingredienti / gestione allergeni',n:'Reg. UE 1169/2011 \u00B7 D.Lgs 231/2017'},
+  {id:'schede-tecniche',t:'Schede tecniche prodotti',n:'Reg. CE 178/2002 \u00B7 Reg. UE 1169/2011'},
+  {id:'acqua',t:'Analisi potabilit\u00E0 acqua (se applicabile)',n:'D.Lgs 18/2023'},
+  {id:'congelati',t:'Gestione congelati / abbattimento (cartello prodotti surgelati)',n:'Reg. CE 852/2004 \u00B7 Reg. CE 853/2004 \u00B7 D.Lgs 110/1992'}]},
  {id:'vvf',sigla:'VV.F.',nome:'Vigili del Fuoco',
   nota:'Bar e ristoranti di norma NON sono soggetti al DPR 151/2011 (nota VVF 17072/2011), salvo cucine con potenza termica > 116 kW (att. 74), depositi GPL o pubblico spettacolo. Restano obbligatori i decreti del settembre 2021.',
   items:[
-  {t:'Valutazione rischio incendio',n:'DM 3/09/2021 (minicodice) \u00B7 D.Lgs 81/2008 art. 17'},
-  {t:'SCIA antincendio / CPI (solo se attivit\u00E0 soggetta)',n:'DPR 151/2011 All. I (es. att. 74 cucine > 116 kW)'},
-  {t:'Registro antincendio (controlli e manutenzioni)',n:'DM 1/09/2021 \u2014 obbligatorio per tutte le attivit\u00E0'},
-  {t:'Verbali manutenzione estintori (semestrali)',n:'DM 1/09/2021 \u00B7 UNI 9994-1'},
-  {t:'Dichiarazione conformit\u00E0 impianto elettrico',n:'DM 37/2008 art. 7'},
-  {t:'Dichiarazione conformit\u00E0 impianto gas',n:'DM 37/2008 \u00B7 UNI 7129'},
-  {t:'Verifica periodica impianto di terra',n:'DPR 462/2001 (biennale o quinquennale)'},
-  {t:'Piano di emergenza ed evacuazione + planimetrie',n:'DM 2/09/2021 art. 2 \u2014 obbligo se \u226510 lavoratori o >50 presenti'},
-  {t:'Attestati addetti antincendio (e aggiornamenti)',n:'DM 2/09/2021 \u00B7 D.Lgs 81/2008 art. 37 c. 9'}]},
+  {id:'rischio-incendio',t:'Valutazione rischio incendio',n:'DM 3/09/2021 (minicodice) \u00B7 D.Lgs 81/2008 art. 17'},
+  {id:'scia-antincendio',t:'SCIA antincendio / CPI (solo se attivit\u00E0 soggetta)',n:'DPR 151/2011 All. I (es. att. 74 cucine > 116 kW)'},
+  {id:'registro-antincendio',t:'Registro antincendio (controlli e manutenzioni)',n:'DM 1/09/2021 \u2014 obbligatorio per tutte le attivit\u00E0'},
+  {id:'estintori',t:'Verbali manutenzione estintori (semestrali)',n:'DM 1/09/2021 \u00B7 UNI 9994-1'},
+  {id:'conf-elettrico',t:'Dichiarazione conformit\u00E0 impianto elettrico',n:'DM 37/2008 art. 7'},
+  {id:'conf-gas',t:'Dichiarazione conformit\u00E0 impianto gas',n:'DM 37/2008 \u00B7 UNI 7129'},
+  {id:'impianto-terra',t:'Verifica periodica impianto di terra',n:'DPR 462/2001 (biennale o quinquennale)'},
+  {id:'piano-emergenza',t:'Piano di emergenza ed evacuazione + planimetrie',n:'DM 2/09/2021 art. 2 \u2014 obbligo se \u226510 lavoratori o >50 presenti'},
+  {id:'addetti-antincendio',t:'Attestati addetti antincendio (e aggiornamenti)',n:'DM 2/09/2021 \u00B7 D.Lgs 81/2008 art. 37 c. 9'}]},
  {id:'itl',sigla:'ITL \u00B7 INPS \u00B7 INAIL',nome:'Ispettorato del Lavoro',
   nota:'Lavoro nero: maxisanzione D.L. 12/2002 art. 3 (da 1.950 \u20AC a oltre 46.000 \u20AC per lavoratore) + possibile sospensione attivit\u00E0 (D.Lgs 81/2008 art. 14).',
   items:[
-  {t:'Comunicazioni di assunzione (UNILAV) e contratti',n:'D.L. 510/1996 art. 9-bis \u00B7 D.Lgs 152/1997'},
-  {t:'Libro Unico del Lavoro (LUL)',n:'D.L. 112/2008 art. 39'},
-  {t:'DVR \u2014 Documento Valutazione Rischi',n:'D.Lgs 81/2008 artt. 17, 28-29'},
-  {t:'Nomina RSPP',n:'D.Lgs 81/2008 artt. 17, 31-34'},
-  {t:'Nomina medico competente e sorveglianza sanitaria',n:'D.Lgs 81/2008 artt. 18, 25, 41'},
-  {t:'Attestati formazione sicurezza lavoratori e preposti',n:'D.Lgs 81/2008 art. 37 \u00B7 Accordo Stato-Regioni 17/04/2025'},
-  {t:'Formazione datore di lavoro (16 ore, entro 24/05/2027)',n:'Accordo Stato-Regioni 17/04/2025 \u00B7 D.L. 146/2021'},
-  {t:'Idoneit\u00E0 sanitarie (visite mediche)',n:'D.Lgs 81/2008 art. 41'},
-  {t:'DURC in corso di validit\u00E0',n:'D.M. 30/01/2015'},
-  {t:'Orari di lavoro / turni e riposi',n:'D.Lgs 66/2003'},
-  {t:'Autorizzazione videosorveglianza (ITL o accordo sindacale)',n:'L. 300/1970 art. 4 (Statuto dei Lavoratori)'}]},
+  {id:'unilav',t:'Comunicazioni di assunzione (UNILAV) e contratti',n:'D.L. 510/1996 art. 9-bis \u00B7 D.Lgs 152/1997'},
+  {id:'lul',t:'Libro Unico del Lavoro (LUL)',n:'D.L. 112/2008 art. 39'},
+  {id:'dvr',t:'DVR \u2014 Documento Valutazione Rischi',n:'D.Lgs 81/2008 artt. 17, 28-29'},
+  {id:'rspp',t:'Nomina RSPP',n:'D.Lgs 81/2008 artt. 17, 31-34'},
+  {id:'medico-competente',t:'Nomina medico competente e sorveglianza sanitaria',n:'D.Lgs 81/2008 artt. 18, 25, 41'},
+  {id:'formazione-sicurezza',t:'Attestati formazione sicurezza lavoratori e preposti',n:'D.Lgs 81/2008 art. 37 \u00B7 Accordo Stato-Regioni 17/04/2025'},
+  {id:'formazione-datore',t:'Formazione datore di lavoro (16 ore, entro 24/05/2027)',n:'Accordo Stato-Regioni 17/04/2025 \u00B7 D.L. 146/2021'},
+  {id:'idoneita',t:'Idoneit\u00E0 sanitarie (visite mediche)',n:'D.Lgs 81/2008 art. 41'},
+  {id:'durc',t:'DURC in corso di validit\u00E0',n:'D.M. 30/01/2015'},
+  {id:'orari',t:'Orari di lavoro / turni e riposi',n:'D.Lgs 66/2003'},
+  {id:'videosorveglianza',t:'Autorizzazione videosorveglianza (ITL o accordo sindacale)',n:'L. 300/1970 art. 4 (Statuto dei Lavoratori)'}]},
  {id:'plq',sigla:'QUESTURA \u00B7 P.L.',nome:'Questura e Polizia Locale',
   nota:'La somministrazione senza titolo comporta sanzioni e chiusura (L. 287/1991 art. 10 \u00B7 TULPS).',
   items:[
-  {t:'SCIA somministrazione alimenti e bevande',n:'L. 287/1991 \u00B7 D.Lgs 59/2010 art. 64 \u00B7 TULPS art. 86'},
-  {t:'Requisiti professionali (SAB / REC) e morali',n:'D.Lgs 59/2010 art. 71'},
-  {t:'Valutazione impatto acustico / deroghe rumore',n:'L. 447/1995 art. 8 \u00B7 DPCM 14/11/1997 \u00B7 regolamento comunale'},
-  {t:'Occupazione suolo pubblico (plateatico) \u2014 canone unico',n:'L. 160/2019 art. 1 c. 816 ss.'},
-  {t:'Permessi SIAE (musica d\u2019ambiente / eventi)',n:'L. 633/1941'},
-  {t:'Cartello orari di apertura esposto',n:'D.L. 223/2006 \u00B7 normativa regionale'},
-  {t:'Listino prezzi esposto (anche all\u2019esterno)',n:'L. 287/1991 art. 4 \u00B7 D.Lgs 206/2005'},
-  {t:'Cartelli divieto di fumo',n:'L. 3/2003 art. 51'},
-  {t:'Autorizzazione insegna',n:'Codice della Strada art. 23 \u00B7 regolamento comunale'},
-  {t:'Tabella alcolemica e etilometro a disposizione (se aperti dopo le 24)',n:'L. 120/2010 art. 54 \u00B7 D.L. 117/2007'}]},
+  {id:'scia-somministrazione',t:'SCIA somministrazione alimenti e bevande',n:'L. 287/1991 \u00B7 D.Lgs 59/2010 art. 64 \u00B7 TULPS art. 86'},
+  {id:'requisiti',t:'Requisiti professionali (SAB / REC) e morali',n:'D.Lgs 59/2010 art. 71'},
+  {id:'acustica',t:'Valutazione impatto acustico / deroghe rumore',n:'L. 447/1995 art. 8 \u00B7 DPCM 14/11/1997 \u00B7 regolamento comunale'},
+  {id:'suolo-pubblico',t:'Occupazione suolo pubblico (plateatico) \u2014 canone unico',n:'L. 160/2019 art. 1 c. 816 ss.'},
+  {id:'siae',t:'Permessi SIAE (musica d\u2019ambiente / eventi)',n:'L. 633/1941'},
+  {id:'cartello-orari',t:'Cartello orari di apertura esposto',n:'D.L. 223/2006 \u00B7 normativa regionale'},
+  {id:'listino',t:'Listino prezzi esposto (anche all\u2019esterno)',n:'L. 287/1991 art. 4 \u00B7 D.Lgs 206/2005'},
+  {id:'divieto-fumo',t:'Cartelli divieto di fumo',n:'L. 3/2003 art. 51'},
+  {id:'insegna',t:'Autorizzazione insegna',n:'Codice della Strada art. 23 \u00B7 regolamento comunale'},
+  {id:'alcolemica',t:'Tabella alcolemica e etilometro a disposizione (se aperti dopo le 24)',n:'L. 120/2010 art. 54 \u00B7 D.L. 117/2007'}]},
  {id:'gdf',sigla:'G.D.F.',nome:'Guardia di Finanza',
   nota:'Mancata memorizzazione/trasmissione corrispettivi: sanzione 90% dell\u2019imposta (min. 500 \u20AC); 4 violazioni in 5 anni = sospensione licenza (D.Lgs 471/1997 art. 12). Dal 2026 \u00E8 obbligatorio anche il collegamento POS\u2013registratore telematico: mancato abbinamento 1.000\u20134.000 \u20AC + 100 \u20AC per ogni giorno di mancata trasmissione dei dati dei pagamenti.',
   items:[
-  {t:'Registratore telematico \u2014 libretto e verificazione periodica (biennale)',n:'D.Lgs 127/2015 art. 2 \u00B7 provv. Agenzia Entrate'},
-  {t:'Documenti commerciali / corrispettivi giornalieri',n:'D.Lgs 127/2015 \u00B7 D.Lgs 471/1997 art. 6'},
-  {t:'Visura camerale aggiornata',n:'L. 580/1993'},
-  {t:'Certificato attribuzione P.IVA',n:'DPR 633/1972 art. 35'},
-  {t:'Contratto affitto d\u2019azienda / locazione registrato',n:'DPR 131/1986'},
-  {t:'Comunicazioni vendita alcolici',n:'D.Lgs 504/1995 art. 29 (come modificato)'},
-  {t:'Collegamento POS \u2013 registratore telematico (abbinamento sul portale Agenzia Entrate)',n:'L. 207/2024 art. 1 cc. 74-77 \u00B7 D.Lgs 127/2015 art. 2 c. 3 \u2014 in vigore dal 1/01/2026, abbinamento operativo dal 5/03/2026'}]},
+  {id:'registratore',t:'Registratore telematico \u2014 libretto e verificazione periodica (biennale)',n:'D.Lgs 127/2015 art. 2 \u00B7 provv. Agenzia Entrate'},
+  {id:'corrispettivi',t:'Documenti commerciali / corrispettivi giornalieri',n:'D.Lgs 127/2015 \u00B7 D.Lgs 471/1997 art. 6'},
+  {id:'visura',t:'Visura camerale aggiornata',n:'L. 580/1993'},
+  {id:'piva',t:'Certificato attribuzione P.IVA',n:'DPR 633/1972 art. 35'},
+  {id:'affitto-azienda',t:'Contratto affitto d\u2019azienda / locazione registrato',n:'DPR 131/1986'},
+  {id:'alcolici',t:'Comunicazioni vendita alcolici',n:'D.Lgs 504/1995 art. 29 (come modificato)'},
+  {id:'pos-rt',t:'Collegamento POS \u2013 registratore telematico (abbinamento sul portale Agenzia Entrate)',n:'L. 207/2024 art. 1 cc. 74-77 \u00B7 D.Lgs 127/2015 art. 2 c. 3 \u2014 in vigore dal 1/01/2026, abbinamento operativo dal 5/03/2026'}]},
  {id:'gen',sigla:'GENERALE',nome:'Documenti aziendali',
   nota:'Documenti trasversali richiesti da pi\u00F9 enti o utili in ogni verifica.',
   items:[
-  {t:'Atto costitutivo e statuto',n:'Codice Civile'},
-  {t:'Polizza rischi catastrofali (obbligatoria \u2014 per somministrazione e ricettivo dal 31/03/2026)',n:'L. 213/2023 art. 1 c. 101 \u00B7 D.L. 39/2025 \u00B7 D.L. 200/2025 (Milleproroghe 2026)'},
-  {t:'Polizza assicurativa RC',n:'facoltativa ma raccomandata'},
-  {t:'Contratto smaltimento oli vegetali esausti',n:'D.Lgs 152/2006 art. 233 (CONOE)'},
-  {t:'Gestione rifiuti / iscrizione RENTRI (solo se produttore di rifiuti pericolosi)',n:'D.Lgs 152/2006 \u00B7 D.M. 59/2023 \u2014 esclusi i soli rifiuti non pericolosi conferiti al servizio pubblico'},
-  {t:'Informative privacy GDPR + cartelli videosorveglianza',n:'Reg. UE 2016/679 \u00B7 Provv. Garante 8/04/2010'},
-  {t:'Esposizione tariffe e diritti del consumatore',n:'D.Lgs 206/2005 (Codice del Consumo)'}]}
+  {id:'atto-costitutivo',t:'Atto costitutivo e statuto',n:'Codice Civile'},
+  {id:'polizza-cat',t:'Polizza rischi catastrofali (obbligatoria \u2014 per somministrazione e ricettivo dal 31/03/2026)',n:'L. 213/2023 art. 1 c. 101 \u00B7 D.L. 39/2025 \u00B7 D.L. 200/2025 (Milleproroghe 2026)'},
+  {id:'polizza-rc',t:'Polizza assicurativa RC',n:'facoltativa ma raccomandata'},
+  {id:'oli-esausti',t:'Contratto smaltimento oli vegetali esausti',n:'D.Lgs 152/2006 art. 233 (CONOE)'},
+  {id:'rifiuti',t:'Gestione rifiuti / iscrizione RENTRI (solo se produttore di rifiuti pericolosi)',n:'D.Lgs 152/2006 \u00B7 D.M. 59/2023 \u2014 esclusi i soli rifiuti non pericolosi conferiti al servizio pubblico'},
+  {id:'privacy',t:'Informative privacy GDPR + cartelli videosorveglianza',n:'Reg. UE 2016/679 \u00B7 Provv. Garante 8/04/2010'},
+  {id:'tariffe',t:'Esposizione tariffe e diritti del consumatore',n:'D.Lgs 206/2005 (Codice del Consumo)'}]}
 ];
 const ENTE=id=>ENTI.find(e=>e.id===id);
 
@@ -307,18 +307,39 @@ const dbGet=(s,k)=>new Promise(r=>{const q=tx(s,'readonly').get(k);q.onsuccess=(
 const dbClear=s=>new Promise(r=>{const q=tx(s,'readwrite').clear();q.onsuccess=()=>r()});
 
 /* ---------- stato ---------- */
-let S={locali:['Il Fionco','La Fornace'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],op:'',
+let S={locali:['Il Fionco','La Fornace'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],operatori:[],opCorrente:null,
   societa:[{ragione:'MASTERPLAN GROUP SRL',indirizzo:'Via Francesco Baracca, 10 - 35019 Tombolo (PD)',piva:'05662050284',rea:'PD 483354',pec:'masterplangroup@pec.it',email:'info@masterplangroup.it',sdi:'X2PH38J'},{}],
-  loghi:[null,null],scadenze:[],discOk:false,opPin:'',lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti'};
+  loghi:[null,null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti'};
 async function loadState(){
   const st=await dbGet('settings','app');
-  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];S.op=st.op||'';if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.opPin=st.opPin||'';S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];}
+  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];S.operatori=st.operatori||[];
+    // migrazione: vecchio codice operatore unico -> un operatore generico sul primo locale
+    if(st.opPin&&!S.operatori.length)S.operatori=[{id:uid(),nome:'Operatore',cognome:'',sigla:'OP',pin:st.opPin,locale:0}];}
   while(S.societa.length<S.locali.length)S.societa.push({});
   while(S.loghi.length<S.locali.length)S.loghi.push(null);
   S.docs=await dbAll('docs');
+  await migrateSlots();
   S.logs=await dbAll('logs');
 }
-const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,op:S.op,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,opPin:S.opPin,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico});
+// migrazione una-tantum: converte gli slot vecchi "eid:indice" nel nuovo "eid:idVoce"
+async function migrateSlots(){
+  let changed=0;
+  for(const d of S.docs){
+    if(!d.slots||!d.slots.length)continue;
+    let touched=false;
+    const nuovi=d.slots.map(s=>{
+      const idx=s.indexOf(':');if(idx<0)return s;
+      const eid=s.slice(0,idx),rest=s.slice(idx+1);
+      if(!/^\d+$/.test(rest))return s;            // gi\u00E0 nuovo formato
+      const e=ENTE(eid);const it=e&&e.items[parseInt(rest,10)];
+      touched=true;
+      return it?eid+':'+it.id:null;               // indice fuori range \u2192 scartato
+    }).filter(Boolean);
+    if(touched){d.slots=nuovi;await dbPut('docs',d);changed++;}
+  }
+  if(changed)S.docs=await dbAll('docs');
+}
+const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,operatori:S.operatori,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico});
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -339,7 +360,7 @@ const docEnti=d=>{const set=new Set((d.slots||[]).map(s=>s.split(':')[0]));(d.ex
 function enteStats(eid){
   const ente=ENTE(eid),docs=docsLocale();
   let covered=0;
-  ente.items.forEach((_,i)=>{if(docs.some(d=>(d.slots||[]).includes(eid+':'+i)))covered++;});
+  ente.items.forEach(it=>{if(docs.some(d=>(d.slots||[]).includes(eid+':'+it.id)))covered++;});
   return{covered,total:ente.items.length,pct:Math.round(covered/ente.items.length*100)};
 }
 
@@ -372,12 +393,14 @@ function render(){
 
 function topbar(){
   if(S.role==='op'){
+    const o=opCorr();
+    const nome=o?((o.nome+' '+(o.cognome||'')).trim()+(o.sigla?' ('+o.sigla+')':'')):'';
     return `<div class="topbar-block"><div class="topbar">
-      <div class="brand">InRegola<small>modalità operatore</small></div>
+      <div class="brand">InRegola<small>${nome?esc(nome):'modalità operatore'}</small></div>
       <button class="icon-btn" onclick="lockNow()" aria-label="Esci">&#128274;</button>
     </div>
-    <div class="locale-bar">${S.locali.map((l,i)=>
-      `<button class="locale-chip ${i===S.locale?'active':''}" onclick="setLocale(${i})">${esc(l)}</button>`).join('')}
+    <div class="locale-bar">
+      <button class="locale-chip active">${esc(S.locali[S.locale]||'')}</button>
     </div></div>`;
   }
   return `<div class="topbar-block">
@@ -470,7 +493,7 @@ function docRow(d){
 /* ---------- ente ---------- */
 function vEnte(eid){
   const e=ENTE(eid),docs=docsLocale(),st=enteStats(eid);
-  const inSlot=i=>docs.filter(d=>(d.slots||[]).includes(eid+':'+i));
+  const inSlot=id=>docs.filter(d=>(d.slots||[]).includes(eid+':'+id));
   const extra=docs.filter(d=>docEnti(d).includes(eid)&&!(d.slots||[]).some(s=>s.startsWith(eid+':')));
   return topbar()+`<div class="page-head">
     <button class="back-btn" onclick="go('home')">&#8592; Archivio</button>
@@ -483,7 +506,7 @@ function vEnte(eid){
   <div class="wrap">
     <div class="sec-label">Checklist documenti</div>
     ${e.items.map((it,i)=>{
-      const linked=inSlot(i);
+      const linked=inSlot(it.id);
       let badge;
       if(!linked.length)badge='<span class="badge manca">Manca</span>';
       else{
@@ -496,8 +519,8 @@ function vEnte(eid){
         <div class="ci-top"><h4>${esc(it.t)}</h4>${badge}</div>
         <div class="ci-norma">${esc(it.n)}</div>
         ${linked.map(docRow).join('')}
-        ${eid==='nas'&&(i===3||i===4)?`<button class="link-btn" onclick="go('registri')">&#128202; Apri il registro digitale compilabile</button><br>`:''}
-        <button class="link-btn" onclick="openDocModal(null,'${eid}:${i}')">+ Carica documento per questa voce</button>
+        ${eid==='nas'&&(it.id==='temperature'||it.id==='pulizie')?`<button class="link-btn" onclick="go('registri')">&#128202; Apri il registro digitale compilabile</button><br>`:''}
+        <button class="link-btn" onclick="openDocModal(null,'${eid}:${it.id}')">+ Carica documento per questa voce</button>
       </div>`;}).join('')}
     ${extra.length?`<div class="sec-label">Altri documenti collegati</div>${extra.map(docRow).join('')}`:''}
   </div>`+navBar();
@@ -527,7 +550,7 @@ function avviaControlloMulti(){
 }
 function startControlloMulti(eids){
   const docs=docsLocale();
-  const inSlot=(eid,i)=>docs.filter(d=>(d.slots||[]).includes(eid+':'+i));
+  const inSlot=(eid,id)=>docs.filter(d=>(d.slots||[]).includes(eid+':'+id));
   const sigle=eids.map(id=>ENTE(id).sigla).join(' · ');
   const div=document.createElement('div');div.className='controllo-screen';div.id='controlloScreen';
   const so=S.societa[S.locale]||{};
@@ -535,12 +558,12 @@ function startControlloMulti(eids){
   eids.forEach(eid=>{
     const e=ENTE(eid);
     corpo+=`<div class="grp-ente">${esc(e.sigla)} · ${esc(e.nome)}</div>`;
-    corpo+=e.items.map((it,i)=>{const l=inSlot(eid,i);
+    corpo+=e.items.map((it,i)=>{const l=inSlot(eid,it.id);
       return `<div class="check-item"><div class="ci-top"><h4>${esc(it.t)}</h4>
         ${l.length?'':'<span class="badge manca">Manca</span>'}</div>
         <div class="ci-norma">${esc(it.n)}</div>
         ${l.map(docRow).join('')}
-        ${eid==='nas'&&(i===3||i===4)?`<button class="link-btn" onclick="document.getElementById('controlloScreen').remove();go('registri')">&#128202; Apri il registro digitale compilabile</button>`:''}</div>`;}).join('');
+        ${eid==='nas'&&(it.id==='temperature'||it.id==='pulizie')?`<button class="link-btn" onclick="document.getElementById('controlloScreen').remove();go('registri')">&#128202; Apri il registro digitale compilabile</button>`:''}</div>`;}).join('');
   });
   div.innerHTML=`<div class="controllo-head">
     <button class="ch-close" onclick="document.getElementById('controlloScreen').remove()">Chiudi</button>
@@ -553,7 +576,7 @@ function startControlloMulti(eids){
 }
 function startControllo(eid){
   const e=ENTE(eid),docs=docsLocale();
-  const inSlot=i=>docs.filter(d=>(d.slots||[]).includes(eid+':'+i));
+  const inSlot=id=>docs.filter(d=>(d.slots||[]).includes(eid+':'+id));
   const extra=docs.filter(d=>docEnti(d).includes(eid)&&!(d.slots||[]).some(s=>s.startsWith(eid+':')));
   const div=document.createElement('div');div.className='controllo-screen';div.id='controlloScreen';
   div.innerHTML=`<div class="controllo-head">
@@ -563,12 +586,12 @@ function startControllo(eid){
     ${(S.societa[S.locale]&&S.societa[S.locale].ragione)?`<div class="ch-loc" style="font-size:12.5px;opacity:.85">${esc(S.societa[S.locale].ragione)}${S.societa[S.locale].piva?' &middot; P.IVA '+esc(S.societa[S.locale].piva):''}${S.societa[S.locale].indirizzo?'<br>'+esc(S.societa[S.locale].indirizzo):''}</div>`:''}
   </div>
   <div class="controllo-body">
-    ${e.items.map((it,i)=>{const l=inSlot(i);
+    ${e.items.map((it,i)=>{const l=inSlot(it.id);
       return `<div class="check-item"><div class="ci-top"><h4>${esc(it.t)}</h4>
         ${l.length?'':'<span class="badge manca">Manca</span>'}</div>
         <div class="ci-norma">${esc(it.n)}</div>
         ${l.map(docRow).join('')}
-        ${eid==='nas'&&(i===3||i===4)?`<button class="link-btn" onclick="document.getElementById('controlloScreen').remove();go('registri')">&#128202; Apri il registro digitale compilabile</button>`:''}</div>`;}).join('')}
+        ${eid==='nas'&&(it.id==='temperature'||it.id==='pulizie')?`<button class="link-btn" onclick="document.getElementById('controlloScreen').remove();go('registri')">&#128202; Apri il registro digitale compilabile</button>`:''}</div>`;}).join('')}
     ${extra.length?`<div class="sec-label">Altri documenti</div>${extra.map(docRow).join('')}`:''}
     <button class="sm-btn green" style="width:100%;margin-top:8px;padding:14px" onclick="stampaControllo('${eid}')">&#128424; Stampa o salva PDF della checklist</button>
   </div>`;
@@ -676,8 +699,8 @@ function apriStampaEtichetta2(d, formato){
 }
 function stampaControllo(eid){
   const e=ENTE(eid),docs=docsLocale();
-  const inSlot=i=>docs.filter(d=>(d.slots||[]).includes(eid+':'+i));
-  let rows=e.items.map((it,i)=>{const l=inSlot(i);
+  const inSlot=id=>docs.filter(d=>(d.slots||[]).includes(eid+':'+id));
+  let rows=e.items.map(it=>{const l=inSlot(it.id);
     const stato=l.length?'<span class="ok">Presente</span>':'<span class="ko">MANCANTE</span>';
     const files=l.length?l.map(d=>esc(d.nome)+(d.scadenza?' (scad. '+fmtDate(d.scadenza)+')':'')).join('<br>'):'—';
     return `<tr><td>${esc(it.t)}</td><td>${stato}</td><td>${files}</td><td style="font-size:10px;color:#666">${esc(it.n)}</td></tr>`;}).join('');
@@ -836,12 +859,13 @@ function vEtichette(){
     const lista=prod.length?prod.map(p=>{
       const last=p.last||{};
       const sub='conserva '+p.giorni+' '+(p.giorni==1?'giorno':'giorni')+(p.cons?' \u00B7 '+esc(p.cons):'')+(last.forn?' \u00B7 '+esc(last.forn):'');
-      return `<button class="prod-row" onclick="apriEtichetta('${p.id}')">
-        <div class="pr-emo">&#127991;</div>
-        <div class="pr-info"><div class="pr-name">${esc(p.nome)}</div>
-          <div class="pr-sub">${sub}</div></div>
-        <div class="pr-go">&#8250;</div>
-      </button>`;}).join(''):'<div class="empty">Nessun prodotto configurato.<br>Aggiungi i prodotti che etichetti pi\u00F9 spesso (es. rag\u00F9, besciamella, funghi).</div>';
+      return `<div class="prod-row" style="cursor:default">
+        <button class="pr-emo" style="border:none;cursor:pointer" onclick="apriEtichetta('${p.id}')">&#127991;</button>
+        <button class="pr-info" style="background:none;border:none;text-align:left;cursor:pointer;min-width:0" onclick="apriEtichetta('${p.id}')"><div class="pr-name">${esc(p.nome)}</div>
+          <div class="pr-sub">${sub}</div></button>
+        ${S.role!=='op'?`<button class="d-edit" onclick="openProdModal('${p.id}')" aria-label="Modifica prodotto">&#9998;</button>`:''}
+        <button class="pr-go" style="background:none;border:none;cursor:pointer" onclick="apriEtichetta('${p.id}')">&#8250;</button>
+      </div>`;}).join(''):'<div class="empty">Nessun prodotto configurato.<br>Aggiungi i prodotti che etichetti pi\u00F9 spesso (es. rag\u00F9, besciamella, funghi).</div>';
     corpo=`${lista}
       <button class="link-btn" onclick="openProdModal()">+ Aggiungi un prodotto</button>
       <div class="set-card" style="margin-top:18px"><p style="margin:0">I giorni di conservazione dopo l\u2019apertura li stabilisci tu in base al tuo piano di autocontrollo HACCP. InRegola calcola la data, ma la responsabilit\u00E0 del valore resta del manuale del locale.</p></div>`;
@@ -964,7 +988,7 @@ function apriEtichetta(pid){
     <div class="f-group"><label>Quantit\u00E0 (facoltativo)</label>
       <input type="text" id="etQta" value="${esc(last.qta||'')}" placeholder="Es. 3 kg, 2 vaschette"></div>
     <div class="f-group"><label>Operatore</label>
-      <input type="text" id="etOp" value="${esc(last.op||S.op||'')}" placeholder="Sigla o nome (es. PV)"></div>
+      <input type="text" id="etOp" value="${esc(last.op||siglaCorrente())}" placeholder="Sigla o nome (es. PV)"></div>
     <div class="f-group"><label>Tipo etichetta</label>
       <select id="etTipo">
         <option value="full">Compilata (date gi\u00E0 scritte)</option>
@@ -1034,6 +1058,7 @@ function vRegistri(){
   const mesiOptions=[...mesiSet].sort().reverse().map(k=>{const[y,m]=k.split('-');
     const lab=new Date(y,m-1,1).toLocaleDateString('it-IT',{month:'long',year:'numeric'});
     return `<option value="${k}">${lab}</option>`;}).join('');
+  const canDel=S.role!=='op';
   const tempRows=punti.length?punti.map(p=>{
     const fatte=oggi.filter(l=>l.tipo==='temp'&&l.punto===p.nome);
     const nonOk=fatte.some(l=>!l.conforme);
@@ -1045,7 +1070,7 @@ function vRegistri(){
         <input type="text" inputmode="decimal" placeholder="&deg;C" id="tin_${p.id}"
           style="flex:1;min-width:0;border:1.5px solid var(--line2);border-radius:10px;padding:11px;background:#fff;font-size:16px">
         <button class="d-open" onclick="regTemp('${p.id}')">Registra</button>
-        <button class="d-edit" onclick="delPunto('${p.id}')" aria-label="Elimina punto">&#10005;</button>
+        ${canDel?`<button class="d-edit" onclick="delPunto('${p.id}')" aria-label="Elimina punto">&#10005;</button>`:''}
       </div>
     </div>`;}).join(''):'<div class="empty">Nessun frigorifero o cella configurati.<br>Aggiungili qui sotto per iniziare a registrare le temperature.</div>';
   const pulRows=aree.length?aree.map(a=>{
@@ -1056,12 +1081,11 @@ function vRegistri(){
       <div class="ci-norma">${last?'ultima: '+new Date(last.ts).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+(last.op?' ('+esc(last.op)+')':''):'mai registrata'}</div>
       <div style="display:flex;gap:8px;margin-top:10px">
         <button class="d-open" style="flex:1" onclick="regPulizia('${a.id}')">&#10003; Registra pulizia</button>
-        <button class="d-edit" onclick="delArea('${a.id}')" aria-label="Elimina area">&#10005;</button>
+        ${canDel?`<button class="d-edit" onclick="delArea('${a.id}')" aria-label="Elimina area">&#10005;</button>`:''}
       </div></div>`;}).join(''):'<div class="empty">Nessuna area di pulizia configurata.</div>';
   return topbar()+`<div class="wrap">
-    <div class="sec-label" style="margin-top:6px">Operatore</div>
-    <div class="search-row"><input type="text" placeholder="Nome o sigla di chi registra (es. P.V.)" maxlength="20"
-      value="${esc(S.op)}" oninput="S.op=this.value" onchange="saveSettings()"></div>
+    <div class="sec-label" style="margin-top:6px">Chi sta registrando</div>
+    <div class="set-card" style="padding:13px 15px;margin-bottom:4px"><p style="margin:0;font-weight:700;color:var(--ink)">&#9997;&#65039; ${esc(siglaCorrente())}${opCorr()?' — '+esc((opCorr().nome+' '+(opCorr().cognome||'')).trim()):''}</p><p style="margin:4px 0 0;font-size:12px">Ogni registrazione viene firmata automaticamente con questo nominativo.</p></div>
     <div class="sec-label">Temperature &middot; ${esc(S.locali[S.locale])}</div>
     ${tempRows}
     <button class="link-btn" onclick="addPunto()">+ Aggiungi frigorifero / cella</button>
@@ -1091,7 +1115,7 @@ function storicoHTML(logsLoc){
       <div class="d-ico">${l.tipo==='temp'?'&deg;C':'PUL'}</div>
       <div class="d-info"><div class="d-name">${esc(l.tipo==='temp'?l.punto:l.area)}${l.tipo==='temp'?' &middot; '+l.valore+'&deg;C':''}</div>
         <div class="d-meta ${l.tipo==='temp'&&!l.conforme?'exp':''}">${ora}${l.op?' &middot; '+esc(l.op):''}${l.tipo==='temp'&&!l.conforme?' &middot; FUORI RANGE'+(l.azione?' &middot; '+esc(l.azione):''):''}</div></div>
-      <button class="d-edit" onclick="delLog(${l.id})" aria-label="Elimina">&#10005;</button>
+      ${S.role!=='op'?`<button class="d-edit" onclick="delLog(${l.id})" aria-label="Elimina">&#10005;</button>`:''}
     </div>`;
   }
   return out;
@@ -1118,17 +1142,15 @@ async function regTemp(pid){
   const inp=document.getElementById('tin_'+pid);
   const v=parseFloat(String(inp.value).replace(',','.'));
   if(isNaN(v))return toast('Inserisci la temperatura');
-  if(!S.op.trim())return toast('Indica prima la sigla operatore in alto');
   const conforme=v>=p.min&&v<=p.max;
   let azione=null;
   if(!conforme)azione=prompt('\u26A0\uFE0F Temperatura FUORI RANGE!\nDescrivi l\u2019azione correttiva adottata (es. spostato i prodotti, chiamato il tecnico):')||'';
-  await dbPut('logs',{tipo:'temp',locale:S.locale,punto:p.nome,min:p.min,max:p.max,valore:v,conforme,azione,op:S.op.trim(),ts:Date.now()});
+  await dbPut('logs',{tipo:'temp',locale:S.locale,punto:p.nome,min:p.min,max:p.max,valore:v,conforme,azione,op:siglaCorrente(),ts:Date.now()});
   S.logs=await dbAll('logs');render();toast(conforme?'Temperatura registrata \u2713':'Registrata con non conformit\u00E0');
 }
 async function regPulizia(aid){
   const a=S.aree.find(x=>x.id===aid);if(!a)return;
-  if(!S.op.trim())return toast('Indica prima la sigla operatore in alto');
-  await dbPut('logs',{tipo:'pul',locale:S.locale,area:a.nome,op:S.op.trim(),ts:Date.now()});
+  await dbPut('logs',{tipo:'pul',locale:S.locale,area:a.nome,op:siglaCorrente(),ts:Date.now()});
   S.logs=await dbAll('logs');render();toast('Pulizia registrata \u2713');
 }
 async function delLog(id){
@@ -1216,17 +1238,20 @@ function vSettings(){
 
     <div class="sec-label">Sicurezza</div>
     <div class="set-card"><h4>PIN titolare</h4>
-      <p>${S.pin?'PIN attivo: l\u2019app chiede il codice all\u2019apertura. Il titolare vede tutto.':'Nessun PIN impostato. Imposta il PIN titolare per attivare anche il codice operatore e il blocco automatico.'}</p>
+      <p>${S.pin?'PIN attivo: l\u2019app chiede il codice all\u2019apertura. Il titolare vede tutto.':'Nessun PIN impostato. Imposta il PIN titolare per attivare gli operatori e il blocco automatico.'}</p>
       <div class="row">
         <button class="sm-btn green" onclick="setPin()">${S.pin?'Cambia PIN':'Imposta PIN'}</button>
         ${S.pin?'<button class="sm-btn red" onclick="clearPin()">Rimuovi</button>':''}
       </div></div>
-    ${S.pin?`<div class="set-card"><h4>Codice operatore</h4>
-      <p>${S.opPin?'Attivo. Chi entra con questo codice vede solo i Registri (temperature e pulizie), non i documenti n\u00E9 le impostazioni.':'Crea un codice separato per i dipendenti: potranno solo registrare temperature e pulizie, senza accedere ai documenti.'}</p>
-      <div class="row">
-        <button class="sm-btn green" onclick="setOpPin()">${S.opPin?'Cambia codice':'Imposta codice operatore'}</button>
-        ${S.opPin?'<button class="sm-btn red" onclick="clearOpPin()">Rimuovi</button>':''}
-      </div></div>
+    ${S.pin?`<div class="set-card"><h4>Operatori</h4>
+      <p>${S.operatori.length?S.operatori.length+' operatore/i. Ognuno entra col proprio PIN, vede solo Registri ed Etichette del suo locale e firma in automatico.':'Crea gli operatori autorizzati: ognuno avr\u00E0 un PIN personale e potr\u00E0 solo registrare temperature, pulizie ed etichette, senza accedere a documenti o impostazioni.'}</p>
+      ${S.operatori.map(o=>`<div class="prod-row" style="margin-bottom:8px">
+        <div class="pr-emo">&#128100;</div>
+        <div class="pr-info"><div class="pr-name">${esc((o.nome+' '+(o.cognome||'')).trim())}${o.sigla?' &middot; '+esc(o.sigla):''}</div>
+          <div class="pr-sub">${esc(S.locali[o.locale]||'?')} &middot; PIN \u2022\u2022\u2022\u2022</div></div>
+        <button class="d-edit" onclick="openOpModal('${o.id}')" aria-label="Modifica">&#9998;</button>
+      </div>`).join('')}
+      <div class="row"><button class="sm-btn green" onclick="openOpModal()">+ Aggiungi operatore</button></div></div>
     <div class="set-card"><h4>Blocco automatico</h4>
       <p>Dopo un periodo di inattivit\u00E0 l\u2019app si riblocca da sola e richiede di nuovo il codice.</p>
       <select onchange="setLockMin(this.value)" style="width:100%;border:none;border-radius:14px;padding:13px 15px;background:var(--bg);font-weight:600">
@@ -1260,8 +1285,8 @@ function vSettings(){
 /* ---------- modale documento ---------- */
 let modalFile=null;
 function slotLabel(k){
-  const[eid,i]=k.split(':');const e=ENTE(eid);if(!e)return k;
-  const it=e.items[parseInt(i,10)];return (it?it.t:'')+' · '+e.sigla;
+  const[eid,id]=k.split(':');const e=ENTE(eid);if(!e)return k;
+  const it=e.items.find(x=>x.id===id);return (it?it.t:'')+' · '+e.sigla;
 }
 function slotConfirmHTML(preSlot,d){
   if(!preSlot||d)return ''; // solo per NUOVO documento aperto da una voce specifica
@@ -1293,7 +1318,7 @@ function openDocModal(docId=null,preSlot=null){
       <label>${(preSlot&&!d)?'Collega anche ad altre voci della checklist':'Collega alle voci della checklist'}</label>
       <div style="max-height:230px;overflow-y:auto;border:1.5px solid var(--line2);border-radius:10px;padding:10px;background:#fff">
       ${ENTI.map(e=>`<div class="slot-group"><div class="sg-name">${e.sigla}</div>
-        ${e.items.map((it,i)=>{const k=e.id+':'+i;
+        ${e.items.map(it=>{const k=e.id+':'+it.id;
           return `<button class="slot-chip ${slots.has(k)?'on':''}" data-slot="${k}" onclick="this.classList.toggle('on')">${esc(it.t)}</button>`;}).join('')}
       </div>`).join('')}
       </div></div>
@@ -1400,15 +1425,46 @@ function setPin(){
   if(p&&/^\d{4,8}$/.test(p)){S.pin=p;saveSettings();render();toast('PIN impostato')}
   else if(p!==null)toast('PIN non valido: solo cifre, da 4 a 8');
 }
-function clearPin(){if(confirm('Rimuovere il PIN? Verranno disattivati anche il codice operatore e il blocco automatico.')){S.pin='';S.opPin='';saveSettings();render()}}
-function setOpPin(){
-  const p=prompt('Codice operatore (4-8 cifre), diverso dal PIN titolare:');
-  if(p===null)return;
-  if(!/^\d{4,8}$/.test(p))return toast('Codice non valido: solo cifre, da 4 a 8');
-  if(p===S.pin)return toast('Deve essere diverso dal PIN titolare');
-  S.opPin=p;saveSettings();render();toast('Codice operatore impostato');
+function clearPin(){if(confirm('Rimuovere il PIN titolare? Verranno rimossi anche tutti gli operatori e il blocco automatico.')){S.pin='';S.operatori=[];saveSettings();render()}}
+function openOpModal(oid){
+  const o=oid?S.operatori.find(x=>x.id===oid):null;
+  $('#layer').innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <h3>${o?'Modifica operatore':'Nuovo operatore'}</h3>
+    <div class="f-group"><label>Nome</label>
+      <input type="text" id="opNome" value="${o?esc(o.nome):''}" placeholder="Es. Mario"></div>
+    <div class="f-group"><label>Cognome</label>
+      <input type="text" id="opCognome" value="${o?esc(o.cognome||''):''}" placeholder="Es. Rossi"></div>
+    <div class="f-group"><label>Sigla (firma sui registri)</label>
+      <input type="text" id="opSigla" maxlength="8" value="${o?esc(o.sigla||''):''}" placeholder="Es. MR"></div>
+    <div class="f-group"><label>PIN personale (4-8 cifre)</label>
+      <input type="text" inputmode="numeric" id="opPin" maxlength="8" value="${o?esc(o.pin||''):''}" placeholder="Es. 2468"></div>
+    <div class="f-group"><label>Locale assegnato</label>
+      <select id="opLocale">${S.locali.map((l,i)=>`<option value="${i}" ${(o?o.locale:S.locale)===i?'selected':''}>${esc(l)}</option>`).join('')}</select></div>
+    <div class="m-actions">
+      ${o?`<button class="btn danger" onclick="delOp('${o.id}')">Elimina</button>`:''}
+      <button class="btn ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn primary" onclick="saveOp(${o?`'${o.id}'`:'null'})">Salva</button>
+    </div></div></div>`;
 }
-function clearOpPin(){if(confirm('Rimuovere il codice operatore?')){S.opPin='';saveSettings();render()}}
+function saveOp(oid){
+  const nome=$('#opNome').value.trim();
+  const cognome=$('#opCognome').value.trim();
+  const sigla=$('#opSigla').value.trim();
+  const pin=$('#opPin').value.trim();
+  const locale=parseInt($('#opLocale').value,10);
+  if(!nome)return toast('Indica il nome');
+  if(!sigla)return toast('Indica la sigla');
+  if(!/^\d{4,8}$/.test(pin))return toast('PIN non valido: solo cifre, da 4 a 8');
+  if(pin===S.pin)return toast('Il PIN deve essere diverso dal PIN titolare');
+  if(S.operatori.some(o=>o.pin===pin&&o.id!==oid))return toast('PIN gi\u00E0 usato da un altro operatore');
+  if(oid){const i=S.operatori.findIndex(x=>x.id===oid);S.operatori[i]={...S.operatori[i],nome,cognome,sigla,pin,locale};}
+  else S.operatori.push({id:uid(),nome,cognome,sigla,pin,locale});
+  saveSettings();closeModal();render();toast('Operatore salvato');
+}
+function delOp(oid){
+  if(!confirm('Eliminare questo operatore? Le registrazioni gi\u00E0 firmate restano nello storico.'))return;
+  S.operatori=S.operatori.filter(x=>x.id!==oid);saveSettings();closeModal();render();toast('Operatore eliminato');
+}
 function setLockMin(v){S.lockMin=parseInt(v,10);S.lastActive=Date.now();saveSettings();toast('Blocco automatico aggiornato');}
 async function resetAll(){
   if(!confirm('ATTENZIONE: verranno cancellati TUTTI i documenti. Continuare?'))return;
@@ -1427,7 +1483,7 @@ async function exportBackup(){
     const{blob,...rest}=d;
     docs.push({...rest,fileData:blob?await blobToB64(blob):null});
   }
-  const data=JSON.stringify({v:2,exported:new Date().toISOString(),locali:S.locali,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,pin:S.pin,opPin:S.opPin,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico,punti:S.punti,aree:S.aree,op:S.op,docs,logs:S.logs});
+  const data=JSON.stringify({v:3,exported:new Date().toISOString(),locali:S.locali,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,pin:S.pin,operatori:S.operatori,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico,punti:S.punti,aree:S.aree,docs,logs:S.logs});
   const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
   const a=document.createElement('a');a.href=url;
   a.download='inregola-backup-'+new Date().toISOString().slice(0,10)+'.json';
@@ -1447,8 +1503,10 @@ async function importBackup(file){
     }
     await dbClear('logs');
     for(const l of(data.logs||[])){const{id,...r}=l;await dbPut('logs',r);}
-    S.locali=data.locali||S.locali;S.pin=data.pin||'';S.opPin=data.opPin||'';S.lockMin=(data.lockMin!==undefined?data.lockMin:5);S.prodotti=data.prodotti||[];S.etStorico=data.etStorico||[];
-    S.punti=data.punti||[];S.aree=data.aree||[];S.op=data.op||'';
+    S.locali=data.locali||S.locali;S.pin=data.pin||'';S.lockMin=(data.lockMin!==undefined?data.lockMin:5);S.prodotti=data.prodotti||[];S.etStorico=data.etStorico||[];
+    S.operatori=data.operatori||[];
+    if(data.opPin&&!S.operatori.length)S.operatori=[{id:uid(),nome:'Operatore',cognome:'',sigla:'OP',pin:data.opPin,locale:0}];
+    S.punti=data.punti||[];S.aree=data.aree||[];
     S.societa=data.societa||S.locali.map(()=>({}));while(S.societa.length<S.locali.length)S.societa.push({});
     S.loghi=data.loghi||S.locali.map(()=>null);while(S.loghi.length<S.locali.length)S.loghi.push(null);
     S.scadenze=data.scadenze||[];S.discOk=!!data.discOk;
@@ -1467,28 +1525,32 @@ async function showStorage(){
 /* ---------- lock ---------- */
 function renderLock(){
   $('#app').innerHTML='';
-  const maxlen=Math.max(String(S.pin).length,String(S.opPin||'').length,8);
+  const pinLens=[String(S.pin).length,...S.operatori.map(o=>String(o.pin||'').length),8];
+  const maxlen=Math.max(...pinLens);
   $('#layer').innerHTML=`<div class="lock">
     <h1>InRegola</h1><p>Inserisci il codice</p>
     <input type="password" inputmode="numeric" maxlength="${maxlen}" id="pinInput" autofocus
       onkeydown="if(event.key==='Enter')tryPin()" oninput="maybeTryPin(this)">
     <div class="lk-err" id="pinErr"></div>
-    ${S.opPin?'<p style="margin-top:22px;opacity:.7;font-size:11px">Codice titolare o codice operatore</p>':''}
+    ${S.operatori.length?'<p style="margin-top:22px;opacity:.7;font-size:11px">Codice titolare o codice operatore</p>':''}
   </div>`;
   setTimeout(()=>{const i=$('#pinInput');if(i)i.focus()},150);
 }
-// prova automatica quando la lunghezza raggiunge uno dei due codici
+// prova automatica quando la lunghezza raggiunge uno dei codici validi
 function maybeTryPin(inp){
   const L=inp.value.length;
-  if(L>=String(S.pin).length || (S.opPin && L>=String(S.opPin).length))tryPin();
+  const minOp=S.operatori.length?Math.min(...S.operatori.map(o=>String(o.pin||'').length)):Infinity;
+  if(L>=String(S.pin).length || L>=minOp)tryPin();
 }
 function tryPin(){
   const i=$('#pinInput');const v=i.value;
-  if(v===S.pin){S.role='owner';S.lastActive=Date.now();$('#layer').innerHTML='';render()}
-  else if(S.opPin&&v===S.opPin){S.role='op';S.screen='registri';S.lastActive=Date.now();$('#layer').innerHTML='';render()}
-  else if(v.length>=String(S.pin).length){$('#pinErr').textContent='Codice errato';i.value='';}
+  if(v===S.pin){S.role='owner';S.opCorrente=null;S.lastActive=Date.now();$('#layer').innerHTML='';render();return}
+  const op=S.operatori.find(o=>o.pin===v);
+  if(op){S.role='op';S.opCorrente=op.id;S.locale=op.locale;S.screen='registri';S.lastActive=Date.now();$('#layer').innerHTML='';render();return}
+  const maxOp=S.operatori.length?Math.max(...S.operatori.map(o=>String(o.pin||'').length)):0;
+  if(v.length>=Math.max(String(S.pin).length,maxOp)){$('#pinErr').textContent='Codice errato';i.value='';}
 }
-function lockNow(){S.role=null;S.unlocked=false;render()}
+function lockNow(){S.role=null;S.opCorrente=null;S.unlocked=false;render()}
 // autoblocco per inattività: controllo al rientro e a ogni interazione
 function touchActivity(){
   if(!S.pin||!S.role)return;
@@ -1505,7 +1567,10 @@ function startLockWatch(){
 
 /* ---------- nav ---------- */
 function go(screen,ente){if(S.role==='op'&&screen!=='registri'&&screen!=='etichette')return;S.screen=screen;S.ente=ente||null;S.query='';render();window.scrollTo(0,0);if(screen==='settings')showStorage()}
-function setLocale(i){S.locale=i;render()}
+function setLocale(i){if(S.role==='op')return;S.locale=i;render()}
+// operatore loggato (oggetto) e sigla da apporre sulle registrazioni
+function opCorr(){return S.opCorrente?S.operatori.find(o=>o.id===S.opCorrente):null;}
+function siglaCorrente(){const o=opCorr();return o?o.sigla:'Titolare';}
 function bindNav(){}
 
 /* ---------- avvio ---------- */

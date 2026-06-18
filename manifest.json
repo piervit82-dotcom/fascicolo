@@ -1,6 +1,6 @@
 {
-  "name": "InRegola",
-  "short_name": "InRegola",
+  "name": "EssereInRegola",
+  "short_name": "EssereInRegola",
   "description": "Documenti, registri e norme pronti per ogni controllo.",
   "start_url": "./index.html",
   "scope": "./",

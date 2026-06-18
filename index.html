@@ -1587,9 +1587,29 @@ async function exportBackup(){
     docs.push({...rest,fileData:blob?await blobToB64(blob):null});
   }
   const data=JSON.stringify({v:3,exported:new Date().toISOString(),locali:S.locali,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,pin:S.pin,operatori:S.operatori,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico,punti:S.punti,aree:S.aree,docs,logs:S.logs});
-  const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
-  const a=document.createElement('a');a.href=url;
-  a.download='inregola-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  const nomeFile='inregola-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  const blob=new Blob([data],{type:'application/json'});
+
+  // 1) prova il menù Condividi nativo (iPhone/Android): Salva su File, iCloud, Mail, WhatsApp...
+  try{
+    const file=new File([blob],nomeFile,{type:'application/json'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:'Backup EssereInRegola',
+        text:'Salvalo su iCloud o Google Drive, non lasciarlo solo nel telefono.'});
+      S.lastBackup=Date.now();S.bkDismissed=0;saveSettings();
+      if(S.screen==='settings')render();
+      toast('Backup pronto \u2713 scegli dove salvarlo');
+      return;
+    }
+  }catch(e){
+    // se l'utente annulla la condivisione, mi fermo senza scaricare
+    if(e && e.name==='AbortError'){return;}
+    // altri errori: proseguo col download classico qui sotto
+  }
+
+  // 2) fallback: download classico (computer e telefoni che non supportano Condividi)
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=nomeFile;
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),30000);
   S.lastBackup=Date.now();S.bkDismissed=0;saveSettings();

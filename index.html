@@ -4,7 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>InRegola · Documenti e norme pronti per ogni controllo</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#178f5a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="InRegola">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -309,7 +316,7 @@ const dbClear=s=>new Promise(r=>{const q=tx(s,'readwrite').clear();q.onsuccess=(
 /* ---------- stato ---------- */
 let S={locali:['Il Fionco','La Fornace'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],operatori:[],opCorrente:null,
   societa:[{ragione:'MASTERPLAN GROUP SRL',indirizzo:'Via Francesco Baracca, 10 - 35019 Tombolo (PD)',piva:'05662050284',rea:'PD 483354',pec:'masterplangroup@pec.it',email:'info@masterplangroup.it',sdi:'X2PH38J'},{}],
-  loghi:[null,null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti',lastBackup:null,bkDismissed:0};
+  loghi:[null,null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti',lastBackup:null,bkDismissed:0,storMese:''};
 async function loadState(){
   const st=await dbGet('settings','app');
   if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];S.operatori=st.operatori||[];S.lastBackup=st.lastBackup||null;
@@ -1119,6 +1126,9 @@ function vRegistri(){
   const mesiOptions=[...mesiSet].sort().reverse().map(k=>{const[y,m]=k.split('-');
     const lab=new Date(y,m-1,1).toLocaleDateString('it-IT',{month:'long',year:'numeric'});
     return `<option value="${k}">${lab}</option>`;}).join('');
+  const mesiOptions2=[...mesiSet].sort().reverse().map(k=>{const[y,m]=k.split('-');
+    const lab=new Date(y,m-1,1).toLocaleDateString('it-IT',{month:'long',year:'numeric'});
+    return `<option value="${k}" ${S.storMese===k?'selected':''}>${lab}</option>`;}).join('');
   const canDel=S.role!=='op';
   const tempRows=punti.length?punti.map(p=>{
     const fatte=oggi.filter(l=>l.tipo==='temp'&&l.punto===p.nome);
@@ -1160,13 +1170,28 @@ function vRegistri(){
       </div>
       <div class="row" style="margin-top:8px"><button class="sm-btn green" onclick="exportRegistroCSV()">Esporta CSV</button>
         <button class="sm-btn" onclick="stampaRegistro()">&#128424; Stampa / PDF</button></div></div>
+    <div class="sec-label">Storico registrazioni</div>
+    <div class="set-card" style="padding:12px 14px;margin-bottom:10px">
+      <label style="display:block;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);margin-bottom:6px">Mostra periodo</label>
+      <select onchange="S.storMese=this.value;render()" style="width:100%;border:1.5px solid var(--line2);border-radius:10px;padding:11px;background:#fff;font-size:15px">
+        <option value="" ${!S.storMese?'selected':''}>Ultimi 60 giorni</option>
+        ${mesiOptions2}
+      </select></div>
     ${storicoHTML(logsLoc)}
   </div>`+navBar();
 }
 function storicoHTML(logsLoc){
-  const cut=Date.now()-60*86400000;
-  const recent=logsLoc.filter(l=>l.ts>=cut).sort((a,b)=>b.ts-a.ts).slice(0,200);
-  if(!recent.length)return'<div class="empty">Ancora nessuna registrazione.</div>';
+  let recent;
+  if(S.storMese){
+    // mese specifico: tutte le registrazioni di quel mese, nessun limite
+    recent=logsLoc.filter(l=>{const d=new Date(l.ts);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')===S.storMese;})
+      .sort((a,b)=>b.ts-a.ts);
+  }else{
+    // default: ultimi 60 giorni, max 200 righe
+    const cut=Date.now()-60*86400000;
+    recent=logsLoc.filter(l=>l.ts>=cut).sort((a,b)=>b.ts-a.ts).slice(0,200);
+  }
+  if(!recent.length)return'<div class="empty">Nessuna registrazione in questo periodo.</div>';
   let out='',lastDay='';
   for(const l of recent){
     const d=new Date(l.ts),day=d.toLocaleDateString('it-IT',{weekday:'short',day:'2-digit',month:'2-digit'});
@@ -1660,6 +1685,14 @@ function bindNav(){}
   startLockWatch();
   render();
 })();
+</script>
+<script>
+/* registrazione del service worker (cache offline) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  });
+}
 </script>
 </body>
 </html>

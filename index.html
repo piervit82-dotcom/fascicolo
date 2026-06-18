@@ -309,10 +309,10 @@ const dbClear=s=>new Promise(r=>{const q=tx(s,'readwrite').clear();q.onsuccess=(
 /* ---------- stato ---------- */
 let S={locali:['Il Fionco','La Fornace'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],operatori:[],opCorrente:null,
   societa:[{ragione:'MASTERPLAN GROUP SRL',indirizzo:'Via Francesco Baracca, 10 - 35019 Tombolo (PD)',piva:'05662050284',rea:'PD 483354',pec:'masterplangroup@pec.it',email:'info@masterplangroup.it',sdi:'X2PH38J'},{}],
-  loghi:[null,null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti'};
+  loghi:[null,null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti',lastBackup:null,bkDismissed:0};
 async function loadState(){
   const st=await dbGet('settings','app');
-  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];S.operatori=st.operatori||[];
+  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];S.operatori=st.operatori||[];S.lastBackup=st.lastBackup||null;
     // migrazione: vecchio codice operatore unico -> un operatore generico sul primo locale
     if(st.opPin&&!S.operatori.length)S.operatori=[{id:uid(),nome:'Operatore',cognome:'',sigla:'OP',pin:st.opPin,locale:0}];}
   while(S.societa.length<S.locali.length)S.societa.push({});
@@ -339,7 +339,7 @@ async function migrateSlots(){
   }
   if(changed)S.docs=await dbAll('docs');
 }
-const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,operatori:S.operatori,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico});
+const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,operatori:S.operatori,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico,lastBackup:S.lastBackup});
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -432,6 +432,19 @@ function vHome(){
   const docs=docsLocale();
   const urgent=docs.map(d=>({d,st:scadStato(d)})).filter(x=>x.st!=='ok')
     .sort((a,b)=>(a.d.scadenza||'').localeCompare(b.d.scadenza||''));
+  // avviso backup: se mai fatto o piu' di 7 giorni fa, e non chiuso in questa sessione
+  let bkAlert='';
+  const gb=giorniDaBackup();
+  if(!S.bkDismissed&&(gb===null||gb>=7)){
+    const msg=gb===null?'Non hai mai fatto un backup. Scaricane uno e salvalo su Google Drive o iCloud, non lasciarlo solo nel telefono.'
+      :'Sono passati '+gb+' giorni dall\u2019ultimo backup. Scaricane uno nuovo e salvalo su Google Drive o iCloud.';
+    bkAlert=`<div class="alert-card scadenza" style="width:100%;align-items:center;margin-top:14px">
+      <span class="a-ico">&#128190;</span>
+      <span style="flex:1;text-align:left"><b>Backup consigliato</b><span>${msg}</span></span>
+      <button class="d-open" style="flex-shrink:0" onclick="exportBackup()">Scarica</button>
+      <button class="d-edit" style="flex-shrink:0" onclick="S.bkDismissed=1;render()" aria-label="Chiudi">&#10005;</button>
+    </div>`;
+  }
   let alerts='';
   if(urgent.length){
     alerts=`<div class="sec-label">Da sistemare</div>`+urgent.slice(0,5).map(({d,st})=>
@@ -452,6 +465,7 @@ function vHome(){
     <div class="search-row"><input type="text" placeholder="Cerca un documento…" value="${esc(S.query)}"
       oninput="S.query=this.value;renderResultsOnly()" id="searchInput"></div>
     <div id="searchResults">${results}</div>
+    ${bkAlert}
     ${alerts}
     <button class="controllo-btn" style="margin-top:18px" onclick="pickControllo()"><span class="dot"></span> Modalità controllo</button>
     <div class="sec-label">Enti di controllo</div>
@@ -707,6 +721,53 @@ function stampaControllo(eid){
   const corpo=`<div class="varea">${esc(e.sigla)} — ${esc(e.nome)}</div>
     <table><thead><tr><th>Documento richiesto</th><th>Stato</th><th>File in archivio</th><th>Riferimento normativo</th></tr></thead><tbody>${rows}</tbody></table>`;
   apriStampa('Checklist controllo — '+e.nome,corpo);
+}
+// REPORT COMPLETO di un locale: stato enti + scadenze + registri ultimo mese
+function stampaReportCompleto(){
+  const loc=S.locale;
+  const docs=S.docs.filter(d=>d.locale===loc);
+  // 1) stato enti
+  let entiRows=ENTI.map(e=>{
+    const st=enteStats(e.id);
+    const mancanti=st.total-st.covered;
+    const cls=mancanti===0?'ok':'ko';
+    return `<tr><td>${esc(e.sigla)} — ${esc(e.nome)}</td>
+      <td style="text-align:center">${st.covered}/${st.total}</td>
+      <td style="text-align:center" class="${cls}">${mancanti===0?'completo':mancanti+' da caricare'}</td></tr>`;
+  }).join('');
+  const sezEnti=`<div class="varea">1 · Stato documenti per ente di controllo</div>
+    <table><thead><tr><th>Ente</th><th style="text-align:center">Coperti</th><th style="text-align:center">Stato</th></tr></thead><tbody>${entiRows}</tbody></table>`;
+
+  // 2) scadenze del locale (documenti con data + scadenze libere)
+  const sc=[];
+  docs.filter(d=>d.scadenza).forEach(d=>sc.push({nome:d.nome,data:d.scadenza,st:scadStatoDate(d.scadenza)}));
+  S.scadenze.filter(s=>s.locale===loc).forEach(s=>sc.push({nome:s.nome,data:s.data,st:scadStatoDate(s.data)}));
+  sc.sort((a,b)=>(a.data||'').localeCompare(b.data||''));
+  const scExp=sc.filter(x=>x.st==='exp'), scWarn=sc.filter(x=>x.st==='warn');
+  let scBody='';
+  if(!scExp.length&&!scWarn.length){scBody='<ul><li>Nessuna scadenza scaduta o in arrivo nei prossimi 60 giorni.</li></ul>';}
+  else{
+    if(scExp.length)scBody+='<div style="font-weight:700;color:#b23427;margin-top:6px">Scaduti</div><ul>'+scExp.map(x=>`<li class="ko">${esc(x.nome)} — ${fmtDate(x.data)}</li>`).join('')+'</ul>';
+    if(scWarn.length)scBody+='<div style="font-weight:700;color:#a8761f;margin-top:6px">In scadenza (entro 60 giorni)</div><ul>'+scWarn.map(x=>`<li>${esc(x.nome)} — ${fmtDate(x.data)}</li>`).join('')+'</ul>';
+  }
+  const sezScad=`<div class="varea">2 · Scadenze</div>${scBody}`;
+
+  // 3) registri ultimo mese (30 giorni)
+  const limite=Date.now()-30*86400000;
+  const logs=S.logs.filter(l=>l.locale===loc&&l.ts>=limite).sort((a,b)=>b.ts-a.ts);
+  const temp=logs.filter(l=>l.tipo==='temp'), pul=logs.filter(l=>l.tipo==='pul');
+  const nonConf=temp.filter(l=>!l.conforme);
+  let regBody=`<p style="margin:4px 0">Registrazioni negli ultimi 30 giorni: <b>${temp.length}</b> temperature, <b>${pul.length}</b> pulizie.`;
+  if(nonConf.length)regBody+=` <span class="ko">${nonConf.length} non conformità rilevate.</span>`;
+  regBody+='</p>';
+  if(nonConf.length){
+    regBody+='<div style="font-weight:700;color:#b23427;margin-top:6px">Non conformità e azioni correttive</div><table><thead><tr><th>Data</th><th>Punto</th><th>Valore</th><th>Azione correttiva</th><th>Operatore</th></tr></thead><tbody>'+
+      nonConf.map(l=>`<tr><td>${new Date(l.ts).toLocaleDateString('it-IT')}</td><td>${esc(l.punto||'')}</td><td class="ko">${l.valore}°</td><td>${esc(l.azione||'—')}</td><td>${esc(l.op||'')}</td></tr>`).join('')+'</tbody></table>';
+  }
+  const sezReg=`<div class="varea">3 · Registri di autocontrollo (ultimo mese)</div>${regBody}
+    <p style="font-size:11px;color:#666;margin-top:6px">Lo storico completo delle registrazioni (fino a 2 anni) è esportabile dalla schermata Registri.</p>`;
+
+  apriStampa('Report compliance — '+S.locali[loc], sezEnti+sezScad+sezReg);
 }
 
 /* ---------- scadenze ---------- */
@@ -1262,9 +1323,19 @@ function vSettings(){
         <option value="-1" ${S.lockMin==-1?'selected':''}>Mai (solo manuale)</option>
       </select></div>`:''}
 
+    <div class="sec-label">Report</div>
+    <div class="set-card"><h4>Report compliance del locale</h4>
+      <p>Genera un documento unico con lo stato dei documenti per ogni ente, le scadenze e i registri dell'ultimo mese, riferito a <b>${esc(S.locali[S.locale])}</b>. Utile da stampare, salvare in PDF o inviare al consulente. Per cambiare locale, selezionalo dalla barra in alto.</p>
+      <div class="row"><button class="sm-btn green" onclick="stampaReportCompleto()">&#128424; Genera report</button></div></div>
+
     <div class="sec-label">Backup</div>
     <div class="set-card"><h4>Esporta tutto</h4>
-      <p>Scarica un file di backup con tutti i documenti e le impostazioni. Conservalo su Drive o sul PC.</p>
+      <p>Scarica un file con tutti i documenti e le impostazioni. <b>Importante:</b> dopo averlo scaricato, spostalo su Google Drive o iCloud (o mandalo via email a te stesso). Se resta solo nel telefono e il telefono si rompe o si perde, perdi tutto. <b>Attenzione:</b> il backup automatico del telefono (iCloud/Google) NON salva i dati di questa app, quindi questo backup va fatto a parte.</p>
+      ${(()=>{const g=giorniDaBackup();
+        if(g===null)return '<p style="margin:-4px 0 12px;font-weight:800;color:var(--rosso)">&#9888; Backup mai effettuato.</p>';
+        const txt=g===0?'oggi':g===1?'ieri':g+' giorni fa';
+        const col=g>=7?'var(--rosso)':'var(--ok)';
+        return `<p style="margin:-4px 0 12px;font-weight:800;color:${col}">Ultimo backup: ${txt}.</p>`;})()}
       <div class="row"><button class="sm-btn green" onclick="exportBackup()">Scarica backup</button>
       <button class="sm-btn" onclick="document.getElementById('importFile').click()">Ripristina backup</button>
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(this.files[0])"></div></div>
@@ -1489,6 +1560,14 @@ async function exportBackup(){
   a.download='inregola-backup-'+new Date().toISOString().slice(0,10)+'.json';
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),30000);
+  S.lastBackup=Date.now();S.bkDismissed=0;saveSettings();
+  if(S.screen==='settings')render();
+  toast('Backup creato \u2713 ora spostalo su Google Drive o iCloud');
+}
+// giorni interi trascorsi dall'ultimo backup; null se mai fatto
+function giorniDaBackup(){
+  if(!S.lastBackup)return null;
+  return Math.floor((Date.now()-S.lastBackup)/86400000);
 }
 async function importBackup(file){
   if(!file)return;
@@ -1506,6 +1585,7 @@ async function importBackup(file){
     S.locali=data.locali||S.locali;S.pin=data.pin||'';S.lockMin=(data.lockMin!==undefined?data.lockMin:5);S.prodotti=data.prodotti||[];S.etStorico=data.etStorico||[];
     S.operatori=data.operatori||[];
     if(data.opPin&&!S.operatori.length)S.operatori=[{id:uid(),nome:'Operatore',cognome:'',sigla:'OP',pin:data.opPin,locale:0}];
+    S.lastBackup=data.lastBackup||null;
     S.punti=data.punti||[];S.aree=data.aree||[];
     S.societa=data.societa||S.locali.map(()=>({}));while(S.societa.length<S.locali.length)S.societa.push({});
     S.loghi=data.loghi||S.locali.map(()=>null);while(S.loghi.length<S.locali.length)S.loghi.push(null);

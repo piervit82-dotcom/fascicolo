@@ -317,12 +317,12 @@ const dbGet=(s,k)=>new Promise(r=>{const q=tx(s,'readonly').get(k);q.onsuccess=(
 const dbClear=s=>new Promise(r=>{const q=tx(s,'readwrite').clear();q.onsuccess=()=>r()});
 
 /* ---------- stato ---------- */
-let S={locali:['Il Fionco','La Fornace'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],operatori:[],opCorrente:null,
-  societa:[{ragione:'MASTERPLAN GROUP SRL',indirizzo:'Via Francesco Baracca, 10 - 35019 Tombolo (PD)',piva:'05662050284',rea:'PD 483354',pec:'masterplangroup@pec.it',email:'info@masterplangroup.it',sdi:'X2PH38J'},{}],
-  loghi:[null,null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti',lastBackup:null,bkDismissed:0,storMese:''};
+let S={locali:['Il mio locale'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],operatori:[],opCorrente:null,
+  societa:[{}],
+  loghi:[null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti',lastBackup:null,bkDismissed:0,storMese:'',benvenutoFatto:false};
 async function loadState(){
   const st=await dbGet('settings','app');
-  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];S.operatori=st.operatori||[];S.lastBackup=st.lastBackup||null;
+  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];S.operatori=st.operatori||[];S.lastBackup=st.lastBackup||null;S.benvenutoFatto=!!st.benvenutoFatto;
     // migrazione: vecchio codice operatore unico -> un operatore generico sul primo locale
     if(st.opPin&&!S.operatori.length)S.operatori=[{id:uid(),nome:'Operatore',cognome:'',sigla:'OP',pin:st.opPin,locale:0}];}
   while(S.societa.length<S.locali.length)S.societa.push({});
@@ -349,7 +349,7 @@ async function migrateSlots(){
   }
   if(changed)S.docs=await dbAll('docs');
 }
-const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,operatori:S.operatori,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico,lastBackup:S.lastBackup});
+const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,operatori:S.operatori,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico,lastBackup:S.lastBackup,benvenutoFatto:S.benvenutoFatto});
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -388,6 +388,7 @@ async function openDoc(id){
    ========================================================= */
 function render(){
   if(!S.discOk)return renderDisclaimer();
+  if(!S.benvenutoFatto && S.locali.length===1 && S.locali[0]==='Il mio locale' && !S.docs.length && !S.logs.length)return renderBenvenuto();
   if(S.pin&&!S.role)return renderLock();
   // operatore: solo registri, niente accesso al resto
   if(S.role==='op'&&S.screen!=='registri'&&S.screen!=='etichette')S.screen='registri';
@@ -1309,6 +1310,38 @@ function renderDisclaimer(){
   </div>`;
 }
 function accettaDisclaimer(){S.discOk=true;saveSettings();$('#layer').innerHTML='';render();}
+
+function renderBenvenuto(){
+  $('#app').innerHTML='';
+  $('#layer').innerHTML=`<div class="lock" style="justify-content:flex-start;padding-top:50px;overflow-y:auto">
+    <svg class="logo-v" width="420" height="252" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230.0" cy="44" r="28" fill="none" stroke="#ffffff" stroke-width="6"/><circle cx="230.0" cy="44" r="20" fill="none" stroke="#bfe8d4" stroke-width="2.8"/><path d="M219.0 44 L227.0 54 L243.0 33" fill="none" stroke="#bfe8d4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230.0" y="120" font-family="Nunito,Arial,sans-serif" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#ffffff">Essere</tspan><tspan fill="#bfe8d4">InRegola</tspan></text><text x="230.0" y="148" font-family="Nunito,Arial,sans-serif" font-size="15" font-weight="700" fill="#bfe8d4" text-anchor="middle" letter-spacing="0.4">Pronti ad ogni controllo!</text></svg>
+    <p style="font-size:18px;font-weight:700;color:#fff;text-transform:none;letter-spacing:0;margin-top:4px">Benvenuto</p>
+    <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:18px;max-width:440px;text-align:left;font-size:14px;line-height:1.6;margin-top:14px;color:#f2f1e6">
+      <p style="margin-bottom:14px">Questa app raccoglie in un unico posto i documenti, le registrazioni e le scadenze del tuo locale, pronti da mostrare in caso di controllo.</p>
+      <p style="margin-bottom:6px"><b>In pochi passi:</b></p>
+      <p style="margin-bottom:8px">1. Inserisci il nome del tuo locale qui sotto. Poi, da <b>Impostazioni</b>, potrai aggiungere i dati completi dell'attività (ragione sociale, partita IVA, indirizzo) che compariranno sui documenti stampati.</p>
+      <p style="margin-bottom:8px">2. Raccogli i documenti richiesti da ogni ente di controllo (igiene, antincendio, lavoro, ecc.)</p>
+      <p>3. Tieni in ordine i registri di temperature e pulizie, e crea le etichette di conservazione dei tuoi alimenti</p>
+    </div>
+    <div style="width:100%;max-width:440px;margin-top:20px">
+      <label style="display:block;font-size:13px;font-weight:700;color:#bfe8d4;margin-bottom:8px">NOME DEL LOCALE</label>
+      <input type="text" id="benvNome" placeholder="Es. Bar Centrale" autocomplete="off"
+        style="width:100%;border:1.5px solid rgba(255,255,255,.4);border-radius:12px;padding:14px;font-size:16px;background:rgba(255,255,255,.95);color:#21251f"
+        onkeydown="if(event.key==='Enter')salvaBenvenuto()">
+    </div>
+    <button class="sm-btn green" style="margin-top:18px;padding:14px 28px" onclick="salvaBenvenuto()">Inizia &#8594;</button>
+  </div>`;
+  setTimeout(()=>{const i=$('#benvNome');if(i)i.focus()},150);
+}
+function salvaBenvenuto(){
+  const nome=($('#benvNome').value||'').trim();
+  if(nome)S.locali[0]=nome;
+  S.benvenutoFatto=true;
+  saveSettings();
+  $('#layer').innerHTML='';
+  render();
+}
+
 
 /* ---------- settings ---------- */
 function vSettings(){

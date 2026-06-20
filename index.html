@@ -319,7 +319,7 @@ const dbClear=s=>new Promise(r=>{const q=tx(s,'readwrite').clear();q.onsuccess=(
 /* ---------- stato ---------- */
 let S={locali:['Il mio locale'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],operatori:[],opCorrente:null,
   societa:[{}],
-  loghi:[null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti',lastBackup:null,bkDismissed:0,storMese:'',benvenutoFatto:false};
+  loghi:[null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti',lastBackup:null,bkDismissed:0,storMese:'',benvenutoFatto:false,listini:null};
 async function loadState(){
   const st=await dbGet('settings','app');
   if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];S.operatori=st.operatori||[];S.lastBackup=st.lastBackup||null;S.benvenutoFatto=!!st.benvenutoFatto;
@@ -327,6 +327,8 @@ async function loadState(){
     if(st.opPin&&!S.operatori.length)S.operatori=[{id:uid(),nome:'Operatore',cognome:'',sigla:'OP',pin:st.opPin,locale:0}];}
   while(S.societa.length<S.locali.length)S.societa.push({});
   while(S.loghi.length<S.locali.length)S.loghi.push(null);
+  const stL=await dbGet('settings','listini');
+  if(stL&&stL.v)S.listini=stL.v;
   S.docs=await dbAll('docs');
   await migrateSlots();
   S.logs=await dbAll('logs');
@@ -398,6 +400,7 @@ function render(){
   else if(S.screen==='scadenze')app.innerHTML=vScadenze();
   else if(S.screen==='registri')app.innerHTML=vRegistri();
   else if(S.screen==='etichette')app.innerHTML=vEtichette();
+  else if(S.screen==='listino')app.innerHTML=vListino();
   else if(S.screen==='settings')app.innerHTML=vSettings();
   bindNav();
 }
@@ -429,11 +432,11 @@ function navBar(){
   if(S.role==='op'){
     return `<div class="bottom-nav">
       <button class="${S.screen==='registri'?'active':''}" onclick="go('registri')"><span class="n-ico">&#127777;</span>Registri</button>
-      <button class="${S.screen==='etichette'?'active':''}" onclick="go('etichette')"><span class="n-ico">&#127991;</span>Etichette</button>
+      <button class="${S.screen==='etichette'?'active':''}" onclick="go('etichette')"><span class="n-ico">&#127991;</span>Da esporre</button>
       <button onclick="lockNow()"><span class="n-ico">&#128274;</span>Esci</button>
     </div>`;
   }
-  const n=[['home','&#127968;','Archivio'],['registri','&#127777;','Registri'],['etichette','&#127991;','Etichette'],['scadenze','&#9200;','Scadenze'],['settings','&#9881;','Impostazioni']];
+  const n=[['home','&#127968;','Archivio'],['registri','&#127777;','Registri'],['etichette','&#127991;','Da esporre'],['scadenze','&#9200;','Scadenze'],['settings','&#9881;','Impostazioni']];
   return `<div class="bottom-nav">${n.map(([id,ico,lab])=>
     `<button class="${S.screen===id?'active':''}" onclick="go('${id}')"><span class="n-ico">${ico}</span>${lab}</button>`).join('')}</div>
   ${(S.screen==='registri'||S.screen==='settings'||S.screen==='etichette')?'':'<button class="fab" onclick="openDocModal()" aria-label="Aggiungi documento">+</button>'}`;
@@ -623,6 +626,195 @@ function startControllo(eid){
   </div>`;
   document.body.appendChild(div);
 }
+/* ---------- LISTINO PREZZI ---------- */
+// modello standard (voci tipiche di bar, come da modulo associazione)
+function listinoDefault(){
+  return [
+    {cat:'Caffetteria',voci:['Caffè espresso','Caffè macchiato','Caffè decaffeinato','Caffè freddo shakerato','Caffè latte','Cappuccino','Cappuccino decaffeinato','Cappuccino d\u2019orzo','Espresso d\u2019orzo','Latte','Latte macchiato','Tè, camomilla, infusi in teiera','Tè freddo','Cioccolata in tazza','Cioccolata con panna','Caffè speciali'].map(n=>({n,banco:'',tavolo:''}))},
+    {cat:'Bibite',voci:['Acqua minerale bicchiere (0,20 l)','Acqua minerale bott. (0,25 l)','Acqua minerale bott. (0,50 l)','Bibite gassate','Bibite in lattina','Succhi di frutta','Succhi di pomodoro','Spremuta di agrumi','Frutta e verdura centrifugata','Frullati','Frappè semplice','Yogurt'].map(n=>({n,banco:'',tavolo:''}))},
+    {cat:'Birre',voci:['Birra alla spina (0,20 l)','Birra alla spina (0,40 l)','Birra (bottiglia)'].map(n=>({n,banco:'',tavolo:''}))},
+    {cat:'Gastronomia',voci:['Panini','Toast','Tramezzini'].map(n=>({n,banco:'',tavolo:''}))},
+    {cat:'Pasticceria',voci:['Paste','Brioches','Pasticceria da tè'].map(n=>({n,banco:'',tavolo:''}))},
+    {cat:'Superalcolici',voci:['Brandy nazionali','Brandy spagnoli','Cognac V.S.O.P.','Prugna, anice, ruta','Punch','Grappa','Grappa riserva','Amari','Liquori nazionali','Liquori esteri','Whisky','Whisky riserva','Vodka, gin','Rum','Rum speciali'].map(n=>({n,banco:'',tavolo:''}))},
+    {cat:'Vini',voci:['Rosso (calice)','Bianco (calice)','Porto - Sherry - Marsala'].map(n=>({n,banco:'',tavolo:''}))},
+    {cat:'Aperitivi',voci:['Analcolici in bottiglietta','Vermouth','Bitter aperitivi','Spritz','Aperitivi alla frutta','Cocktails','Long drinks'].map(n=>({n,banco:'',tavolo:''}))}
+  ];
+}
+// ogni locale ha il suo listino: S.listini[locale]
+function getListino(){
+  if(!S.listini)S.listini={};
+  if(!S.listini[S.locale])S.listini[S.locale]=listinoDefault();
+  return S.listini[S.locale];
+}
+const saveListino=()=>dbPut('settings',{k:'listini',v:S.listini});
+function setPrezzo(ci,vi,campo,val){getListino()[ci].voci[vi][campo]=val;}
+function aggiungiVoce(ci){
+  const nome=prompt('Nome della voce da aggiungere:');
+  if(nome&&nome.trim()){getListino()[ci].voci.push({n:nome.trim(),banco:'',tavolo:''});saveListino();render();}
+}
+function rimuoviVoce(ci,vi){
+  if(confirm('Togliere questa voce dal listino?')){getListino()[ci].voci.splice(vi,1);saveListino();render();}
+}
+function vListino(){
+  const L=getListino();
+  return topbar()+`<div class="wrap">
+    <button class="back-btn" onclick="go('settings')">&#8592; Impostazioni</button>
+    <div class="sec-label" style="margin-top:6px">Listino prezzi &middot; ${esc(S.locali[S.locale])}</div>
+    <p style="font-size:13.5px;color:var(--ink2);margin-bottom:14px">Inserisci i prezzi al banco e al tavolo. Le voci che non usi puoi toglierle. Quando hai finito, stampa il listino col tuo logo da esporre nel locale.</p>
+    ${L.map((c,ci)=>`
+      <div class="set-card" style="padding:13px">
+        <h4 style="margin-bottom:10px">${esc(c.cat)}</h4>
+        <div style="display:flex;gap:8px;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);padding:0 2px 4px">
+          <span style="flex:1">Voce</span><span style="width:64px;text-align:center">Banco</span><span style="width:64px;text-align:center">Tavolo</span><span style="width:24px"></span>
+        </div>
+        ${c.voci.map((v,vi)=>`
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+            <span style="flex:1;font-size:13.5px">${esc(v.n)}</span>
+            <input type="text" inputmode="decimal" value="${esc(v.banco)}" placeholder="€" onchange="setPrezzo(${ci},${vi},'banco',this.value);saveListino()" style="width:64px;text-align:center;border:1.5px solid var(--line2);border-radius:8px;padding:7px 4px">
+            <input type="text" inputmode="decimal" value="${esc(v.tavolo)}" placeholder="€" onchange="setPrezzo(${ci},${vi},'tavolo',this.value);saveListino()" style="width:64px;text-align:center;border:1.5px solid var(--line2);border-radius:8px;padding:7px 4px">
+            <button onclick="rimuoviVoce(${ci},${vi})" style="width:24px;border:none;background:none;color:var(--rosso);font-size:17px" aria-label="Togli">&times;</button>
+          </div>`).join('')}
+        <button class="link-btn" onclick="aggiungiVoce(${ci})">+ Aggiungi voce a ${esc(c.cat)}</button>
+      </div>`).join('')}
+    <button class="btn primary" style="width:100%;margin-top:6px" onclick="stampaListino()">Stampa listino prezzi</button>
+  </div>`+navBar();
+}
+function stampaListino(){
+  const L=getListino();
+  const col=c=>`<div style="break-inside:avoid;margin-bottom:14px">
+    <div style="font-weight:800;font-size:15px;color:#1d4634;border-bottom:2px solid #1d4634;padding-bottom:3px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.02em">${esc(c.cat)}</div>
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      <thead><tr><th style="text-align:left;padding:2px 0"></th><th style="width:62px;text-align:center;font-size:10px;color:#555;font-weight:600">BANCO</th><th style="width:62px;text-align:center;font-size:10px;color:#555;font-weight:600">TAVOLO</th></tr></thead>
+      <tbody>${c.voci.map(v=>`<tr>
+        <td style="padding:3px 0;border-bottom:1px dotted #ccc">${esc(v.n)}</td>
+        <td style="text-align:center;border-bottom:1px dotted #ccc">${v.banco?'€ '+esc(v.banco):'—'}</td>
+        <td style="text-align:center;border-bottom:1px dotted #ccc">${v.tavolo?'€ '+esc(v.tavolo):'—'}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+  const corpo=`<div style="column-count:2;column-gap:26px">${L.map(col).join('')}</div>
+    <p style="font-size:11px;color:#666;margin-top:16px;text-align:center">Listino prezzi esposto ai sensi della L. 287/1991 e del D.Lgs 206/2005 (Codice del Consumo).</p>`;
+  apriStampa('Listino prezzi',corpo);
+}
+
+// corpo della scheda Listino (dentro Da esporre)
+function corpoListino(){
+  const L=getListino();
+  return `<p style="font-size:13.5px;color:var(--ink2);margin:10px 0 14px">Inserisci i prezzi al banco e al tavolo. Le voci che non usi puoi toglierle. Poi stampa il listino col tuo logo, pronto da esporre.</p>
+    ${L.map((c,ci)=>`
+      <div class="set-card" style="padding:13px">
+        <h4 style="margin-bottom:10px">${esc(c.cat)}</h4>
+        <div style="display:flex;gap:8px;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);padding:0 2px 4px">
+          <span style="flex:1">Voce</span><span style="width:60px;text-align:center">Banco</span><span style="width:60px;text-align:center">Tavolo</span><span style="width:22px"></span>
+        </div>
+        ${c.voci.map((v,vi)=>`
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+            <span style="flex:1;font-size:13.5px">${esc(v.n)}</span>
+            <input type="text" inputmode="decimal" value="${esc(v.banco)}" placeholder="€" onchange="setPrezzo(${ci},${vi},'banco',this.value);saveListino()" style="width:60px;text-align:center;border:1.5px solid var(--line2);border-radius:8px;padding:7px 4px">
+            <input type="text" inputmode="decimal" value="${esc(v.tavolo)}" placeholder="€" onchange="setPrezzo(${ci},${vi},'tavolo',this.value);saveListino()" style="width:60px;text-align:center;border:1.5px solid var(--line2);border-radius:8px;padding:7px 4px">
+            <button onclick="rimuoviVoce(${ci},${vi})" style="width:22px;border:none;background:none;color:var(--rosso);font-size:17px" aria-label="Togli">&times;</button>
+          </div>`).join('')}
+        <button class="link-btn" onclick="aggiungiVoce(${ci})">+ Aggiungi voce</button>
+      </div>`).join('')}
+    <button class="btn primary" style="width:100%;margin-top:6px" onclick="stampaListino()">Stampa listino prezzi</button>`;
+}
+
+// elenco dei cartelli obbligatori da stampare ed esporre
+const CARTELLI=[
+  {id:'fumo',nome:'Vietato fumare',desc:'L. 3/2003 art. 51 \u00B7 da esporre in luogo visibile'},
+  {id:'alcolminori',nome:'Non serviamo alcolici ai minori',desc:'Divieto vendita under 18 e dalle 3 alle 6 (anche in inglese)'},
+  {id:'tulps',nome:'Estratto Legge di Pubblica Sicurezza',desc:'Art. 180 R.D. 635/1940 \u00B7 obbligo di esposizione'},
+  {id:'ambientale',nome:'Etichettatura ambientale',desc:'Smaltimento imballaggi \u00B7 verifica le regole del tuo Comune'},
+  {id:'guida',nome:'Chi guida stasera?',desc:'Tasso alcolemico e limiti di legge per la guida'}
+];
+function corpoCartelli(){
+  return `<p style="font-size:13.5px;color:var(--ink2);margin:10px 0 14px">Cartelli obbligatori da stampare ed esporre nel locale, gi\u00E0 col tuo logo. Tocca un cartello per stamparlo.</p>
+    ${CARTELLI.map(c=>`<div class="set-card" style="display:flex;align-items:center;gap:12px;padding:14px">
+      <div style="flex:1"><h4 style="margin-bottom:3px">${esc(c.nome)}</h4><p style="margin:0;font-size:12.5px;color:var(--ink2)">${esc(c.desc)}</p></div>
+      <button class="sm-btn green" onclick="stampaCartello('${c.id}')">Stampa</button>
+    </div>`).join('')}
+    <div class="set-card" style="margin-top:6px"><p style="margin:0;font-size:12.5px">I testi dei cartelli riportano la normativa vigente. Verifica con la tua associazione di categoria o un tecnico che siano aggiornati per il tuo Comune e la tua Regione.</p></div>`;
+}
+
+// genera la finestra di stampa del cartello scelto
+function stampaCartello(id){
+  const m={fumo:cartFumo,alcolminori:cartAlcol,tulps:cartTulps,ambientale:cartAmbientale,guida:cartGuida};
+  const fn=m[id];if(!fn)return;
+  const w=window.open('','_blank');
+  w.document.write(fn());w.document.close();
+  setTimeout(()=>{try{w.print()}catch(e){}},400);
+}
+
+
+function _logoCart(){return '<svg width="190" height="61" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230" cy="44" r="28" fill="none" stroke="#21251f" stroke-width="6"/><circle cx="230" cy="44" r="20" fill="none" stroke="#178f5a" stroke-width="2.8"/><path d="M219 44 L227 54 L243 33" fill="none" stroke="#178f5a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230" y="120" font-family="Arial" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#21251f">Essere</tspan><tspan fill="#178f5a">InRegola</tspan></text><text x="230" y="150" font-family="Arial" font-size="15" font-weight="700" fill="#5b5f56" text-anchor="middle">Pronti ad ogni controllo!</text></svg>';}
+function _cartHead(){return '<div style="text-align:center;margin-bottom:10px">'+_logoCart()+'</div>';}
+function _cartWrap(inner){return '<!DOCTYPE html><html><head><meta charset="utf-8"><style>@page{size:A4;margin:13mm}body{font-family:Georgia,\'Times New Roman\',serif;color:#21251f;margin:0 auto;padding:14px 22px;max-width:780px}</style></head><body>'+inner+'</body></html>';}
+
+function cartFumo(){
+var sim='<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="82" fill="none" stroke="#5a4a3a" stroke-width="14"/><line x1="42" y1="42" x2="158" y2="158" stroke="#5a4a3a" stroke-width="14"/><rect x="48" y="108" width="78" height="16" rx="2" fill="#e08a2e"/><rect x="130" y="108" width="10" height="16" fill="#e08a2e"/><rect x="144" y="108" width="8" height="16" fill="#e08a2e"/></svg>';
+var b='<div style="text-align:center">'+_cartHead()+'<div style="margin:10px 0">'+sim+'</div>'+
+'<div style="font-size:15px;font-weight:bold;margin-top:10px">LEGGE 16 GENNAIO 2003, N. 3 - ART. 51<div style="font-weight:normal;font-size:13px;font-style:italic">e successive modificazioni e integrazioni</div></div>'+
+'<h1 style="font-family:Arial;color:#c0392b;font-size:72px;font-weight:900;margin:14px 0 18px;line-height:.95">VIETATO<br>FUMARE</h1>'+
+'<div style="font-size:21px;font-weight:bold;line-height:1.35">I TRASGRESSORI AL DIVIETO SONO SOGGETTI<br>ALLA SANZIONE AMMINISTRATIVA PECUNIARIA<br>DA EURO 27,50 AD EURO 275,00</div>'+
+'<div style="font-size:14px;line-height:1.5;margin-top:18px;color:#333">LA MISURA DELLA SANZIONE \u00C8 RADDOPPIATA QUALORA LA VIOLAZIONE SIA COMMESSA IN PRESENZA DI UNA DONNA IN EVIDENTE STATO DI GRAVIDANZA O IN PRESENZA DI LATTANTI O BAMBINI FINO A 12 ANNI</div>'+
+'<div style="font-size:13px;margin-top:26px;text-align:left">Soggetti ai quali spetta vigilare per l\'osservanza del divieto:<span style="border-bottom:1px solid #888;display:inline-block;width:55%;margin-left:6px"></span></div>'+
+'<div style="font-size:12px;color:#444;margin-top:14px;text-align:left;line-height:1.5">Soggetti competenti all\'accertamento delle infrazioni: Ufficiali ed Agenti di Polizia Giudiziaria, Polizia Amministrativa Locale, Guardie Giurate adibite allo specifico servizio.</div></div>';
+return _cartWrap(b);}
+
+function cartAlcol(){
+var sim='<svg width="220" height="220" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="82" fill="none" stroke="#5a4a3a" stroke-width="13"/><line x1="42" y1="42" x2="158" y2="158" stroke="#5a4a3a" stroke-width="13"/><path d="M78 70 l0 -12 l10 0 l0 12 c0 6 6 8 6 16 l0 46 c0 5 -3 7 -8 7 l-6 0 c-5 0 -8 -2 -8 -7 l0 -46 c0 -8 6 -10 6 -16 z" fill="#e08a2e"/><path d="M108 108 l36 0 l-4 40 c-1 5 -4 7 -9 7 l-10 0 c-5 0 -8 -2 -9 -7 z" fill="#e08a2e"/></svg>';
+var b='<div style="text-align:center">'+_cartHead()+'<div style="margin:14px 0">'+sim+'</div>'+
+'<h1 style="font-family:Arial;color:#c0392b;font-size:48px;font-weight:900;margin:18px 0 6px;line-height:1.08;text-transform:uppercase">Non vendiamo e non serviamo<br>alcolici ai minori di 18 anni</h1>'+
+'<div style="font-family:Arial;color:#c0392b;font-size:38px;font-weight:900;text-transform:uppercase;line-height:1.1">e dalle ore 3 alle ore 6</div>'+
+'<div style="font-size:18px;color:#555;font-style:italic;margin-top:22px;line-height:1.4">We do not sell or serve alcohol to persons under 18 \u2014 and from 3 a.m. to 6 a.m.</div>'+
+'<div style="font-size:12px;color:#666;font-style:italic;margin-top:30px">Rif. art. 689 C.P. \u00B7 L.R. Veneto 29/2007 \u00B7 L. 120/2010 \u00B7 L. 189/2012</div></div>';
+return _cartWrap(b);}
+
+function cartGuida(){
+var liv=[['Fino a 0,5 g/l','Iniziale riduzione di inibizioni e autocontrollo. Lieve euforia.'],['0,5 \u2013 0,8 g/l','Riduzione delle capacit\u00E0 visive laterali e dei riflessi. Tempi di reazione pi\u00F9 lenti.'],['0,8 \u2013 1,5 g/l','Alterazione dell\'umore, confusione mentale, disorientamento. Compromissione del giudizio e del coordinamento dei movimenti.'],['1,6 \u2013 3,0 g/l','Stordimento, aggressivit\u00E0, stato depressivo, apatia. Difficolt\u00E0 a stare in piedi e a camminare.'],['3,0 \u2013 5,0 g/l','Stato di incoscienza, incontinenza, possibile coma. Difficolt\u00E0 respiratorie.'],['Oltre 4 g/l','Forte rischio di soffocamento, arresto respiratorio o cardiaco. Pericolo di morte.']];
+var trs=liv.map(function(x){return '<tr><td style="width:130px;background:#f3ece2;font-weight:bold;font-size:13px;padding:7px 10px;border:1px solid #ddd;text-align:center">'+x[0]+'</td><td style="font-size:12.5px;padding:7px 12px;border:1px solid #ddd;line-height:1.4">'+x[1]+'</td></tr>';}).join('');
+var b=_cartHead()+'<h1 style="text-align:center;color:#e08a2e;font-size:26px;font-weight:bold;margin:4px 0 2px">CHI GUIDA STASERA? CHI \u00C8 SOBRIO!</h1>'+
+'<div style="text-align:center;color:#999;font-size:14px;font-style:italic;margin-bottom:14px">Who\'s driving tonight? Whoever is not drinking!</div>'+
+'<div style="font-size:12.5px;text-align:center;line-height:1.5;margin-bottom:16px"><b>Non esistono livelli di consumo alcolico sicuri alla guida.</b> Anche piccole quantit\u00E0 di alcol riducono i riflessi e la capacit\u00E0 di guida.</div>'+
+'<div style="background:#c0392b;color:#fff;text-align:center;font-size:21px;font-weight:bold;padding:12px;border-radius:8px;margin:14px 0">Il limite di legge del tasso alcolemico per la guida \u00E8 0,5 g/l</div>'+
+'<h2 style="text-align:center;color:#21251f;font-size:16px;margin:18px 0 8px;font-style:italic">L\'alcol ti trasforma. Come?</h2>'+
+'<table style="width:100%;border-collapse:collapse">'+trs+'</table>'+
+'<div style="font-size:11px;color:#666;font-style:italic;text-align:center;margin-top:14px;line-height:1.5">Rif. Codice della Strada (D.Lgs 285/1992 art. 186) \u00B7 L. 120/2010. I valori sono indicativi e variano in base a sesso, peso, stato di salute e quantit\u00E0 di cibo assunto.</div>';
+return _cartWrap(b);}
+
+function cartTulps(){
+var b=_cartHead()+'<div style="border:1.5px solid #bbb;padding:18px 22px">'+
+'<div style="text-align:center;font-size:12px;font-weight:bold">(Art. 180 del Regio Decreto n\u00B0 635/1940)</div>'+
+'<h1 style="text-align:center;color:#e08a2e;font-size:23px;font-weight:bold;margin:4px 0;line-height:1.15">ESTRATTO DELLA LEGGE E DEL REGOLAMENTO<br>DI PUBBLICA SICUREZZA</h1>'+
+'<div style="text-align:center;font-size:12.5px;margin-bottom:14px">DA TENERE ESPOSTO NEI PUBBLICI ESERCIZI IN LUOGO VISIBILE AL PUBBLICO</div>'+
+'<h2 style="text-align:center;color:#e08a2e;font-size:16px;font-style:italic;margin:14px 0 2px">LEGGE DI PUBBLICA SICUREZZA</h2>'+
+'<div style="text-align:center;font-size:12px;margin-bottom:6px">(Testo Unico approvato con R. Decreto 18 giugno 1931, n. 773)</div>'+
+'<div style="text-align:center;font-weight:bold;font-size:13.5px;margin-top:12px">Art. 101</div>'+
+'<p style="font-size:12px;line-height:1.4;text-align:center;margin:3px 0">\u00C8 vietato di adibire il locale di un pubblico esercizio a ufficio di collocamento o di pagamento delle mercedi agli operai.</p>'+
+'<p style="font-style:italic;font-size:11px;text-align:center">NOTA: gli articoli 89, 96 e 97 Testo Unico sono stati abrogati dall\'art. 1 Legge 25/8/1991 n. 287</p>'+
+'<h2 style="text-align:center;color:#e08a2e;font-size:16px;font-style:italic;margin:14px 0 2px">REGOLAMENTO DI PUBBLICA SICUREZZA</h2>'+
+'<div style="text-align:center;font-size:12px;margin-bottom:6px">(approvato con R. Decreto 6 maggio 1940, n. 635)</div>'+
+'<div style="text-align:center;font-weight:bold;font-size:13.5px;margin-top:12px">Art. 176</div>'+
+'<p style="font-size:12px;line-height:1.4;text-align:center;margin:3px 0">Agli effetti dell\'art. 86 della Legge, non si considera vendita al minuto di bevande alcooliche quella fatta in recipienti chiusi secondo le consuetudini commerciali, e da trasportarsi fuori dal locale di vendita, purch\u00E9 la quantit\u00E0 contenuta nei singoli recipienti non sia inferiore a litri 0,20 per le bevande alcooliche di cui all\'art. 89 della Legge ed a litri 0,33 per le altre.</p>'+
+'<p style="font-size:12px;line-height:1.4;text-align:center;margin:3px 0">Per le bevande non alcooliche, \u00E8 considerata vendita al minuto esclusivamente quella congiunta al consumo.</p>'+
+'<p style="font-style:italic;font-size:11px;text-align:center">NOTA: articolo cos\u00EC modificato dall\'art. 7 Legge 11/5/1981 n. 213</p>'+
+'<div style="text-align:center;font-weight:bold;font-size:13.5px;margin-top:12px">Art. 180</div>'+
+'<p style="font-size:12px;line-height:1.4;text-align:center;margin:3px 0">I pubblici esercenti debbono tenere esposte nel locale dell\'esercizio, in luogo visibile al pubblico, la licenza, l\'autorizzazione e la tariffa dei prezzi.</p>'+
+'<p style="font-size:12px;line-height:1.4;text-align:center;margin:3px 0">Hanno pure l\'obbligo di tenere in luogo visibile al pubblico l\'elenco delle bevande alcooliche indicate nell\'art. 89 della Legge che trovansi in vendita nell\'esercizio, nonch\u00E9 la riproduzione a stampa degli articoli 96, 97 e 101 della Legge e degli articoli 173, 176 a 181 e 186 del presente Regolamento.</p>'+
+'<div style="text-align:center;font-weight:bold;font-size:13.5px;margin-top:12px">Art. 181</div>'+
+'<p style="font-size:12px;line-height:1.4;text-align:center;margin:3px 0">Non \u00E8 permesso somministrare al minuto bevande alcooliche di qualsiasi specie, come prezzo di scommessa o di giuoco, n\u00E9 farne vendita a prezzo ragguagliato ad ora o frazione di ora.</p>'+
+'<div style="text-align:center;font-weight:bold;font-size:13.5px;margin-top:12px">Art. 186</div>'+
+'<p style="font-size:12px;line-height:1.4;text-align:center;margin:3px 0">Con la chiusura dei pubblici esercizi all\'ora stabilita deve cessare ogni servizio o somministrazione agli avventori ed effettuarsi lo sgombero del locale.</p>'+
+'</div>';
+return _cartWrap(b);}
+function cartAmbientale(){
+var b=_cartHead()+'<h1 style="text-align:center;font-size:24px;letter-spacing:1px;margin:6px 0 2px">ETICHETTATURA AMBIENTALE</h1>'+
+'<div style="text-align:center;color:#e08a2e;font-size:15px;margin-bottom:12px">Le componenti dell\'imballaggio fornito sono cos\u00EC identificate:</div>'+
+'<table style="width:100%;border-collapse:collapse"><thead><tr><th style="background:#e08a2e;color:#fff;font-size:14px;padding:7px;border:1px solid #d07d22">Prodotto</th><th style="background:#e08a2e;color:#fff;font-size:14px;padding:7px;border:1px solid #d07d22">Codice</th><th style="background:#e08a2e;color:#fff;font-size:14px;padding:7px;border:1px solid #d07d22">Famiglia</th></tr></thead><tbody>'+
+'<tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Bicchiere in carta</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">C/PAP 81</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Carta</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Bicchiere in plastica</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">BIO 07</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Umido – organico</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Coperchio in plastica per bicchiere</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">PS 6</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Plastica</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Bustina di zucchero</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">C/PAP 81</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Carta</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Cannuccia in carta</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">PAP 22</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Carta</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Coppetta gelato in carta</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">C/PAP 81</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Carta</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Pirottini per dolci</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">PAP 22</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Carta</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Posate monouso in legno</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">FOR 50</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Umido – organico</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Sacchetti/buste in carta</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">PAP 22</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Carta</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Sacchetti in polietilene</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">PP 04</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Plastica</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Borse bio</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">BIO 07</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Umido – organico</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Vaschetta in PVC per asporto</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">PVC 3</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Plastica</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Vaschetta in polistirolo per asporto</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">PS 6 / PS 5</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Plastica</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Vaschetta in alluminio per asporto</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">ALU 41</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Alluminio – metallo</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Vaschetta bio</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">BIO 07</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Umido – organico</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Spiedino, stuzzicadente, cucchiaio, stecco in legno monouso</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">FOR 50</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Umido – organico</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Tovaglioli</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">PAP 22</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Carta</td></tr><tr><td style="text-align:left;font-size:12px;padding:5px 8px;border:1px solid #ccc">Cartoni per pizza</td><td style="text-align:center;font-weight:bold;font-size:12px;padding:5px 8px;border:1px solid #ccc">PAP 20</td><td style="text-align:center;font-size:12px;padding:5px 8px;border:1px solid #ccc">Carta</td></tr>'+
+'</tbody></table>'+
+'<div style="font-size:11.5px;text-align:center;margin-top:12px;line-height:1.5">Prima di smaltire l\'imballaggio ricorda di svuotarlo completamente, pulirlo se necessario, ridurlo di dimensioni e separare le componenti.<b style="display:block;margin-top:4px">Verifica sempre le disposizioni del tuo Comune.</b></div>';
+return _cartWrap(b);}
+
 // genera una finestra di stampa pulita e intestata
 function intestazioneHTML(){
   const so=S.societa[S.locale]||{},logo=S.loghi[S.locale];
@@ -926,11 +1118,18 @@ function rinnovaScad(sid){
 function vEtichette(){
   const tab=S.etTab||'prodotti';
   const seg=`<div class="et-seg">
-    <button class="${tab==='prodotti'?'on':''}" onclick="S.etTab='prodotti';render()">Prodotti</button>
+    <button class="${tab==='prodotti'||tab==='storico'?'on':''}" onclick="S.etTab='prodotti';render()">Etichette</button>
+    <button class="${tab==='listino'?'on':''}" onclick="S.etTab='listino';render()">Listino</button>
+    <button class="${tab==='cartelli'?'on':''}" onclick="S.etTab='cartelli';render()">Cartelli</button>
+  </div>`;
+  if(tab==='listino')return topbar()+`<div class="wrap"><div class="sec-label" style="margin-top:6px">Da esporre &middot; ${esc(S.locali[S.locale])}</div>${seg}${corpoListino()}</div>`+navBar();
+  if(tab==='cartelli')return topbar()+`<div class="wrap"><div class="sec-label" style="margin-top:6px">Da esporre &middot; ${esc(S.locali[S.locale])}</div>${seg}${corpoCartelli()}</div>`+navBar();
+  const segStorico=`<div class="et-seg" style="margin-top:8px">
+    <button class="${tab!=='storico'?'on':''}" onclick="S.etTab='prodotti';render()">Prodotti</button>
     <button class="${tab==='storico'?'on':''}" onclick="S.etTab='storico';render()">Storico</button>
   </div>`;
   let corpo;
-  if(tab==='prodotti'){
+  if(tab!=='storico'){
     const prod=S.prodotti.filter(p=>p.locale===S.locale);
     const lista=prod.length?prod.map(p=>{
       const last=p.last||{};
@@ -949,8 +1148,9 @@ function vEtichette(){
     corpo=vStoricoEtichette();
   }
   return topbar()+`<div class="wrap">
-    <div class="sec-label" style="margin-top:6px">Etichette &middot; ${esc(S.locali[S.locale])}</div>
+    <div class="sec-label" style="margin-top:6px">Da esporre &middot; ${esc(S.locali[S.locale])}</div>
     ${seg}
+    ${segStorico}
     ${corpo}
   </div>`+navBar();
 }
@@ -1346,7 +1546,12 @@ function salvaBenvenuto(){
 /* ---------- settings ---------- */
 function vSettings(){
   return topbar()+`<div class="wrap">
-    <div class="sec-label" style="margin-top:6px">Locali</div>
+    <div class="sec-label" style="margin-top:6px">Documenti da esporre</div>
+    <div class="set-card"><h4>Listino prezzi</h4>
+      <p>Compila i prezzi del tuo locale e stampa un listino col tuo logo, pronto da esporre come richiede la legge.</p>
+      <button class="sm-btn green" onclick="go('listino')">Apri il listino prezzi</button></div>
+
+    <div class="sec-label">Locali</div>
     ${S.locali.map((l,i)=>{const so=S.societa[i]||{};return `<div class="set-card"><div class="row" style="align-items:center">
       <input type="text" value="${esc(l)}" style="flex:1;border:1.5px solid var(--line2);border-radius:10px;padding:11px" onchange="renameLocale(${i},this.value)">
       ${S.locali.length>1?`<button class="sm-btn red" onclick="removeLocale(${i})">Elimina</button>`:''}

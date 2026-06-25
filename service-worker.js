@@ -9,7 +9,7 @@
    I dispositivi scaricheranno la nuova versione e cancelleranno
    la cache vecchia al riavvio successivo.
    ========================================================= */
-const CACHE = 'inregola-v24';
+const CACHE = 'inregola-v24b';
 const ASSETS = [
   './',
   './index.html',

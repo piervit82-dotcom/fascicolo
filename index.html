@@ -319,10 +319,10 @@ const dbClear=s=>new Promise(r=>{const q=tx(s,'readwrite').clear();q.onsuccess=(
 /* ---------- stato ---------- */
 let S={locali:['Il mio locale'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],operatori:[],opCorrente:null,
   societa:[{}],
-  loghi:[null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti',lastBackup:null,bkDismissed:0,storMese:'',benvenutoFatto:false,listini:null};
+  loghi:[null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti',lastBackup:null,bkDismissed:0,storMese:'',benvenutoFatto:false,listini:null,apiKey:''};
 async function loadState(){
   const st=await dbGet('settings','app');
-  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];S.operatori=st.operatori||[];S.lastBackup=st.lastBackup||null;S.benvenutoFatto=!!st.benvenutoFatto;
+  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];S.operatori=st.operatori||[];S.lastBackup=st.lastBackup||null;S.benvenutoFatto=!!st.benvenutoFatto;S.apiKey=st.apiKey||'';
     // migrazione: vecchio codice operatore unico -> un operatore generico sul primo locale
     if(st.opPin&&!S.operatori.length)S.operatori=[{id:uid(),nome:'Operatore',cognome:'',sigla:'OP',pin:st.opPin,locale:0}];}
   while(S.societa.length<S.locali.length)S.societa.push({});
@@ -351,7 +351,7 @@ async function migrateSlots(){
   }
   if(changed)S.docs=await dbAll('docs');
 }
-const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,operatori:S.operatori,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico,lastBackup:S.lastBackup,benvenutoFatto:S.benvenutoFatto});
+const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,operatori:S.operatori,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico,lastBackup:S.lastBackup,benvenutoFatto:S.benvenutoFatto,apiKey:S.apiKey});
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -1209,6 +1209,12 @@ function openProdModal(pid){
   const p=pid?S.prodotti.find(x=>x.id===pid):null;
   $('#layer').innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
     <h3>${p?'Modifica prodotto':'Nuovo prodotto'}</h3>
+    ${!p?`<div class="f-group">
+      <input type="file" id="prFoto" accept="image/*" capture="environment" style="display:none" onchange="leggiEtichettaAI(this)">
+      <button class="btn ghost" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px" onclick="document.getElementById('prFoto').click()">
+        <span style="font-size:18px">\u{1F4F7}</span> Fotografa l'etichetta (AI)</button>
+      <p id="aiStato" style="font-size:12px;color:var(--ink2);margin-top:6px;text-align:center"></p>
+    </div>`:''}
     <div class="f-group"><label>Nome prodotto</label>
       <input type="text" id="prNome" value="${p?esc(p.nome):''}" placeholder="Es. Funghi porcini"></div>
     <div class="f-group"><label>Giorni di conservazione dopo apertura</label>
@@ -1236,6 +1242,71 @@ function saveProd(pid){
 function delProd(pid){
   if(!confirm('Eliminare questo prodotto?'))return;
   S.prodotti=S.prodotti.filter(x=>x.id!==pid);saveSettings();closeModal();render();toast('Prodotto eliminato');
+}
+function salvaApiKey(){
+  const v=($('#setApiKey').value||'').trim();
+  S.apiKey=v;saveSettings();render();
+  toast(v?'Chiave AI salvata':'Chiave rimossa');
+}
+function rimuoviApiKey(){
+  if(!confirm('Rimuovere la chiave AI da questo dispositivo?'))return;
+  S.apiKey='';saveSettings();render();toast('Chiave rimossa');
+}
+// legge l'etichetta dalla foto con l'AI (Claude) e compila i campi
+async function leggiEtichettaAI(input){
+  if(!input.files||!input.files[0])return;
+  if(!S.apiKey){
+    toast('Prima inserisci la chiave AI nelle Impostazioni');
+    return;
+  }
+  const file=input.files[0];
+  const stato=$('#aiStato');
+  if(stato)stato.textContent='Lettura in corso\u2026 attendi qualche secondo';
+  try{
+    // converto la foto in base64
+    const b64=await new Promise((res,rej)=>{
+      const r=new FileReader();
+      r.onload=()=>res(r.result.split(',')[1]);
+      r.onerror=rej;r.readAsDataURL(file);
+    });
+    const media=file.type||'image/jpeg';
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'content-type':'application/json',
+        'x-api-key':S.apiKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
+      body:JSON.stringify({
+        model:'claude-haiku-4-5-20251001',
+        max_tokens:300,
+        messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:media,data:b64}},
+          {type:'text',text:'Questa \u00E8 la foto dell\'etichetta di un prodotto alimentare. Leggi e restituisci SOLO un oggetto JSON con questi campi (stringa vuota se non presente): {"nome":"nome del prodotto","lotto":"numero di lotto","scadenza":"data di scadenza in formato AAAA-MM-GG"}. Non aggiungere altro testo, solo il JSON.'}
+        ]}]
+      })
+    });
+    if(!resp.ok){
+      const e=await resp.text();
+      if(stato)stato.textContent='Errore AI. Controlla la chiave nelle Impostazioni.';
+      console.log('AI error',e);
+      return;
+    }
+    const data=await resp.json();
+    let txt=(data.content||[]).filter(x=>x.type==='text').map(x=>x.text).join('').trim();
+    txt=txt.replace(/```json|```/g,'').trim();
+    let info={};
+    try{info=JSON.parse(txt);}catch(e){info={};}
+    if(info.nome&&$('#prNome'))$('#prNome').value=info.nome;
+    if(stato)stato.textContent=info.nome?('Letto: '+info.nome):'Non sono riuscito a leggere il nome, scrivilo a mano.';
+    // memorizzo lotto/scadenza letti, da riusare quando si fa l'etichetta
+    S._aiLetto={lotto:info.lotto||'',scadenza:info.scadenza||''};
+    toast('Etichetta letta');
+  }catch(err){
+    if(stato)stato.textContent='Errore di connessione. Riprova.';
+    console.log(err);
+  }
 }
 // compilazione etichetta: precompila con l'ultima etichetta fatta per questo prodotto
 function apriEtichetta(pid){
@@ -1592,6 +1663,16 @@ function vSettings(){
         <option value="15" ${S.lockMin==15?'selected':''}>Dopo 15 minuti</option>
         <option value="-1" ${S.lockMin==-1?'selected':''}>Mai (solo manuale)</option>
       </select></div>`:''}
+
+    <div class="sec-label">Intelligenza artificiale</div>
+    <div class="set-card"><h4>Lettura etichette con foto</h4>
+      <p>Con la chiave AI puoi fotografare l'etichetta di un prodotto e farti compilare il nome in automatico. La chiave resta salvata solo su questo dispositivo.</p>
+      <input type="password" id="setApiKey" value="${esc(S.apiKey||'')}" placeholder="Incolla qui la chiave (sk-ant-...)" style="width:100%;border:1.5px solid var(--line2);border-radius:10px;padding:11px;margin-bottom:8px">
+      <div class="row">
+        <button class="sm-btn green" onclick="salvaApiKey()">Salva chiave</button>
+        ${S.apiKey?'<button class="sm-btn red" onclick="rimuoviApiKey()">Rimuovi</button>':''}
+      </div>
+      <p style="font-size:12px;color:var(--ink2);margin-top:8px;margin-bottom:0">${S.apiKey?'\u2713 Chiave attiva. La funzione foto \u00E8 disponibile quando aggiungi un prodotto.':'Nessuna chiave inserita. La crei su console.anthropic.com \u2192 Chiavi API.'}</p></div>
 
     <div class="sec-label">Report</div>
     <div class="set-card"><h4>Report compliance del locale</h4>

@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>EssereInRegola · Documenti e norme pronti per ogni controllo</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#178f5a">
+<meta name="theme-color" content="#1d4634">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="EssereInRegola">
@@ -16,14 +16,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#1b2420; --ink2:#7c857f; --ink3:#aab0ab;
-  --bg:#f4f5f0; --card:#ffffff;
-  --verde:#178f5a; --verde-d:#0f7a4b; --verde-l:#22a96c; --verde-soft:#e2f4ea;
-  --rosso:#e8503a; --rosso-d:#c93f2c; --rosso-soft:#fce6e1;
-  --ambra:#e8a13a; --ambra-d:#a06d12; --ambra-soft:#fcefd9;
-  --ok:#0f7a4b;
-  --line:#edeee9; --line2:#e3e5de;
-  --r:20px;
+  --ink:#16201b; --ink2:#6b746d; --ink3:#9aa29b;
+  --bg:#ecebe2; --card:#ffffff;
+  --verde:#1d4634; --verde-d:#143126; --verde-l:#2f6b4f; --verde-soft:#e3e9e3;
+  --rosso:#b23427; --rosso-d:#8e281e; --rosso-soft:#f2e1de;
+  --ambra:#9a6b15; --ambra-d:#7a5410; --ambra-soft:#f1e8d5;
+  --ok:#1d4634;
+  --line:#e0e0d6; --line2:#d2d3c6;
+  --r:8px;
   --sans:'Nunito',-apple-system,system-ui,sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -48,15 +48,15 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .locale-chip.active{background:var(--verde);color:#fff;border-color:var(--verde)}
 
 /* ---------- sections ---------- */
-.wrap{padding:18px 18px 0}
+.wrap{padding-bottom:120px;padding:18px 18px 0}
 .sec-label{font-size:12px;font-weight:800;letter-spacing:.01em;text-transform:uppercase;color:var(--ink2);margin:22px 4px 12px;display:flex;align-items:center;gap:10px}
 .sec-label:first-child{margin-top:6px}
 
 /* ---------- alert scadenze ---------- */
-.alert-card{border-radius:var(--r);padding:15px 16px;margin-bottom:10px;display:flex;gap:13px;align-items:center;border:none;background:var(--card);box-shadow:0 2px 10px rgba(0,0,0,.05);width:100%;text-align:left}
+.alert-card{border-radius:var(--r);padding:15px 16px;margin-bottom:10px;display:flex;gap:13px;align-items:center;border:none;background:var(--card);border:1px solid var(--line);width:100%;text-align:left}
 .alert-card.scaduto{color:var(--ink)}
 .alert-card.scadenza{color:var(--ink)}
-.alert-card .a-ico{font-size:18px;line-height:1;width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.alert-card .a-ico{font-size:18px;line-height:1;width:42px;height:42px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .alert-card.scaduto .a-ico{background:var(--rosso-soft)}
 .alert-card.scadenza .a-ico{background:var(--ambra-soft)}
 .alert-card b{display:block;font-size:14.5px;font-weight:800}
@@ -67,7 +67,7 @@ input,select,textarea{font-family:inherit;font-size:16px}
 
 /* ---------- ente tiles ---------- */
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.tile{position:relative;text-align:left;background:var(--card);border:none;border-radius:24px;padding:17px;min-height:140px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.tile{position:relative;text-align:left;background:var(--card);border:none;border-radius:24px;padding:17px;min-height:140px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid var(--line)}
 .tile .t-sigla{font-size:10px;font-weight:800;letter-spacing:.04em;color:var(--ink3);text-transform:uppercase}
 .tile h3{font-size:15.5px;font-weight:800;letter-spacing:-.01em;line-height:1.15;margin-top:2px}
 .tile .t-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:11px}
@@ -84,7 +84,7 @@ input,select,textarea{font-family:inherit;font-size:16px}
 
 /* ---------- search ---------- */
 .search-row{display:flex;gap:8px;margin-bottom:4px}
-.search-row input{flex:1;border:none;border-radius:99px;padding:14px 20px;background:var(--card);color:var(--ink);font-weight:600;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.search-row input{flex:1;border:none;border-radius:99px;padding:14px 20px;background:var(--card);color:var(--ink);font-weight:600;border:1px solid var(--line)}
 .search-row input::placeholder{color:var(--ink3);font-weight:600}
 .search-row input:focus{outline:2px solid var(--verde)}
 
@@ -96,10 +96,10 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .controllo-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:16px;background:#fff;color:var(--rosso);border:none;border-radius:99px;padding:15px;font-size:15px;font-weight:900;letter-spacing:.01em;text-transform:none}
 .controllo-btn:active{background:#f5f5f0}
 
-.check-item{background:var(--card);border:none;border-radius:var(--r);padding:15px 16px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.check-item{background:var(--card);border:none;border-radius:var(--r);padding:15px 16px;margin-bottom:10px;border:1px solid var(--line)}
 .check-item .ci-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .ci-norma{font-size:11px;font-weight:600;color:var(--ink3);margin-top:5px;line-height:1.5}
-.ente-nota{margin-top:14px;padding:14px 15px;background:var(--verde-soft);border:none;border-radius:18px;font-size:12.5px;font-weight:600;color:var(--verde-d);line-height:1.55}
+.ente-nota{margin-top:14px;padding:14px 15px;background:var(--verde-soft);border:none;border-radius:8px;font-size:12.5px;font-weight:600;color:var(--verde-d);line-height:1.55}
 .check-item h4{font-size:14.5px;font-weight:800;line-height:1.3;flex:1}
 .badge{font-size:10.5px;font-weight:800;letter-spacing:.01em;padding:5px 11px;border-radius:99px;white-space:nowrap;text-transform:none}
 .badge.manca{background:var(--rosso-soft);color:var(--rosso)}
@@ -107,34 +107,34 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .badge.scad{background:var(--ambra-soft);color:var(--ambra-d)}
 .badge.exp{background:var(--rosso);color:#fff}
 .doc-row{display:flex;align-items:center;gap:12px;margin-top:12px;padding:11px 12px;background:var(--bg);border-radius:15px;border:none}
-.doc-row .d-ico{width:34px;height:34px;flex-shrink:0;border:none;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:800;color:var(--ink3);position:relative;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.doc-row .d-ico{width:34px;height:34px;flex-shrink:0;border:none;border-radius:6px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:800;color:var(--ink3);position:relative;border:1px solid var(--line)}
 .doc-row .d-info{flex:1;min-width:0}
 .doc-row .d-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .doc-row .d-meta{font-size:10.5px;font-weight:600;color:var(--ink3);margin-top:1px}
 .doc-row .d-meta.warn{color:var(--ambra-d);font-weight:700}
 .doc-row .d-meta.exp{color:var(--rosso);font-weight:700}
 .doc-row .d-open{border:none;background:var(--verde);color:#fff;border-radius:99px;padding:9px 16px;font-size:12.5px;font-weight:800;flex-shrink:0}
-.doc-row .d-edit{border:none;background:#fff;color:var(--ink2);border-radius:11px;width:38px;height:38px;font-size:14px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.doc-row .d-edit{border:none;background:#fff;color:var(--ink2);border-radius:6px;width:38px;height:38px;font-size:14px;flex-shrink:0;border:1px solid var(--line)}
 .link-btn{background:none;border:none;color:var(--verde);font-weight:800;font-size:13px;padding:10px 2px 0;text-decoration:none}
 
 /* ---------- modalità controllo ---------- */
-.controllo-screen{position:fixed;inset:0;z-index:100;background:var(--bg);overflow-y:auto}
-.controllo-head{background:var(--rosso);color:#fff;padding:20px;position:sticky;top:0;z-index:5;border-radius:0 0 26px 26px}
-.controllo-head .ch-tag{font-size:11.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.controllo-screen{position:fixed;inset:0;z-index:100;background:var(--bg);overflow-y:auto;border:5px solid var(--rosso)}
+.controllo-head{background:var(--card);color:var(--ink);padding:18px 20px;position:sticky;top:0;z-index:5;border-bottom:2px solid var(--rosso)}
+.controllo-head .ch-tag{font-size:11.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;display:flex;align-items:center;gap:8px;color:var(--rosso)}
 .dot{width:9px;height:9px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
 @keyframes blink{50%{opacity:.25}}
 @media (prefers-reduced-motion:reduce){.dot{animation:none}}
 .controllo-head h2{font-size:26px;font-weight:900;letter-spacing:-.02em;margin-top:6px}
-.controllo-head .ch-loc{font-size:14px;font-weight:600;opacity:.92;margin-top:2px}
-.controllo-head .ch-close{position:absolute;top:18px;right:18px;background:rgba(255,255,255,.22);border:none;color:#fff;border-radius:99px;padding:8px 16px;font-weight:800;font-size:14px}
+.controllo-head .ch-loc{font-size:14px;font-weight:600;color:var(--ink2);margin-top:2px}
+.controllo-head .ch-close{position:absolute;top:16px;right:18px;background:var(--bg);border:1px solid var(--line2);color:var(--ink2);border-radius:99px;padding:8px 16px;font-weight:800;font-size:14px}
 .controllo-body{padding:18px;max-width:680px;margin:0 auto}
 .controllo-body .check-item{padding:16px}
 .controllo-body h4{font-size:15px}
 .controllo-body .doc-row .d-open{padding:11px 18px;font-size:14px}
 
 /* ---------- FAB & nav ---------- */
-.fab{position:fixed;right:20px;bottom:96px;z-index:50;width:58px;height:58px;border-radius:21px;background:var(--verde);color:#fff;border:none;font-size:28px;font-weight:400;box-shadow:0 10px 26px rgba(23,143,90,.5);display:flex;align-items:center;justify-content:center;line-height:1}
-.bottom-nav{position:fixed;left:18px;right:18px;bottom:18px;z-index:50;background:var(--ink);border:none;border-radius:99px;display:flex;max-width:644px;margin:0 auto;padding:7px;box-shadow:0 10px 30px rgba(27,36,32,.35)}
+.fab{position:fixed;right:16px;bottom:104px;z-index:50;width:50px;height:50px;border-radius:99px;background:var(--verde);color:#fff;font-size:25px;font-weight:400;border:1px solid var(--verde-d);display:flex;align-items:center;justify-content:center;line-height:1}
+.bottom-nav{position:fixed;left:18px;right:18px;bottom:18px;z-index:50;background:var(--ink);border:none;border-radius:99px;display:flex;max-width:644px;margin:0 auto;padding:7px;border:1px solid var(--line2)}
 .bottom-nav button{flex:1;background:none;border:none;padding:8px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;color:rgba(255,255,255,.55);font-size:8.5px;font-weight:700;border-radius:99px;min-width:0}
 .bottom-nav button.active{color:#fff;background:rgba(255,255,255,.16)}
 .bottom-nav .n-ico{font-size:17px;line-height:1}
@@ -145,9 +145,9 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .modal h3{font-size:21px;font-weight:900;letter-spacing:-.01em;margin-bottom:16px}
 .f-group{margin-bottom:15px}
 .f-group label{display:block;font-size:12px;font-weight:800;letter-spacing:.01em;text-transform:uppercase;color:var(--ink2);margin-bottom:7px}
-.f-group input[type=text],.f-group input[type=date],.f-group input[type=password],.f-group input[type=number],.f-group select{width:100%;border:none;border-radius:14px;padding:13px 15px;background:var(--bg);color:var(--ink);font-weight:600}
+.f-group input[type=text],.f-group input[type=date],.f-group input[type=password],.f-group input[type=number],.f-group select{width:100%;border:none;border-radius:8px;padding:13px 15px;background:var(--bg);color:var(--ink);font-weight:600}
 .f-group input:focus,.f-group select:focus{outline:2px solid var(--verde)}
-.file-drop{border:none;border-radius:16px;padding:18px;text-align:center;background:var(--bg);color:var(--ink2);font-size:14px;font-weight:700}
+.file-drop{border:none;border-radius:8px;padding:18px;text-align:center;background:var(--bg);color:var(--ink2);font-size:14px;font-weight:700}
 .file-drop.has-file{background:var(--verde-soft);color:var(--verde-d);font-weight:800}
 .slot-group{margin-bottom:8px}
 .slot-group .sg-name{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.03em;color:var(--ink2);margin:10px 0 6px}
@@ -162,15 +162,18 @@ input,select,textarea{font-family:inherit;font-size:16px}
 /* ---------- lock ---------- */
 .lock{position:fixed;inset:0;z-index:200;background:var(--verde);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
 .lock h1{font-size:36px;font-weight:900;letter-spacing:-.02em}
-.lock p{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;opacity:.8;margin:6px 0 26px}
-.lock input{width:220px;text-align:center;font-size:28px;font-weight:800;letter-spacing:.3em;border:none;border-radius:18px;padding:16px;background:rgba(255,255,255,.18);color:#fff}
+.lock p{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;opacity:.85;margin:6px 0 26px}
+.lock .disc-box p,.lock .disc-box{text-transform:none;letter-spacing:0;opacity:1}
+.lock .disc-box p{font-size:14px;font-weight:600;line-height:1.6;margin:0 0 14px}
+.lock .disc-box p:last-child{margin-bottom:0}
+.lock input{width:220px;text-align:center;font-size:28px;font-weight:800;letter-spacing:.3em;border:none;border-radius:8px;padding:16px;background:rgba(255,255,255,.18);color:#fff}
 .lock input::placeholder{color:rgba(255,255,255,.5)}
 .lock input:focus{outline:2px solid #fff}
 .lock .lk-err{color:#ffd9d1;font-size:13.5px;font-weight:700;margin-top:12px;min-height:18px}
 .lock .sm-btn{background:rgba(255,255,255,.18);border:none;color:#fff}
 
 /* ---------- settings & misc ---------- */
-.set-card{background:var(--card);border:none;border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.set-card{background:var(--card);border:none;border-radius:var(--r);padding:16px;margin-bottom:12px;border:1px solid var(--line)}
 .set-card h4{font-size:15.5px;font-weight:900;margin-bottom:4px}
 .set-card p{font-size:13.5px;font-weight:600;color:var(--ink2);margin-bottom:12px}
 .set-card .row{display:flex;gap:8px;flex-wrap:wrap}
@@ -178,39 +181,39 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .sm-btn.green{background:var(--verde);color:#fff}
 .sm-btn.red{background:var(--rosso-soft);color:var(--rosso-d)}
 .empty{padding:34px 18px;text-align:center;color:var(--ink2);font-size:14.5px;font-weight:600}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:110px;z-index:300;background:var(--ink);color:#fff;border-radius:99px;padding:12px 22px;font-size:14px;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,.3);opacity:0;transition:opacity .25s;pointer-events:none}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:110px;z-index:300;background:var(--ink);color:#fff;border-radius:99px;padding:12px 22px;font-size:14px;font-weight:800;border:1px solid var(--line2);opacity:0;transition:opacity .25s;pointer-events:none}
 .toast.show{opacity:1}
-.scad-list .doc-row{margin-top:0;margin-bottom:9px;background:var(--card);box-shadow:0 2px 10px rgba(0,0,0,.05)}
-.prod-row{display:flex;align-items:center;gap:13px;background:var(--card);border:none;border-radius:18px;padding:14px 15px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,.05);width:100%;text-align:left}
-.prod-row .pr-emo{width:44px;height:44px;border-radius:14px;background:var(--verde-soft);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.scad-list .doc-row{margin-top:0;margin-bottom:9px;background:var(--card);border:1px solid var(--line)}
+.prod-row{display:flex;align-items:center;gap:13px;background:var(--card);border:none;border-radius:8px;padding:14px 15px;margin-bottom:10px;border:1px solid var(--line);width:100%;text-align:left}
+.prod-row .pr-emo{width:44px;height:44px;border-radius:8px;background:var(--verde-soft);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .prod-row .pr-info{flex:1;min-width:0}
 .prod-row .pr-name{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .prod-row .pr-sub{font-size:12px;font-weight:600;color:var(--ink3);margin-top:1px}
 .prod-row .pr-go{font-size:22px;color:var(--ink3);font-weight:700;flex-shrink:0}
 .et-seg{display:flex;gap:7px;margin-bottom:14px}
-.et-seg button{flex:1;border:none;background:var(--card);color:var(--ink2);border-radius:99px;padding:10px;font-size:13.5px;font-weight:800;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.et-seg button{flex:1;border:none;background:var(--card);color:var(--ink2);border-radius:99px;padding:10px;font-size:13.5px;font-weight:800;border:1px solid var(--line)}
 .et-seg button.on{background:var(--verde);color:#fff}
-.h-row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:12px 14px;margin-bottom:9px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.h-row .h-emo{width:40px;height:40px;border-radius:12px;background:var(--verde-soft);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.h-row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:8px;padding:12px 14px;margin-bottom:9px;border:1px solid var(--line)}
+.h-row .h-emo{width:40px;height:40px;border-radius:7px;background:var(--verde-soft);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .h-row .h-info{flex:1;min-width:0}
 .h-row .h-nm{font-size:14.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .h-row .h-meta{font-size:11.5px;font-weight:600;color:var(--ink3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .h-row .h-day{font-size:11px;font-weight:800;color:var(--ink2);text-align:right;flex-shrink:0;line-height:1.3}
-.pick-ent{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--bg);border:none;border-radius:14px;padding:13px 14px;margin-bottom:9px}
+.pick-ent{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--bg);border:none;border-radius:8px;padding:13px 14px;margin-bottom:9px}
 .pick-ent .pe-chk{width:24px;height:24px;border-radius:7px;border:2px solid var(--line2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:transparent;font-weight:900}
 .pick-ent.on .pe-chk{background:var(--verde);border-color:var(--verde);color:#fff}
 .pick-ent .pe-nm{flex:1}
 .pick-ent .pe-nm b{font-size:14.5px;font-weight:800;display:block}
 .pick-ent .pe-nm span{font-size:11.5px;color:var(--ink3);font-weight:600}
 .grp-ente{font-size:12.5px;font-weight:900;color:var(--rosso);text-transform:uppercase;letter-spacing:.03em;margin:20px 2px 11px;padding-bottom:6px;border-bottom:2px solid var(--rosso-soft)}
-.slot-confirm{display:flex;align-items:center;gap:10px;background:var(--verde-soft);border-radius:12px;padding:13px 14px;margin-bottom:10px}
+.slot-confirm{display:flex;align-items:center;gap:10px;background:var(--verde-soft);border-radius:7px;padding:13px 14px;margin-bottom:10px}
 .slot-confirm .sc-ck{width:24px;height:24px;border-radius:50%;background:var(--verde);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0}
 .slot-confirm .sc-tx{font-size:13px;font-weight:700;line-height:1.35}
 .slot-confirm .sc-tx b{display:block;font-size:14px}
 @media(min-width:560px){.tiles{grid-template-columns:1fr 1fr 1fr}}
 
 /* ===== v25: profilo del locale ===== */
-.prof-card{display:flex;align-items:center;gap:12px;width:100%;background:var(--card);border:none;border-radius:var(--r);padding:15px 16px;margin-top:16px;box-shadow:0 2px 10px rgba(0,0,0,.05);text-align:left;position:relative;overflow:hidden}
+.prof-card{display:flex;align-items:center;gap:12px;width:100%;background:var(--card);border:none;border-radius:var(--r);padding:15px 16px;margin-top:16px;border:1px solid var(--line);text-align:left;position:relative;overflow:hidden}
 .prof-card.vuoto{background:var(--verde-soft)}
 .prof-card:active{transform:scale(.99)}
 .prof-card .pc-ico{font-size:24px;flex-shrink:0}
@@ -223,24 +226,24 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .prof-bar{height:5px;background:rgba(255,255,255,.35);border-radius:99px;margin-top:12px;overflow:hidden}
 .prof-bar i{display:block;height:100%;background:#fff;border-radius:99px;transition:width .25s}
 .prof-sub{font-size:12px;font-weight:600;color:var(--ink2);line-height:1.5;margin:-4px 0 10px}
-.prof-item{background:var(--card);border-radius:var(--r);padding:14px 15px;margin-bottom:9px;box-shadow:0 2px 10px rgba(0,0,0,.05);border-left:3px solid transparent}
+.prof-item{background:var(--card);border-radius:var(--r);padding:14px 15px;margin-bottom:9px;border:1px solid var(--line);border-left:3px solid transparent}
 .prof-item.done{border-left-color:var(--verde)}
 .prof-item .pi-t{font-size:14px;font-weight:800;line-height:1.35;color:var(--ink)}
 .prof-item .pi-a{font-size:11.5px;font-weight:600;color:var(--ink2);line-height:1.5;margin-top:5px}
 .prof-sino{display:flex;gap:8px;margin-top:11px;align-items:center}
-.ps-btn{flex:1;max-width:96px;padding:10px 0;border:1.5px solid var(--line2);background:#fff;border-radius:11px;font-size:13.5px;font-weight:800;color:var(--ink2)}
+.ps-btn{flex:1;max-width:96px;padding:10px 0;border:1.5px solid var(--line2);background:#fff;border-radius:6px;font-size:13.5px;font-weight:800;color:var(--ink2)}
 .ps-btn.on{background:var(--verde);border-color:var(--verde);color:#fff}
 .ps-clr{width:34px;padding:10px 0;border:none;background:transparent;color:var(--ink3);font-size:17px;font-weight:700}
 .prof-num{display:flex;gap:9px;align-items:center;margin-top:11px}
-.prof-num input{width:104px;border:1.5px solid var(--line2);border-radius:11px;padding:10px 12px;font-size:15px;font-weight:800;color:var(--ink);font-family:inherit}
+.prof-num input{width:104px;border:1.5px solid var(--line2);border-radius:6px;padding:10px 12px;font-size:15px;font-weight:800;color:var(--ink);font-family:inherit}
 .prof-num span{font-size:12.5px;font-weight:700;color:var(--ink2)}
 .prof-opt{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
-.po-btn{padding:9px 14px;border:1.5px solid var(--line2);background:#fff;border-radius:11px;font-size:13px;font-weight:700;color:var(--ink2)}
+.po-btn{padding:9px 14px;border:1.5px solid var(--line2);background:#fff;border-radius:6px;font-size:13px;font-weight:700;color:var(--ink2)}
 .po-btn.on{background:var(--verde);border-color:var(--verde);color:#fff}
 .prof-fine{margin-top:22px;padding:18px 16px;background:var(--verde-soft);border-radius:var(--r);text-align:center}
 .prof-fine p{font-size:12.5px;font-weight:600;color:var(--verde-d);line-height:1.55;margin-bottom:14px}
 .ci-perche{font-size:12px;font-weight:600;color:var(--ink2);line-height:1.5;margin-top:7px;padding-left:10px;border-left:2px solid var(--line2)}
-.ci-forse{font-size:12px;font-weight:700;color:var(--ambra);line-height:1.5;margin-top:7px;padding:9px 11px;background:rgba(232,161,58,.09);border-radius:11px}
+.ci-forse{font-size:12px;font-weight:700;color:var(--ambra);line-height:1.5;margin-top:7px;padding:9px 11px;background:rgba(232,161,58,.09);border-radius:6px}
 .check-item.forse{border-left:3px solid var(--ambra)}
 .check-item.fuori{opacity:.62;box-shadow:none;background:transparent;border:1.5px dashed var(--line2)}
 .check-item.fuori h4{font-weight:700;color:var(--ink2)}
@@ -249,6 +252,42 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .ente-vuoto{background:var(--verde-soft);border-radius:var(--r);padding:17px 16px;margin-bottom:14px;display:flex;flex-direction:column;gap:7px}
 .ente-vuoto b{font-size:14.5px;font-weight:800;color:var(--verde-d);line-height:1.35}
 .ente-vuoto span{font-size:12.5px;font-weight:600;color:var(--verde-d);line-height:1.55;opacity:.9}
+.riga-link{display:flex;align-items:center;gap:11px;width:100%;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;margin-bottom:16px;text-align:left}
+.riga-link:active{background:var(--bg)}
+.riga-link .rl-ico{width:21px;height:21px;color:var(--verde);flex-shrink:0}
+.riga-link .rl-ico svg{width:100%;height:100%;display:block}
+.riga-link .rl-txt{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.riga-link .rl-txt b{font-size:14px;font-weight:800;color:var(--ink)}
+.riga-link .rl-txt span{font-size:11.5px;font-weight:600;color:var(--ink2);line-height:1.4}
+.riga-link .rl-go{font-size:17px;color:var(--ink3);flex-shrink:0}
+.controllo-big{display:flex;align-items:center;gap:13px;width:100%;background:var(--rosso);color:#fff;border:none;border-radius:var(--r);padding:17px 16px;margin-bottom:20px;text-align:left}
+.controllo-big:active{background:var(--rosso-d)}
+.controllo-big .cb-dot{width:11px;height:11px;border-radius:99px;background:#fff;flex-shrink:0;animation:pulsa 1.8s infinite}
+@keyframes pulsa{0%,100%{opacity:1}50%{opacity:.35}}
+.controllo-big .cb-txt{display:flex;flex-direction:column;gap:2px}
+.controllo-big .cb-txt b{font-size:16px;font-weight:900;letter-spacing:-.01em}
+.controllo-big .cb-txt span{font-size:12px;font-weight:600;opacity:.88}
+.riga-link.evidenza{background:var(--verde-soft);border-color:var(--verde-l)}
+.cerca-btn{position:absolute;right:0;top:2px;width:38px;height:38px;color:var(--ink2)}
+.cerca-btn svg{width:20px;height:20px;display:block;margin:0 auto}
+.logo-r{display:block}
+.topbar-block.compatta .topbar{padding-top:10px;padding-bottom:6px}
+.search-row{position:relative}
+.sr-close{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:none;background:transparent;color:var(--ink3);font-size:16px}
+.op-nome{font-size:13px;font-weight:700;color:var(--verde);margin-top:3px}
+.a-ico.exp{color:var(--rosso);font-weight:900}
+.a-ico.warn{color:var(--ambra);font-weight:900}
+.n-ico svg{width:21px;height:21px;display:block;margin:0 auto}
+.bottom-nav .n-ico{width:21px;height:21px}
+/* dimensioni delle icone disegnate dentro i pulsanti */
+.d-edit svg,.d-open svg,.icon-btn svg,.sm-btn svg,.pr-info svg{width:17px;height:17px;display:block;margin:0 auto}
+.d-edit,.d-open{display:flex;align-items:center;justify-content:center}
+.a-ico svg{width:19px;height:19px;display:block}
+.pr-emo svg,.h-emo svg{width:19px;height:19px;display:block;color:var(--ink2)}
+.a-ico{display:flex;align-items:center;justify-content:center}
+/* durante il controllo il nome del documento si legge tutto */
+.controllo-body .d-name{white-space:normal;overflow:visible;text-overflow:clip;font-size:14px;line-height:1.35}
+.controllo-body .doc-row{align-items:flex-start}
 </style>
 </head>
 <body>
@@ -263,6 +302,27 @@ input,select,textarea{font-family:inherit;font-size:16px}
    ========================================================= */
 
 /* ---------- checklist per ente ---------- */
+const LOGO_HOME=`<svg class="logo-v" width="186" height="112" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230.0" cy="44" r="28" fill="none" stroke="#16201b" stroke-width="6"/><circle cx="230.0" cy="44" r="20" fill="none" stroke="#1d4634" stroke-width="2.8"/><path d="M219.0 44 L227.0 54 L243.0 33" fill="none" stroke="#1d4634" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230.0" y="120" font-family="Nunito,Arial,sans-serif" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#16201b">Essere</tspan><tspan fill="#1d4634">InRegola</tspan></text><text x="230.0" y="148" font-family="Nunito,Arial,sans-serif" font-size="15" font-weight="700" fill="#6b746d" text-anchor="middle" letter-spacing="0.4">Pronti ad ogni controllo!</text></svg>`;
+const LOGO_RIGA=`<svg class="logo-r" width="168" height="26" viewBox="0 0 300 46" xmlns="http://www.w3.org/2000/svg"><circle cx="21" cy="23" r="16" fill="none" stroke="#16201b" stroke-width="3.4"/><circle cx="21" cy="23" r="11.4" fill="none" stroke="#1d4634" stroke-width="1.7"/><path d="M14.7 23 L19.3 28.7 L28.4 16.6" fill="none" stroke="#1d4634" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><text x="46" y="31" font-family="Nunito,Arial,sans-serif" font-size="25" font-weight="900" letter-spacing="-0.7"><tspan fill="#16201b">Essere</tspan><tspan fill="#1d4634">InRegola</tspan></text></svg>`;
+const ICO={
+ archivio:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v13H3z"/><path d="M3 7l1.5-3h15L21 7"/><path d="M9 12h6"/></svg>',
+ registri:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h11l4 4v14H5z"/><path d="M16 3v4h4"/><path d="M9 12h7M9 16h7"/></svg>',
+ locale:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 4l9 6.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5h4v5"/></svg>',
+ scadenze:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
+ settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"/></svg>',
+ esporre:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H4z"/><path d="M12 16v4M8 20h8"/></svg>',
+ esci:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5h6v14H6z"/><path d="M15 12h6M18.5 9l3 3-3 3"/></svg>',
+ cerca:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>',
+ stampa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3h10v6"/><path d="M4 9h16v7h-3v5H7v-5H4z"/></svg>',
+ calendario:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v15H4z"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',
+ lista:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>',
+ etichetta:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11V4h7l10 10-7 7z"/><circle cx="7.5" cy="7.5" r="1.3"/></svg>',
+ persona:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6"/></svg>',
+ pulizie:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13h12l-1 8H7z"/><path d="M9 13V5h6v8"/></svg>',
+ gelo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9"/></svg>',
+ matita:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14.5 5.5l4 4"/></svg>',
+ backup:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="M8 10.5l4 4 4-4"/><path d="M4 17v3h16v-3"/></svg>'
+};
 const APP_VER='v25';
 const APP_DATA='23/09/2026';
 const ENTI=[
@@ -281,7 +341,7 @@ const ENTI=[
   {id:'acqua',t:'Analisi potabilit\u00E0 acqua (se applicabile)',n:'D.Lgs 18/2023'},
   {id:'congelati',t:'Gestione congelati / abbattimento (cartello prodotti surgelati)',n:'Reg. CE 852/2004 \u00B7 Reg. CE 853/2004 \u00B7 D.Lgs 110/1992'}]},
  {id:'vvf',sigla:'VV.F.',nome:'Vigili del Fuoco',
-  nota:'Bar e ristoranti di norma NON sono soggetti al DPR 151/2011 (nota VVF 17072/2011), salvo cucine con potenza termica > 116 kW (att. 74), depositi GPL o pubblico spettacolo. Restano obbligatori i decreti del settembre 2021.',
+  nota:'Bar e ristoranti di norma NON sono soggetti al DPR 151/2011, salvo apparecchi a fiamma oltre 116 kW complessivi (att. 74), depositi GPL o pubblico spettacolo. Restano obbligatori i decreti del settembre 2021. Circolare VVF 674 del 15/01/2026: musica e karaoke non cambiano la natura del locale finch\u00E9 restano accessori alla somministrazione; il piano di emergenza serve oltre 50 presenze contemporanee.',
   items:[
   {id:'rischio-incendio',t:'Valutazione rischio incendio',n:'DM 3/09/2021 (minicodice) \u00B7 D.Lgs 81/2008 art. 17'},
   {id:'scia-antincendio',t:'SCIA antincendio (solo se attivit\u00E0 soggetta)',n:'DPR 151/2011 All. I att. 74 (oltre 116 kW) \u00B7 categoria A: si presenta la SCIA, il CPI riguarda solo le attivit\u00E0 oltre 700 kW \u00B7 rinnovo ogni 5 anni'},
@@ -648,7 +708,7 @@ function profCompleto(){
 function vProfilo(){
   const p=prof(),c=profCompleto();
   return topbar()+`<div class="page-head">
-    <button class="back-btn" onclick="go('home')">&#8592; Archivio</button>
+    <button class="back-btn" onclick="go('home')">&#8592; Home</button>
     <h2>Il mio locale</h2>
     <div class="ph-meta">${esc(S.locali[S.locale])} &middot; ${c.fatte}/${c.tot} risposte</div>
     <div class="prof-bar"><i style="width:${c.pct}%"></i></div>
@@ -819,40 +879,44 @@ function render(){
 }
 
 function topbar(){
+  const home=(S.screen==='home');
+  const logo=home?LOGO_HOME:LOGO_RIGA;
+  const barraLocali=(S.locali.length>1)?`<div class="locale-bar">${S.locali.map((l,i)=>
+      `<button class="locale-chip ${i===S.locale?'active':''}" onclick="setLocale(${i})">${esc(l)}</button>`).join('')}
+    </div>`:'';
   if(S.role==='op'){
     const o=opCorr();
     const nome=o?((o.nome+' '+(o.cognome||'')).trim()+(o.sigla?' ('+o.sigla+')':'')):'';
-    return `<div class="topbar-block"><div class="topbar" style="position:relative;flex-direction:column;align-items:center">
-      <svg class="logo-v" width="250" height="150" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230.0" cy="44" r="28" fill="none" stroke="#21251f" stroke-width="6"/><circle cx="230.0" cy="44" r="20" fill="none" stroke="#178f5a" stroke-width="2.8"/><path d="M219.0 44 L227.0 54 L243.0 33" fill="none" stroke="#178f5a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230.0" y="120" font-family="Nunito,Arial,sans-serif" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#21251f">Essere</tspan><tspan fill="#178f5a">InRegola</tspan></text><text x="230.0" y="148" font-family="Nunito,Arial,sans-serif" font-size="15" font-weight="700" fill="#5b5f56" text-anchor="middle" letter-spacing="0.4">Pronti ad ogni controllo!</text></svg>
-      ${nome?`<div style="font-size:13px;font-weight:700;color:var(--verde);margin-top:2px">&#9997;&#65039; ${esc(nome)}</div>`:''}
-      <button class="icon-btn" style="position:absolute;right:0;top:2px" onclick="lockNow()" aria-label="Esci">&#128274;</button>
+    return `<div class="topbar-block${home?'':' compatta'}"><div class="topbar" style="position:relative;flex-direction:column;align-items:center">
+      ${logo}
+      ${nome?`<div class="op-nome">${esc(nome)}</div>`:''}
+      <button class="icon-btn" style="position:absolute;right:0;top:2px" onclick="lockNow()" aria-label="Esci">${ICO.esci}</button>
     </div>
     <div class="locale-bar" style="justify-content:center">
       <button class="locale-chip active">${esc(S.locali[S.locale]||'')}</button>
     </div></div>`;
   }
-  return `<div class="topbar-block">
+  return `<div class="topbar-block${home?'':' compatta'}">
     <div class="topbar" style="position:relative;flex-direction:column;align-items:center">
-      <svg class="logo-v" width="250" height="150" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230.0" cy="44" r="28" fill="none" stroke="#21251f" stroke-width="6"/><circle cx="230.0" cy="44" r="20" fill="none" stroke="#178f5a" stroke-width="2.8"/><path d="M219.0 44 L227.0 54 L243.0 33" fill="none" stroke="#178f5a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230.0" y="120" font-family="Nunito,Arial,sans-serif" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#21251f">Essere</tspan><tspan fill="#178f5a">InRegola</tspan></text><text x="230.0" y="148" font-family="Nunito,Arial,sans-serif" font-size="15" font-weight="700" fill="#5b5f56" text-anchor="middle" letter-spacing="0.4">Pronti ad ogni controllo!</text></svg>
+      ${logo}
+      ${home?`<button class="icon-btn cerca-btn" onclick="apriCerca()" aria-label="Cerca un documento">${ICO.cerca}</button>`:''}
     </div>
-    <div class="locale-bar">${S.locali.map((l,i)=>
-      `<button class="locale-chip ${i===S.locale?'active':''}" onclick="setLocale(${i})">${esc(l)}</button>`).join('')}
-    </div>
+    ${barraLocali}
   </div>`;
 }
 
 function navBar(){
   if(S.role==='op'){
     return `<div class="bottom-nav">
-      <button class="${S.screen==='registri'?'active':''}" onclick="go('registri')"><span class="n-ico">&#127777;</span>Registri</button>
-      <button class="${S.screen==='etichette'?'active':''}" onclick="go('etichette')"><span class="n-ico">&#127991;</span>Da esporre</button>
-      <button onclick="lockNow()"><span class="n-ico">&#128274;</span>Esci</button>
+      <button class="${S.screen==='registri'?'active':''}" onclick="go('registri')"><span class="n-ico">${ICO.registri}</span>Registri</button>
+      <button class="${S.screen==='etichette'?'active':''}" onclick="go('etichette')"><span class="n-ico">${ICO.esporre}</span>Da esporre</button>
+      <button onclick="lockNow()"><span class="n-ico">${ICO.esci}</span>Esci</button>
     </div>`;
   }
-  const n=[['home','&#127968;','Archivio'],['registri','&#127777;','Registri'],['etichette','&#127991;','Da esporre'],['scadenze','&#9200;','Scadenze'],['settings','&#9881;','Impostazioni']];
+  const n=[['home',ICO.archivio,'Home'],['registri',ICO.registri,'Registri'],['profilo',ICO.locale,'Il mio locale'],['scadenze',ICO.scadenze,'Scadenze'],['settings',ICO.settings,'Impostazioni']];
   return `<div class="bottom-nav">${n.map(([id,ico,lab])=>
     `<button class="${S.screen===id?'active':''}" onclick="go('${id}')"><span class="n-ico">${ico}</span>${lab}</button>`).join('')}</div>
-  ${(S.screen==='registri'||S.screen==='settings'||S.screen==='etichette')?'':'<button class="fab" onclick="openDocModal()" aria-label="Aggiungi documento">+</button>'}`;
+  ${(S.screen==='home'||S.screen==='ente'||S.screen==='scadenze')?'<button class="fab" onclick="openDocModal()" aria-label="Aggiungi un documento">+</button>':''}`;
 }
 
 /* ---------- home ---------- */
@@ -860,80 +924,84 @@ function vHome(){
   const docs=docsLocale();
   const urgent=docs.map(d=>({d,st:scadStato(d)})).filter(x=>x.st!=='ok')
     .sort((a,b)=>(a.d.scadenza||'').localeCompare(b.d.scadenza||''));
-  // avviso backup: se mai fatto o piu' di 7 giorni fa, e non chiuso in questa sessione
-  let bkAlert='';
+
+  // 1) il pulsante del controllo, grande, prima di tutto
+  let html=`<button class="controllo-big" onclick="pickControllo()">
+      <span class="cb-dot"></span>
+      <span class="cb-txt"><b>Modalit\u00E0 controllo</b><span>\u00C8 arrivato un controllo? Parti da qui</span></span>
+    </button>`;
+
+  // 2) gli enti
+  html+=`<div class="sec-label">Enti di controllo</div><div class="tiles">`+
+    ENTI.map(e=>{
+      const st=enteStats(e.id);
+      const cls=st.total===0?'full':st.pct===100?'full':st.pct>=50?'mid':'low';
+      return `<button class="tile ${cls}" onclick="go('ente','${e.id}')">
+        <div><div class="t-sigla">${esc(e.sigla)}</div><h3>${esc(e.nome)}</h3></div>
+        <div><div class="t-foot"><div class="t-pct">${st.total===0?'\u2014':st.pct+'<small>%</small>'}</div>
+          <div class="t-missing">${st.total===0?'non ti riguarda':(st.total-st.covered===0?'completo':(st.total-st.covered)+' da caricare')}</div></div>
+          <div class="pbar"><i style="width:${st.total===0?0:st.pct}%"></i></div></div>
+      </button>`;}).join('')+`</div>`;
+
+  // 3) cosa manca
+  if(urgent.length){
+    html+=`<div class="sec-label">Da sistemare</div>`+urgent.slice(0,5).map(({d,st})=>
+      `<button class="alert-card ${st==='exp'?'scaduto':'scadenza'}" style="width:100%" onclick="openDocModal(${d.id})">
+        <span class="a-ico ${st}">${st==='exp'?'!':'\u00B7'}</span>
+        <span style="flex:1;text-align:left"><b>${esc(d.nome)}</b>
+        <span>${st==='exp'?'Scaduto il':'Scade il'} <span class="a-date">${fmtDate(d.scadenza)}</span></span></span>
+      </button>`).join('');
+    if(urgent.length>5)html+=`<button class="riga-link" onclick="go('scadenze')"><span class="rl-txt"><b>Vedi tutte le ${urgent.length} scadenze</b></span><span class="rl-go">&#8594;</span></button>`;
+  }
+
+  // 4) il profilo del locale
+  const c=profCompleto();
+  html+=`<button class="riga-link${c.fatte===0?' evidenza':''}" onclick="go('profilo')">
+      <span class="rl-ico">${ICO.locale}</span>
+      <span class="rl-txt"><b>${c.fatte===0?'Dimmi com\u2019\u00E8 fatto il tuo locale':'Il mio locale'}</b>
+      <span>${c.fatte===0?'Otto domande, due minuti: poi ti mostro solo i documenti che servono a te'
+        :(c.fatte<c.tot?c.fatte+' risposte su '+c.tot+' \u00B7 ogni risposta toglie una voce che non ti riguarda'
+        :'Profilo completo \u00B7 \u00E8 cambiato qualcosa nel locale?')}</span></span>
+      <span class="rl-go">&#8594;</span></button>`;
+
+  // 5) il backup, solo quando serve davvero
   const gb=giorniDaBackup();
   if(!S.bkDismissed&&(gb===null||gb>=7)){
-    const msg=gb===null?'Non hai mai fatto un backup. Scaricane uno e salvalo su Google Drive o iCloud, non lasciarlo solo nel telefono.'
-      :'Sono passati '+gb+' giorni dall\u2019ultimo backup. Scaricane uno nuovo e salvalo su Google Drive o iCloud.';
-    bkAlert=`<div class="alert-card scadenza" style="width:100%;align-items:center;margin-top:14px">
-      <span class="a-ico">&#128190;</span>
+    const msg=gb===null?'Non hai mai fatto un backup. Scaricane uno e mettilo su Google Drive o iCloud.'
+      :'Sono passati '+gb+' giorni dall\u2019ultimo backup. Scaricane uno nuovo.';
+    html+=`<div class="alert-card scadenza" style="width:100%;align-items:center">
+      <span class="a-ico">${ICO.backup}</span>
       <span style="flex:1;text-align:left"><b>Backup consigliato</b><span>${msg}</span></span>
       <button class="d-open" style="flex-shrink:0" onclick="exportBackup()">Scarica</button>
       <button class="d-edit" style="flex-shrink:0" onclick="S.bkDismissed=1;render()" aria-label="Chiudi">&#10005;</button>
     </div>`;
   }
-  let alerts='';
-  if(urgent.length){
-    alerts=`<div class="sec-label">Da sistemare</div>`+urgent.slice(0,5).map(({d,st})=>
-      `<button class="alert-card ${st==='exp'?'scaduto':'scadenza'}" style="width:100%" onclick="openDocModal(${d.id})">
-        <span class="a-ico">${st==='exp'?'&#9888;':'&#9203;'}</span>
-        <span style="flex:1;text-align:left"><b>${esc(d.nome)}</b>
-        <span>${st==='exp'?'Scaduto il':'Scade il'} <span class="a-date">${fmtDate(d.scadenza)}</span></span></span>
-      </button>`).join('');
-  }
-  let results='';
+
+  return topbar()+`<div class="wrap">
+    <div id="cercaBox">${S.cercaAperta?boxCerca():''}</div>
+    ${html}
+  </div>`+navBar();
+}
+
+function boxCerca(){
+  const docs=docsLocale();
+  let res='';
   if(S.query){
     const q=S.query.toLowerCase();
     const found=docs.filter(d=>d.nome.toLowerCase().includes(q));
-    results=`<div class="sec-label">Risultati (${found.length})</div>`+
-      (found.length?found.map(docRow).join(''):`<div class="empty">Nessun documento trovato per «${esc(S.query)}»</div>`);
+    res=`<div class="sec-label">Risultati (${found.length})</div>`+
+      (found.length?found.map(docRow).join(''):`<div class="empty">Nessun documento trovato per \u00AB${esc(S.query)}\u00BB</div>`);
   }
-  return topbar()+`<div class="wrap">
-    <div class="search-row"><input type="text" placeholder="Cerca un documento…" value="${esc(S.query)}"
-      oninput="S.query=this.value;renderResultsOnly()" id="searchInput"></div>
-    <div id="searchResults">${results}</div>
-    ${(()=>{const c=profCompleto();
-      if(c.fatte===0)return `<button class="prof-card vuoto" onclick="go('profilo')">
-        <span class="pc-ico">&#127968;</span>
-        <span class="pc-txt"><b>Dimmi com\u2019\u00E8 fatto il tuo locale</b>
-        <span>Otto domande, due minuti. Poi ti faccio vedere solo i documenti che servono a te.</span></span>
-        <span class="pc-go">&#8594;</span></button>`;
-      if(c.fatte<c.tot)return `<button class="prof-card" onclick="go('profilo')">
-        <span class="pc-ico">&#127968;</span>
-        <span class="pc-txt"><b>Il mio locale &middot; ${c.fatte} risposte su ${c.tot}</b>
-        <span>Ogni risposta in pi\u00F9 toglie una voce che non ti riguarda.</span></span>
-        <span class="pc-bar"><i style="width:${c.pct}%"></i></span>
-        <span class="pc-go">&#8594;</span></button>`;
-      return `<button class="prof-card ok" onclick="go('profilo')">
-        <span class="pc-ico">&#127968;</span>
-        <span class="pc-txt"><b>Il mio locale &middot; profilo completo</b>
-        <span>\u00C8 cambiato qualcosa? Aggiorna qui e la lista si rifa\u0300 da sola.</span></span>
-        <span class="pc-go">&#8594;</span></button>`;})()}
-    ${bkAlert}
-    ${alerts}
-    <button class="controllo-btn" style="margin-top:18px" onclick="pickControllo()"><span class="dot"></span> Modalità controllo</button>
-    <div class="sec-label">Enti di controllo</div>
-    <div class="tiles">${ENTI.map(e=>{
-      const st=enteStats(e.id);
-      const cls=st.pct===100?'full':st.pct>=50?'mid':'low';
-      return `<button class="tile ${cls}" onclick="go('ente','${e.id}')">
-        <div><div class="t-sigla">${e.sigla}</div><h3>${e.nome}</h3></div>
-        <div><div class="t-foot"><div class="t-pct">${st.pct}<small>%</small></div>
-          <div class="t-missing">${st.total-st.covered===0?'completo':(st.total-st.covered)+' da caricare'}</div></div>
-          <div class="pbar"><i style="width:${st.pct}%"></i></div></div>
-      </button>`;}).join('')}
-    </div>
-  </div>`+navBar();
+  return `<div class="search-row"><input type="text" id="searchInput" placeholder="Cerca un documento\u2026" value="${esc(S.query)}"
+      oninput="S.query=this.value;renderResultsOnly()">
+      <button class="sr-close" onclick="chiudiCerca()" aria-label="Chiudi la ricerca">&#10005;</button></div>
+    <div id="searchResults">${res}</div>`;
 }
-function renderResultsOnly(){
-  const docs=docsLocale(),q=S.query.toLowerCase();
-  const box=$('#searchResults');if(!box)return;
-  if(!q){box.innerHTML='';return}
-  const found=docs.filter(d=>d.nome.toLowerCase().includes(q));
-  box.innerHTML=`<div class="sec-label">Risultati (${found.length})</div>`+
-    (found.length?found.map(docRow).join(''):`<div class="empty">Nessun documento trovato</div>`);
+function apriCerca(){
+  S.cercaAperta=true;render();
+  const el=document.getElementById('searchInput');if(el)el.focus();
 }
+function chiudiCerca(){S.cercaAperta=false;S.query='';render();}
 
 function docRow(d){
   const st=scadStato(d);
@@ -944,7 +1012,7 @@ function docRow(d){
   return `<div class="doc-row">
     <div class="d-ico">${ext}</div>
     <div class="d-info"><div class="d-name">${esc(d.nome)}</div>${meta}</div>
-    <button class="d-edit" onclick="openDocModal(${d.id})" aria-label="Modifica">&#9998;</button>
+    <button class="d-edit" onclick="openDocModal(${d.id})" aria-label="Modifica">${ICO.matita}</button>
     <button class="d-open" onclick="openDoc(${d.id})">Apri</button>
   </div>`;
 }
@@ -955,7 +1023,7 @@ function vEnte(eid){
   const inSlot=id=>docs.filter(d=>(d.slots||[]).includes(eid+':'+id));
   const extra=docs.filter(d=>docEnti(d).includes(eid)&&!(d.slots||[]).some(s=>s.startsWith(eid+':')));
   return topbar()+`<div class="page-head">
-    <button class="back-btn" onclick="go('home')">&#8592; Archivio</button>
+    <button class="back-btn" onclick="go('home')">&#8592; Home</button>
     <h2>${e.nome}</h2>
     <div class="ph-meta">${e.sigla} &middot; ${st.total===0?'nessuna voce ti riguarda':st.covered+'/'+st.total+' voci coperte'}${st.esclusi&&st.total?' &middot; '+st.esclusi+' non ti riguardano':''} &middot; ${esc(S.locali[S.locale])}</div>
     ${(S.societa[S.locale]&&S.societa[S.locale].ragione)?`<div class="ph-meta">${esc(S.societa[S.locale].ragione)}${S.societa[S.locale].piva?' &middot; P.IVA '+esc(S.societa[S.locale].piva):''}</div>`:''}
@@ -982,7 +1050,7 @@ function vEnte(eid){
         <div class="ci-norma">${esc(it.n)}</div>
         ${vs.ril===null?`<div class="ci-forse">Da confermare &middot; ${esc(vs.perche)} <button class="link-btn" onclick="go('profilo')">Rispondi nel profilo</button></div>`:(vs.perche?`<div class="ci-perche">${esc(vs.perche)}</div>`:'')}
         ${linked.map(docRow).join('')}
-        ${eid==='nas'&&(it.id==='temperature'||it.id==='pulizie')?`<button class="link-btn" onclick="go('registri')">&#128202; Apri il registro digitale compilabile</button><br>`:''}
+        ${eid==='nas'&&(it.id==='temperature'||it.id==='pulizie')?`<button class="link-btn" onclick="go('registri')">Apri il registro digitale compilabile</button><br>`:''}
         <button class="link-btn" onclick="openDocModal(null,'${eid}:${it.id}')">+ Carica documento per questa voce</button>
       </div>`;}).join('')}
     ${(()=>{const fuori=e.items.filter(it=>voceStato(eid,it.id).ril===false);
@@ -1029,12 +1097,12 @@ function startControlloMulti(eids){
   eids.forEach(eid=>{
     const e=ENTE(eid);
     corpo+=`<div class="grp-ente">${esc(e.sigla)} · ${esc(e.nome)}</div>`;
-    corpo+=e.items.map((it,i)=>{const l=inSlot(eid,it.id);
+    corpo+=e.items.filter(it=>voceStato(eid,it.id).ril!==false).map((it,i)=>{const l=inSlot(eid,it.id);
       return `<div class="check-item"><div class="ci-top"><h4>${esc(it.t)}</h4>
         ${l.length?'':'<span class="badge manca">Manca</span>'}</div>
         <div class="ci-norma">${esc(it.n)}</div>
         ${l.map(docRow).join('')}
-        ${eid==='nas'&&(it.id==='temperature'||it.id==='pulizie')?`<button class="link-btn" onclick="document.getElementById('controlloScreen').remove();go('registri')">&#128202; Apri il registro digitale compilabile</button>`:''}</div>`;}).join('');
+        ${eid==='nas'&&(it.id==='temperature'||it.id==='pulizie')?`<button class="link-btn" onclick="document.getElementById('controlloScreen').remove();go('registri')">Apri il registro digitale compilabile</button>`:''}</div>`;}).join('');
   });
   div.innerHTML=`<div class="controllo-head">
     <button class="ch-close" onclick="document.getElementById('controlloScreen').remove()">Chiudi</button>
@@ -1057,14 +1125,14 @@ function startControllo(eid){
     ${(S.societa[S.locale]&&S.societa[S.locale].ragione)?`<div class="ch-loc" style="font-size:12.5px;opacity:.85">${esc(S.societa[S.locale].ragione)}${S.societa[S.locale].piva?' &middot; P.IVA '+esc(S.societa[S.locale].piva):''}${S.societa[S.locale].indirizzo?'<br>'+esc(S.societa[S.locale].indirizzo):''}</div>`:''}
   </div>
   <div class="controllo-body">
-    ${e.items.map((it,i)=>{const l=inSlot(it.id);
+    ${e.items.filter(it=>voceStato(eid,it.id).ril!==false).map((it,i)=>{const l=inSlot(it.id);
       return `<div class="check-item"><div class="ci-top"><h4>${esc(it.t)}</h4>
         ${l.length?'':'<span class="badge manca">Manca</span>'}</div>
         <div class="ci-norma">${esc(it.n)}</div>
         ${l.map(docRow).join('')}
-        ${eid==='nas'&&(it.id==='temperature'||it.id==='pulizie')?`<button class="link-btn" onclick="document.getElementById('controlloScreen').remove();go('registri')">&#128202; Apri il registro digitale compilabile</button>`:''}</div>`;}).join('')}
+        ${eid==='nas'&&(it.id==='temperature'||it.id==='pulizie')?`<button class="link-btn" onclick="document.getElementById('controlloScreen').remove();go('registri')">Apri il registro digitale compilabile</button>`:''}</div>`;}).join('')}
     ${extra.length?`<div class="sec-label">Altri documenti</div>${extra.map(docRow).join('')}`:''}
-    <button class="sm-btn green" style="width:100%;margin-top:8px;padding:14px" onclick="stampaControllo('${eid}')">&#128424; Stampa o salva PDF della checklist</button>
+    <button class="sm-btn green" style="width:100%;margin-top:8px;padding:14px" onclick="stampaControllo('${eid}')">Stampa o salva PDF della checklist</button>
   </div>`;
   document.body.appendChild(div);
 }
@@ -1187,9 +1255,9 @@ function stampaCartello(id){
 }
 
 
-function _logoCart(){return '<svg width="190" height="61" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230" cy="44" r="28" fill="none" stroke="#21251f" stroke-width="6"/><circle cx="230" cy="44" r="20" fill="none" stroke="#178f5a" stroke-width="2.8"/><path d="M219 44 L227 54 L243 33" fill="none" stroke="#178f5a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230" y="120" font-family="Arial" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#21251f">Essere</tspan><tspan fill="#178f5a">InRegola</tspan></text><text x="230" y="150" font-family="Arial" font-size="15" font-weight="700" fill="#5b5f56" text-anchor="middle">Pronti ad ogni controllo!</text></svg>';}
+function _logoCart(){return '<svg width="190" height="61" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230" cy="44" r="28" fill="none" stroke="#16201b" stroke-width="6"/><circle cx="230" cy="44" r="20" fill="none" stroke="#1d4634" stroke-width="2.8"/><path d="M219 44 L227 54 L243 33" fill="none" stroke="#1d4634" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230" y="120" font-family="Arial" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#16201b">Essere</tspan><tspan fill="#1d4634">InRegola</tspan></text><text x="230" y="150" font-family="Arial" font-size="15" font-weight="700" fill="#6b746d" text-anchor="middle">Pronti ad ogni controllo!</text></svg>';}
 function _cartHead(){return '<div style="text-align:center;margin-bottom:10px">'+_logoCart()+'</div>';}
-function _cartWrap(inner){return '<!DOCTYPE html><html><head><meta charset="utf-8"><style>@page{size:A4;margin:13mm}body{font-family:Georgia,\'Times New Roman\',serif;color:#21251f;margin:0 auto;padding:14px 22px;max-width:780px}</style></head><body>'+inner+'</body></html>';}
+function _cartWrap(inner){return '<!DOCTYPE html><html><head><meta charset="utf-8"><style>@page{size:A4;margin:13mm}body{font-family:Georgia,\'Times New Roman\',serif;color:#16201b;margin:0 auto;padding:14px 22px;max-width:780px}</style></head><body>'+inner+'</body></html>';}
 
 function cartFumo(){
 var sim='<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="82" fill="none" stroke="#5a4a3a" stroke-width="14"/><line x1="42" y1="42" x2="158" y2="158" stroke="#5a4a3a" stroke-width="14"/><rect x="48" y="108" width="78" height="16" rx="2" fill="#e08a2e"/><rect x="130" y="108" width="10" height="16" fill="#e08a2e"/><rect x="144" y="108" width="8" height="16" fill="#e08a2e"/></svg>';
@@ -1218,7 +1286,7 @@ var b=_cartHead()+'<h1 style="text-align:center;color:#e08a2e;font-size:26px;fon
 '<div style="text-align:center;color:#999;font-size:14px;font-style:italic;margin-bottom:14px">Who\'s driving tonight? Whoever is not drinking!</div>'+
 '<div style="font-size:12.5px;text-align:center;line-height:1.5;margin-bottom:16px"><b>Non esistono livelli di consumo alcolico sicuri alla guida.</b> Anche piccole quantit\u00E0 di alcol riducono i riflessi e la capacit\u00E0 di guida.</div>'+
 '<div style="background:#c0392b;color:#fff;text-align:center;font-size:21px;font-weight:bold;padding:12px;border-radius:8px;margin:14px 0">Il limite di legge del tasso alcolemico per la guida \u00E8 0,5 g/l</div>'+
-'<h2 style="text-align:center;color:#21251f;font-size:16px;margin:18px 0 8px;font-style:italic">L\'alcol ti trasforma. Come?</h2>'+
+'<h2 style="text-align:center;color:#16201b;font-size:16px;margin:18px 0 8px;font-style:italic">L\'alcol ti trasforma. Come?</h2>'+
 '<table style="width:100%;border-collapse:collapse">'+trs+'</table>'+
 '<div style="font-size:11px;color:#666;font-style:italic;text-align:center;margin-top:14px;line-height:1.5">Rif. Codice della Strada (D.Lgs 285/1992 art. 186) \u00B7 L. 120/2010. I valori sono indicativi e variano in base a sesso, peso, stato di salute e quantit\u00E0 di cibo assunto.</div>';
 return _cartWrap(b);}
@@ -1261,7 +1329,7 @@ return _cartWrap(b);}
 function intestazioneHTML(){
   const so=S.societa[S.locale]||{},logo=S.loghi[S.locale];
   return `<div style="text-align:center;margin-bottom:14px">
-    <svg class="logo-v" width="250" height="150" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230.0" cy="44" r="28" fill="none" stroke="#21251f" stroke-width="6"/><circle cx="230.0" cy="44" r="20" fill="none" stroke="#178f5a" stroke-width="2.8"/><path d="M219.0 44 L227.0 54 L243.0 33" fill="none" stroke="#178f5a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230.0" y="120" font-family="Nunito,Arial,sans-serif" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#21251f">Essere</tspan><tspan fill="#178f5a">InRegola</tspan></text><text x="230.0" y="148" font-family="Nunito,Arial,sans-serif" font-size="15" font-weight="700" fill="#5b5f56" text-anchor="middle" letter-spacing="0.4">Pronti ad ogni controllo!</text></svg>
+    <svg class="logo-v" width="250" height="150" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230.0" cy="44" r="28" fill="none" stroke="#16201b" stroke-width="6"/><circle cx="230.0" cy="44" r="20" fill="none" stroke="#1d4634" stroke-width="2.8"/><path d="M219.0 44 L227.0 54 L243.0 33" fill="none" stroke="#1d4634" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230.0" y="120" font-family="Nunito,Arial,sans-serif" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#16201b">Essere</tspan><tspan fill="#1d4634">InRegola</tspan></text><text x="230.0" y="148" font-family="Nunito,Arial,sans-serif" font-size="15" font-weight="700" fill="#6b746d" text-anchor="middle" letter-spacing="0.4">Pronti ad ogni controllo!</text></svg>
   </div>
   <div style="display:flex;gap:14px;align-items:center;border-bottom:2px solid #1d4634;padding-bottom:12px;margin-bottom:16px">
     ${logo?`<img src="${logo}" style="height:60px;width:60px;object-fit:contain">`:''}
@@ -1276,7 +1344,7 @@ function apriStampa(titolo,corpo){
   const w=window.open('','_blank');
   if(!w)return toast('Consenti le finestre pop-up per stampare');
   w.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>${esc(titolo)}</title>
-    <style>body{font-family:-apple-system,Arial,sans-serif;color:#21251f;padding:24px;max-width:800px;margin:0 auto;font-size:13px;line-height:1.5}
+    <style>body{font-family:-apple-system,Arial,sans-serif;color:#16201b;padding:24px;max-width:800px;margin:0 auto;font-size:13px;line-height:1.5}
     h1{font-size:18px;color:#1d4634;margin:0 0 4px} .sub{color:#666;font-size:12px;margin-bottom:18px}
     table{width:100%;border-collapse:collapse;margin-top:8px} th,td{border:1px solid #ccc;padding:6px 8px;text-align:left;font-size:12px}
     th{background:#ecebe2} .ko{color:#b23427;font-weight:bold} .ok{color:#2c6e4c}
@@ -1348,7 +1416,7 @@ function apriStampaEtichetta2(d, formato){
     .entro .ek{font-size:3.5mm;font-weight:900;color:#c1271b;white-space:nowrap;flex-shrink:0}
     .entro .ev{font-size:4mm;font-weight:900;color:#c1271b;text-align:right;flex:1}
     .entro .line.r{display:block;border-bottom:0.4mm solid #e0b3ab;height:1.05em;width:100%}
-    @media screen{.lab{transform:scale(2.8);transform-origin:top center;margin-bottom:${hmm*2}mm;box-shadow:0 4px 16px rgba(0,0,0,.2)}}
+    @media screen{.lab{transform:scale(2.8);transform-origin:top center;margin-bottom:${hmm*2}mm;border:1px solid var(--line2)}}
     @media print{.noprint{display:none}}
     .noprint{margin-top:22px;padding:11px 18px;background:#137a4e;color:#fff;border:none;border-radius:8px;font-size:14px;font-family:-apple-system,Arial}
     .hint{margin-top:14px;font-size:12px;color:#555;max-width:300px;text-align:center;font-family:-apple-system,Arial;line-height:1.5}
@@ -1363,7 +1431,7 @@ function apriStampaEtichetta2(d, formato){
 function stampaControllo(eid){
   const e=ENTE(eid),docs=docsLocale();
   const inSlot=id=>docs.filter(d=>(d.slots||[]).includes(eid+':'+id));
-  let rows=e.items.map(it=>{const l=inSlot(it.id);
+  let rows=e.items.filter(it=>voceStato(eid,it.id).ril!==false).map(it=>{const l=inSlot(it.id);
     const stato=l.length?'<span class="ok">Presente</span>':'<span class="ko">MANCANTE</span>';
     const files=l.length?l.map(d=>esc(d.nome)+(d.scadenza?' (scad. '+fmtDate(d.scadenza)+')':'')).join('<br>'):'—';
     return `<tr><td>${esc(it.t)}</td><td>${stato}</td><td>${files}</td><td style="font-size:10px;color:#666">${esc(it.n)}</td></tr>`;}).join('');
@@ -1436,10 +1504,14 @@ function vScadenze(){
   const grp=(t,arr)=>arr.length?`<div class="sec-label">${t}</div><div class="scad-list">${arr.map(scadRow).join('')}</div>`:'';
   return topbar()+`<div class="wrap">
     <div class="sec-label" style="margin-top:6px">Scadenziario &middot; tutti i locali</div>
-    <button class="controllo-btn" style="background:var(--verde);margin-top:0;margin-bottom:14px" onclick="openScadModal()">+ Aggiungi scadenza</button>
-    ${items.length?'':'<div class="empty">Nessuna scadenza impostata.<br>Aggiungi una scadenza qui sopra, oppure metti una data ai documenti in Archivio.</div>'}
-    ${grp('&#9888; Scaduti',items.filter(x=>x.st==='exp'))}
-    ${grp('&#9203; Entro 60 giorni',items.filter(x=>x.st==='warn'))}
+    <button class="controllo-btn" style="background:var(--verde);margin-top:0;margin-bottom:10px" onclick="openScadModal()">+ Aggiungi scadenza</button>
+    <button class="riga-link" onclick="go('etichette')">
+      <span class="rl-ico">${ICO.esporre}</span>
+      <span class="rl-txt"><b>Da esporre</b><span>Etichette, listino prezzi e i cinque cartelli obbligatori</span></span>
+      <span class="rl-go">&#8594;</span></button>
+    ${items.length?'':'<div class="empty">Nessuna scadenza impostata.<br>Aggiungi una scadenza qui sopra, oppure metti una data ai documenti che hai caricato.</div>'}
+    ${grp('Scaduti',items.filter(x=>x.st==='exp'))}
+    ${grp('Entro 60 giorni',items.filter(x=>x.st==='warn'))}
     ${grp('In regola',items.filter(x=>x.st==='ok'))}
   </div>`+navBar();
 }
@@ -1450,20 +1522,20 @@ function scadRow(it){
       <div class="d-ico">${(d.fileName||'').split('.').pop().toUpperCase().slice(0,4)||'DOC'}</div>
       <div class="d-info"><div class="d-name">${esc(d.nome)}</div>
         <div class="d-meta ${st==='exp'?'exp':st==='warn'?'warn':''}">${esc(S.locali[d.locale]||'?')} &middot; ${fmtDate(d.scadenza)}</div></div>
-      <button class="d-edit" onclick="addScadCalendar('doc',${d.id})" aria-label="Aggiungi al calendario">&#128197;</button>
-      <button class="d-edit" onclick="openDocModal(${d.id})">&#9998;</button>
+      <button class="d-edit" onclick="addScadCalendar('doc',${d.id})" aria-label="Aggiungi al calendario">${ICO.calendario}</button>
+      <button class="d-edit" onclick="openDocModal(${d.id})">${ICO.matita}</button>
       <button class="d-open" onclick="openDoc(${d.id})">Apri</button>
     </div>`;}
   const s=it.ref;
   const docColl=s.docId?S.docs.find(x=>x.id===s.docId):null;
   return `<div class="doc-row">
-    <div class="d-ico" style="border-style:dashed">&#9201;</div>
+    <div class="d-ico" style="border-style:dashed">${ICO.scadenze}</div>
     <div class="d-info"><div class="d-name">${esc(s.nome)}${s.ric?' &#8635;':''}</div>
       <div class="d-meta ${st==='exp'?'exp':st==='warn'?'warn':''}">${esc(S.locali[s.locale]||'?')} &middot; ${fmtDate(s.data)}${s.ric?' &middot; ogni '+(s.ric==='6m'?'6 mesi':s.ric==='12m'?'anno':s.ric==='24m'?'2 anni':'')+'':''}</div></div>
     ${docColl?`<button class="d-open" onclick="openDoc(${docColl.id})">Apri</button>`:''}
     ${st!=='ok'&&s.ric?`<button class="d-open" style="background:var(--ambra)" onclick="rinnovaScad('${s.id}')">Fatto</button>`:''}
-    <button class="d-edit" onclick="addScadCalendar('free','${s.id}')" aria-label="Aggiungi al calendario">&#128197;</button>
-    <button class="d-edit" onclick="openScadModal('${s.id}')">&#9998;</button>
+    <button class="d-edit" onclick="addScadCalendar('free','${s.id}')" aria-label="Aggiungi al calendario">${ICO.calendario}</button>
+    <button class="d-edit" onclick="openScadModal('${s.id}')">${ICO.matita}</button>
   </div>`;
 }
 // genera evento .ics e lo apre nel calendario del telefono
@@ -1577,10 +1649,10 @@ function vEtichette(){
       const last=p.last||{};
       const sub='conserva '+p.giorni+' '+(p.giorni==1?'giorno':'giorni')+(p.cons?' \u00B7 '+esc(p.cons):'')+(last.forn?' \u00B7 '+esc(last.forn):'');
       return `<div class="prod-row" style="cursor:default">
-        <button class="pr-emo" style="border:none;cursor:pointer" onclick="apriEtichetta('${p.id}')">&#127991;</button>
+        <button class="pr-emo" style="border:none;cursor:pointer" onclick="apriEtichetta('${p.id}')" aria-label="Stampa etichetta">${ICO.etichetta}</button>
         <button class="pr-info" style="background:none;border:none;text-align:left;cursor:pointer;min-width:0" onclick="apriEtichetta('${p.id}')"><div class="pr-name">${esc(p.nome)}</div>
           <div class="pr-sub">${sub}</div></button>
-        ${S.role!=='op'?`<button class="d-edit" onclick="openProdModal('${p.id}')" aria-label="Modifica prodotto">&#9998;</button>`:''}
+        ${S.role!=='op'?`<button class="d-edit" onclick="openProdModal('${p.id}')" aria-label="Modifica prodotto">${ICO.matita}</button>`:''}
         <button class="pr-go" style="background:none;border:none;cursor:pointer" onclick="apriEtichetta('${p.id}')">&#8250;</button>
       </div>`;}).join(''):'<div class="empty">Nessun prodotto configurato.<br>Aggiungi i prodotti che etichetti pi\u00F9 spesso (es. rag\u00F9, besciamella, funghi).</div>';
     corpo=`${lista}
@@ -1614,7 +1686,7 @@ function vStoricoEtichette(){
     const ora=String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0');
     const giorno=String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0');
     const meta=[e.lotto?'Lotto '+esc(e.lotto):'',e.forn?esc(e.forn):'',e.comanda?'entro '+fmtDate(e.comanda).slice(0,5):''].filter(Boolean).join(' \u00B7 ');
-    html+=`<div class="h-row"><div class="h-emo">&#127991;</div>
+    html+=`<div class="h-row"><div class="h-emo">${ICO.etichetta}</div>
       <div class="h-info"><div class="h-nm">${esc(e.nome)}</div><div class="h-meta">${meta||'\u2014'}</div></div>
       <div class="h-day">${giorno}<br>${ora}</div></div>`;
   });
@@ -1856,11 +1928,11 @@ function vRegistri(){
     const nonOk=fatte.some(l=>!l.conforme);
     const badge=fatte.length?(nonOk?'<span class="badge exp">Fuori range</span>':'<span class="badge ok">Registrata</span>'):'<span class="badge manca">Da fare</span>';
     return `<div class="check-item">
-      <div class="ci-top"><h4>&#10052;&#65039; ${esc(p.nome)}</h4>${badge}</div>
+      <div class="ci-top"><h4>${esc(p.nome)}</h4>${badge}</div>
       <div class="ci-norma">range consentito: ${p.min} / ${p.max} &deg;C${fatte.length?' &middot; oggi: '+fatte.map(l=>l.valore+'&deg;').join(', '):''}</div>
       <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
         <input type="text" inputmode="decimal" placeholder="&deg;C" id="tin_${p.id}"
-          style="flex:1;min-width:0;border:1.5px solid var(--line2);border-radius:10px;padding:11px;background:#fff;font-size:16px">
+          style="flex:1;min-width:0;border:1.5px solid var(--line2);border-radius:6px;padding:11px;background:#fff;font-size:16px">
         <button class="d-open" onclick="regTemp('${p.id}')">Registra</button>
         ${canDel?`<button class="d-edit" onclick="delPunto('${p.id}')" aria-label="Elimina punto">&#10005;</button>`:''}
       </div>
@@ -1868,7 +1940,7 @@ function vRegistri(){
   const pulRows=aree.length?aree.map(a=>{
     const last=[...logsLoc].sort((x,y)=>y.ts-x.ts).find(l=>l.tipo==='pul'&&l.area===a.nome);
     const oggiOk=oggi.some(l=>l.tipo==='pul'&&l.area===a.nome);
-    return `<div class="check-item"><div class="ci-top"><h4>&#129529; ${esc(a.nome)}</h4>
+    return `<div class="check-item"><div class="ci-top"><h4>${esc(a.nome)}</h4>
       ${oggiOk?'<span class="badge ok">Fatta oggi</span>':'<span class="badge scad">Da fare</span>'}</div>
       <div class="ci-norma">${last?'ultima: '+new Date(last.ts).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+(last.op?' ('+esc(last.op)+')':''):'mai registrata'}</div>
       <div style="display:flex;gap:8px;margin-top:10px">
@@ -1877,7 +1949,7 @@ function vRegistri(){
       </div></div>`;}).join(''):'<div class="empty">Nessuna area di pulizia configurata.</div>';
   return topbar()+`<div class="wrap">
     <div class="sec-label" style="margin-top:6px">Chi sta registrando</div>
-    <div class="set-card" style="padding:13px 15px;margin-bottom:4px"><p style="margin:0;font-weight:700;color:var(--ink)">&#9997;&#65039; ${esc(siglaCorrente())}${opCorr()?' — '+esc((opCorr().nome+' '+(opCorr().cognome||'')).trim()):''}</p><p style="margin:4px 0 0;font-size:12px">Ogni registrazione viene firmata automaticamente con questo nominativo.</p></div>
+    <div class="set-card" style="padding:13px 15px;margin-bottom:4px"><p style="margin:0;font-weight:700;color:var(--ink)">${esc(siglaCorrente())}${opCorr()?' — '+esc((opCorr().nome+' '+(opCorr().cognome||'')).trim()):''}</p><p style="margin:4px 0 0;font-size:12px">Ogni registrazione viene firmata automaticamente con questo nominativo.</p></div>
     <div class="sec-label">Temperature &middot; ${esc(S.locali[S.locale])}</div>
     ${tempRows}
     <button class="link-btn" onclick="addPunto()">+ Aggiungi frigorifero / cella</button>
@@ -1887,14 +1959,14 @@ function vRegistri(){
     <div class="sec-label">Storico e stampa</div>
     <div class="set-card"><p style="margin-bottom:10px">Ogni registrazione ha data e ora automatiche, non modificabili. Scegli un mese ed esportalo per stamparlo o inviarlo al consulente (l'ASL può chiedere fino a 2 anni di registrazioni).</p>
       <div class="row" style="align-items:center">
-        <select id="expMese" style="flex:1;border:1.5px solid var(--line2);border-radius:10px;padding:11px;background:#fff;font-size:15px">${mesiOptions}</select>
+        <select id="expMese" style="flex:1;border:1.5px solid var(--line2);border-radius:6px;padding:11px;background:#fff;font-size:15px">${mesiOptions}</select>
       </div>
       <div class="row" style="margin-top:8px"><button class="sm-btn green" onclick="exportRegistroCSV()">Esporta CSV</button>
-        <button class="sm-btn" onclick="stampaRegistro()">&#128424; Stampa / PDF</button></div></div>
+        <button class="sm-btn" onclick="stampaRegistro()">Stampa / PDF</button></div></div>
     <div class="sec-label">Storico registrazioni</div>
     <div class="set-card" style="padding:12px 14px;margin-bottom:10px">
       <label style="display:block;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);margin-bottom:6px">Mostra periodo</label>
-      <select onchange="S.storMese=this.value;render()" style="width:100%;border:1.5px solid var(--line2);border-radius:10px;padding:11px;background:#fff;font-size:15px">
+      <select onchange="S.storMese=this.value;render()" style="width:100%;border:1.5px solid var(--line2);border-radius:6px;padding:11px;background:#fff;font-size:15px">
         <option value="" ${!S.storMese?'selected':''}>Ultimi 60 giorni</option>
         ${mesiOptions2}
       </select></div>
@@ -2011,9 +2083,9 @@ function stampaRegistro(){
 /* ---------- disclaimer ---------- */
 function renderDisclaimer(){
   $('#layer').innerHTML=`<div class="lock" style="justify-content:flex-start;padding-top:60px;overflow-y:auto">
-    <svg class="logo-v" width="250" height="150" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230.0" cy="44" r="28" fill="none" stroke="#ffffff" stroke-width="6"/><circle cx="230.0" cy="44" r="20" fill="none" stroke="#bfe8d4" stroke-width="2.8"/><path d="M219.0 44 L227.0 54 L243.0 33" fill="none" stroke="#bfe8d4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230.0" y="120" font-family="Nunito,Arial,sans-serif" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#ffffff">Essere</tspan><tspan fill="#bfe8d4">InRegola</tspan></text><text x="230.0" y="148" font-family="Nunito,Arial,sans-serif" font-size="15" font-weight="700" fill="#bfe8d4" text-anchor="middle" letter-spacing="0.4">Pronti ad ogni controllo!</text></svg>
+    <svg class="logo-v" width="250" height="150" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230.0" cy="44" r="28" fill="none" stroke="#ffffff" stroke-width="6"/><circle cx="230.0" cy="44" r="20" fill="none" stroke="#cfe0d3" stroke-width="2.8"/><path d="M219.0 44 L227.0 54 L243.0 33" fill="none" stroke="#cfe0d3" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230.0" y="120" font-family="Nunito,Arial,sans-serif" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#ffffff">Essere</tspan><tspan fill="#cfe0d3">InRegola</tspan></text><text x="230.0" y="148" font-family="Nunito,Arial,sans-serif" font-size="15" font-weight="700" fill="#cfe0d3" text-anchor="middle" letter-spacing="0.4">Pronti ad ogni controllo!</text></svg>
     <p>Prima di iniziare</p>
-    <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:18px;max-width:440px;text-align:left;font-size:14px;line-height:1.6;margin-top:10px">
+    <div class="disc-box" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:8px;padding:18px;max-width:440px;text-align:left;margin-top:10px">
       <p style="margin-bottom:12px"><b>EssereInRegola è uno strumento organizzativo</b> per raccogliere documenti, registrazioni e scadenze e averli a portata di mano durante un controllo.</p>
       <p style="margin-bottom:12px">Non sostituisce gli obblighi di legge, il manuale di autocontrollo HACCP, né la consulenza di un professionista (consulente sicurezza, RSPP, commercialista).</p>
       <p style="margin-bottom:12px">La completezza e la correttezza dei documenti e dei dati inseriti restano responsabilità dell'utente. I riferimenti normativi sono indicativi e vanno verificati con il proprio consulente.</p>
@@ -2027,9 +2099,9 @@ function accettaDisclaimer(){S.discOk=true;saveSettings();$('#layer').innerHTML=
 function renderBenvenuto(){
   $('#app').innerHTML='';
   $('#layer').innerHTML=`<div class="lock" style="justify-content:flex-start;padding-top:50px;overflow-y:auto">
-    <svg class="logo-v" width="420" height="252" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230.0" cy="44" r="28" fill="none" stroke="#ffffff" stroke-width="6"/><circle cx="230.0" cy="44" r="20" fill="none" stroke="#bfe8d4" stroke-width="2.8"/><path d="M219.0 44 L227.0 54 L243.0 33" fill="none" stroke="#bfe8d4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230.0" y="120" font-family="Nunito,Arial,sans-serif" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#ffffff">Essere</tspan><tspan fill="#bfe8d4">InRegola</tspan></text><text x="230.0" y="148" font-family="Nunito,Arial,sans-serif" font-size="15" font-weight="700" fill="#bfe8d4" text-anchor="middle" letter-spacing="0.4">Pronti ad ogni controllo!</text></svg>
+    <svg class="logo-v" width="296" height="178" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230.0" cy="44" r="28" fill="none" stroke="#ffffff" stroke-width="6"/><circle cx="230.0" cy="44" r="20" fill="none" stroke="#cfe0d3" stroke-width="2.8"/><path d="M219.0 44 L227.0 54 L243.0 33" fill="none" stroke="#cfe0d3" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230.0" y="120" font-family="Nunito,Arial,sans-serif" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#ffffff">Essere</tspan><tspan fill="#cfe0d3">InRegola</tspan></text><text x="230.0" y="148" font-family="Nunito,Arial,sans-serif" font-size="15" font-weight="700" fill="#cfe0d3" text-anchor="middle" letter-spacing="0.4">Pronti ad ogni controllo!</text></svg>
     <p style="font-size:18px;font-weight:700;color:#fff;text-transform:none;letter-spacing:0;margin-top:4px">Benvenuto</p>
-    <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:18px;max-width:440px;text-align:left;font-size:14px;line-height:1.6;margin-top:14px;color:#f2f1e6">
+    <div class="disc-box" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:8px;padding:18px;max-width:440px;text-align:left;margin-top:14px;color:#f2f1e6">
       <p style="margin-bottom:14px">Questa app raccoglie in un unico posto i documenti, le registrazioni e le scadenze del tuo locale, pronti da mostrare in caso di controllo.</p>
       <p style="margin-bottom:6px"><b>In pochi passi:</b></p>
       <p style="margin-bottom:8px">1. Inserisci il nome del tuo locale qui sotto. Poi, da <b>Impostazioni</b>, potrai aggiungere i dati completi dell'attività (ragione sociale, partita IVA, indirizzo) che compariranno sui documenti stampati.</p>
@@ -2037,9 +2109,9 @@ function renderBenvenuto(){
       <p>3. Tieni in ordine i registri di temperature e pulizie, e crea le etichette di conservazione dei tuoi alimenti</p>
     </div>
     <div style="width:100%;max-width:440px;margin-top:20px">
-      <label style="display:block;font-size:13px;font-weight:700;color:#bfe8d4;margin-bottom:8px">NOME DEL LOCALE</label>
+      <label style="display:block;font-size:13px;font-weight:700;color:#cfe0d3;margin-bottom:8px">NOME DEL LOCALE</label>
       <input type="text" id="benvNome" placeholder="Es. Bar Centrale" autocomplete="off"
-        style="width:100%;border:1.5px solid rgba(255,255,255,.4);border-radius:12px;padding:14px;font-size:16px;background:rgba(255,255,255,.95);color:#21251f"
+        style="width:100%;border:1.5px solid rgba(255,255,255,.4);border-radius:7px;padding:14px;font-size:16px;background:rgba(255,255,255,.95);color:#16201b"
         onkeydown="if(event.key==='Enter')salvaBenvenuto()">
     </div>
     <button class="sm-btn green" style="margin-top:18px;padding:14px 28px" onclick="salvaBenvenuto()">Inizia &#8594;</button>
@@ -2071,7 +2143,7 @@ function vSettings(){
 
     <div class="sec-label">Locali</div>
     ${S.locali.map((l,i)=>{const so=S.societa[i]||{};return `<div class="set-card"><div class="row" style="align-items:center">
-      <input type="text" value="${esc(l)}" style="flex:1;border:1.5px solid var(--line2);border-radius:10px;padding:11px" onchange="renameLocale(${i},this.value)">
+      <input type="text" value="${esc(l)}" style="flex:1;border:1.5px solid var(--line2);border-radius:6px;padding:11px" onchange="renameLocale(${i},this.value)">
       ${S.locali.length>1?`<button class="sm-btn red" onclick="removeLocale(${i})">Elimina</button>`:''}
     </div>
     <p style="margin:9px 0 8px;font-size:13px;color:var(--ink2)">${so.ragione?esc(so.ragione)+(so.piva?' &middot; P.IVA '+esc(so.piva):''):'Dati società non ancora inseriti'}</p>
@@ -2095,15 +2167,15 @@ function vSettings(){
     ${S.pin?`<div class="set-card"><h4>Operatori</h4>
       <p>${S.operatori.length?S.operatori.length+' operatore/i. Ognuno entra col proprio PIN, vede solo Registri ed Etichette del suo locale e firma in automatico.':'Crea gli operatori autorizzati: ognuno avr\u00E0 un PIN personale e potr\u00E0 solo registrare temperature, pulizie ed etichette, senza accedere a documenti o impostazioni.'}</p>
       ${S.operatori.map(o=>`<div class="prod-row" style="margin-bottom:8px">
-        <div class="pr-emo">&#128100;</div>
+        <div class="pr-emo">${ICO.persona}</div>
         <div class="pr-info"><div class="pr-name">${esc((o.nome+' '+(o.cognome||'')).trim())}${o.sigla?' &middot; '+esc(o.sigla):''}</div>
           <div class="pr-sub">${esc(S.locali[o.locale]||'?')} &middot; PIN \u2022\u2022\u2022\u2022</div></div>
-        <button class="d-edit" onclick="openOpModal('${o.id}')" aria-label="Modifica">&#9998;</button>
+        <button class="d-edit" onclick="openOpModal('${o.id}')" aria-label="Modifica">${ICO.matita}</button>
       </div>`).join('')}
       <div class="row"><button class="sm-btn green" onclick="openOpModal()">+ Aggiungi operatore</button></div></div>
     <div class="set-card"><h4>Blocco automatico</h4>
       <p>Dopo un periodo di inattivit\u00E0 l\u2019app si riblocca da sola e richiede di nuovo il codice.</p>
-      <select onchange="setLockMin(this.value)" style="width:100%;border:none;border-radius:14px;padding:13px 15px;background:var(--bg);font-weight:600">
+      <select onchange="setLockMin(this.value)" style="width:100%;border:none;border-radius:8px;padding:13px 15px;background:var(--bg);font-weight:600">
         <option value="0" ${S.lockMin==0?'selected':''}>Subito alla chiusura</option>
         <option value="1" ${S.lockMin==1?'selected':''}>Dopo 1 minuto</option>
         <option value="5" ${S.lockMin==5?'selected':''}>Dopo 5 minuti</option>
@@ -2114,7 +2186,7 @@ function vSettings(){
     <div class="sec-label">Intelligenza artificiale</div>
     <div class="set-card"><h4>Lettura etichette con foto</h4>
       <p>Con la chiave AI puoi fotografare l'etichetta di un prodotto e farti compilare il nome in automatico. La chiave resta salvata solo su questo dispositivo.</p>
-      <input type="password" id="setApiKey" value="${esc(S.apiKey||'')}" placeholder="Incolla qui la chiave (sk-ant-...)" style="width:100%;border:1.5px solid var(--line2);border-radius:10px;padding:11px;margin-bottom:8px">
+      <input type="password" id="setApiKey" value="${esc(S.apiKey||'')}" placeholder="Incolla qui la chiave (sk-ant-...)" style="width:100%;border:1.5px solid var(--line2);border-radius:6px;padding:11px;margin-bottom:8px">
       <div class="row">
         <button class="sm-btn green" onclick="salvaApiKey()">Salva chiave</button>
         ${S.apiKey?'<button class="sm-btn red" onclick="rimuoviApiKey()">Rimuovi</button>':''}
@@ -2124,13 +2196,13 @@ function vSettings(){
     <div class="sec-label">Report</div>
     <div class="set-card"><h4>Report compliance del locale</h4>
       <p>Genera un documento unico con lo stato dei documenti per ogni ente, le scadenze e i registri dell'ultimo mese, riferito a <b>${esc(S.locali[S.locale])}</b>. Utile da stampare, salvare in PDF o inviare al consulente. Per cambiare locale, selezionalo dalla barra in alto.</p>
-      <div class="row"><button class="sm-btn green" onclick="stampaReportCompleto()">&#128424; Genera report</button></div></div>
+      <div class="row"><button class="sm-btn green" onclick="stampaReportCompleto()">Genera report</button></div></div>
 
     <div class="sec-label">Backup</div>
     <div class="set-card"><h4>Esporta tutto</h4>
       <p>Scarica un file con tutti i documenti e le impostazioni. <b>Importante:</b> dopo averlo scaricato, spostalo su Google Drive o iCloud (o mandalo via email a te stesso). Se resta solo nel telefono e il telefono si rompe o si perde, perdi tutto. <b>Attenzione:</b> il backup automatico del telefono (iCloud/Google) NON salva i dati di questa app, quindi questo backup va fatto a parte.</p>
       ${(()=>{const g=giorniDaBackup();
-        if(g===null)return '<p style="margin:-4px 0 12px;font-weight:800;color:var(--rosso)">&#9888; Backup mai effettuato.</p>';
+        if(g===null)return '<p style="margin:-4px 0 12px;font-weight:800;color:var(--rosso)">Backup mai effettuato.</p>';
         const txt=g===0?'oggi':g===1?'ieri':g+' giorni fa';
         const col=g>=7?'var(--rosso)':'var(--ok)';
         return `<p style="margin:-4px 0 12px;font-weight:800;color:${col}">Ultimo backup: ${txt}.</p>`;})()}
@@ -2186,7 +2258,7 @@ function openDocModal(docId=null,preSlot=null){
     ${slotConfirmHTML(preSlot,d)}
     <div class="f-group" id="slotPickerGroup" style="${(preSlot&&!d)?'display:none':''}">
       <label>${(preSlot&&!d)?'Collega anche ad altre voci della checklist':'Collega alle voci della checklist'}</label>
-      <div style="max-height:230px;overflow-y:auto;border:1.5px solid var(--line2);border-radius:10px;padding:10px;background:#fff">
+      <div style="max-height:230px;overflow-y:auto;border:1.5px solid var(--line2);border-radius:6px;padding:10px;background:#fff">
       ${ENTI.map(e=>`<div class="slot-group"><div class="sg-name">${e.sigla}</div>
         ${e.items.map(it=>{const k=e.id+':'+it.id;
           return `<button class="slot-chip ${slots.has(k)?'on':''}" data-slot="${k}" onclick="this.classList.toggle('on')">${esc(it.t)}</button>`;}).join('')}
@@ -2427,7 +2499,7 @@ function renderLock(){
   const pinLens=[String(S.pin).length,...S.operatori.map(o=>String(o.pin||'').length),8];
   const maxlen=Math.max(...pinLens);
   $('#layer').innerHTML=`<div class="lock">
-    <svg class="logo-v" width="250" height="150" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230.0" cy="44" r="28" fill="none" stroke="#ffffff" stroke-width="6"/><circle cx="230.0" cy="44" r="20" fill="none" stroke="#bfe8d4" stroke-width="2.8"/><path d="M219.0 44 L227.0 54 L243.0 33" fill="none" stroke="#bfe8d4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230.0" y="120" font-family="Nunito,Arial,sans-serif" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#ffffff">Essere</tspan><tspan fill="#bfe8d4">InRegola</tspan></text><text x="230.0" y="148" font-family="Nunito,Arial,sans-serif" font-size="15" font-weight="700" fill="#bfe8d4" text-anchor="middle" letter-spacing="0.4">Pronti ad ogni controllo!</text></svg>
+    <svg class="logo-v" width="250" height="150" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230.0" cy="44" r="28" fill="none" stroke="#ffffff" stroke-width="6"/><circle cx="230.0" cy="44" r="20" fill="none" stroke="#cfe0d3" stroke-width="2.8"/><path d="M219.0 44 L227.0 54 L243.0 33" fill="none" stroke="#cfe0d3" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230.0" y="120" font-family="Nunito,Arial,sans-serif" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#ffffff">Essere</tspan><tspan fill="#cfe0d3">InRegola</tspan></text><text x="230.0" y="148" font-family="Nunito,Arial,sans-serif" font-size="15" font-weight="700" fill="#cfe0d3" text-anchor="middle" letter-spacing="0.4">Pronti ad ogni controllo!</text></svg>
     <p>Inserisci il codice</p>
     <input type="password" inputmode="numeric" maxlength="${maxlen}" id="pinInput" autofocus
       onkeydown="if(event.key==='Enter')tryPin()" oninput="maybeTryPin(this)">

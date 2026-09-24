@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- EssereInRegola v25 - 23/09/2026 - profilo del locale e motore delle regole -->
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -207,6 +208,47 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .slot-confirm .sc-tx{font-size:13px;font-weight:700;line-height:1.35}
 .slot-confirm .sc-tx b{display:block;font-size:14px}
 @media(min-width:560px){.tiles{grid-template-columns:1fr 1fr 1fr}}
+
+/* ===== v25: profilo del locale ===== */
+.prof-card{display:flex;align-items:center;gap:12px;width:100%;background:var(--card);border:none;border-radius:var(--r);padding:15px 16px;margin-top:16px;box-shadow:0 2px 10px rgba(0,0,0,.05);text-align:left;position:relative;overflow:hidden}
+.prof-card.vuoto{background:var(--verde-soft)}
+.prof-card:active{transform:scale(.99)}
+.prof-card .pc-ico{font-size:24px;flex-shrink:0}
+.prof-card .pc-txt{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+.prof-card .pc-txt b{font-size:14.5px;font-weight:800;color:var(--ink);line-height:1.3}
+.prof-card .pc-txt span{font-size:12px;font-weight:600;color:var(--ink2);line-height:1.45}
+.prof-card .pc-go{font-size:19px;color:var(--ink3);flex-shrink:0}
+.prof-card .pc-bar{position:absolute;left:0;bottom:0;height:3px;width:100%;background:var(--line)}
+.prof-card .pc-bar i{display:block;height:100%;background:var(--verde);border-radius:0 99px 99px 0}
+.prof-bar{height:5px;background:rgba(255,255,255,.35);border-radius:99px;margin-top:12px;overflow:hidden}
+.prof-bar i{display:block;height:100%;background:#fff;border-radius:99px;transition:width .25s}
+.prof-sub{font-size:12px;font-weight:600;color:var(--ink2);line-height:1.5;margin:-4px 0 10px}
+.prof-item{background:var(--card);border-radius:var(--r);padding:14px 15px;margin-bottom:9px;box-shadow:0 2px 10px rgba(0,0,0,.05);border-left:3px solid transparent}
+.prof-item.done{border-left-color:var(--verde)}
+.prof-item .pi-t{font-size:14px;font-weight:800;line-height:1.35;color:var(--ink)}
+.prof-item .pi-a{font-size:11.5px;font-weight:600;color:var(--ink2);line-height:1.5;margin-top:5px}
+.prof-sino{display:flex;gap:8px;margin-top:11px;align-items:center}
+.ps-btn{flex:1;max-width:96px;padding:10px 0;border:1.5px solid var(--line2);background:#fff;border-radius:11px;font-size:13.5px;font-weight:800;color:var(--ink2)}
+.ps-btn.on{background:var(--verde);border-color:var(--verde);color:#fff}
+.ps-clr{width:34px;padding:10px 0;border:none;background:transparent;color:var(--ink3);font-size:17px;font-weight:700}
+.prof-num{display:flex;gap:9px;align-items:center;margin-top:11px}
+.prof-num input{width:104px;border:1.5px solid var(--line2);border-radius:11px;padding:10px 12px;font-size:15px;font-weight:800;color:var(--ink);font-family:inherit}
+.prof-num span{font-size:12.5px;font-weight:700;color:var(--ink2)}
+.prof-opt{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+.po-btn{padding:9px 14px;border:1.5px solid var(--line2);background:#fff;border-radius:11px;font-size:13px;font-weight:700;color:var(--ink2)}
+.po-btn.on{background:var(--verde);border-color:var(--verde);color:#fff}
+.prof-fine{margin-top:22px;padding:18px 16px;background:var(--verde-soft);border-radius:var(--r);text-align:center}
+.prof-fine p{font-size:12.5px;font-weight:600;color:var(--verde-d);line-height:1.55;margin-bottom:14px}
+.ci-perche{font-size:12px;font-weight:600;color:var(--ink2);line-height:1.5;margin-top:7px;padding-left:10px;border-left:2px solid var(--line2)}
+.ci-forse{font-size:12px;font-weight:700;color:var(--ambra);line-height:1.5;margin-top:7px;padding:9px 11px;background:rgba(232,161,58,.09);border-radius:11px}
+.check-item.forse{border-left:3px solid var(--ambra)}
+.check-item.fuori{opacity:.62;box-shadow:none;background:transparent;border:1.5px dashed var(--line2)}
+.check-item.fuori h4{font-weight:700;color:var(--ink2)}
+.badge.fuori{background:var(--line);color:var(--ink2)}
+.ver-line{text-align:center;font-size:11.5px;font-weight:700;color:var(--ink3);margin:26px 0 8px;letter-spacing:.02em}
+.ente-vuoto{background:var(--verde-soft);border-radius:var(--r);padding:17px 16px;margin-bottom:14px;display:flex;flex-direction:column;gap:7px}
+.ente-vuoto b{font-size:14.5px;font-weight:800;color:var(--verde-d);line-height:1.35}
+.ente-vuoto span{font-size:12.5px;font-weight:600;color:var(--verde-d);line-height:1.55;opacity:.9}
 </style>
 </head>
 <body>
@@ -221,6 +263,8 @@ input,select,textarea{font-family:inherit;font-size:16px}
    ========================================================= */
 
 /* ---------- checklist per ente ---------- */
+const APP_VER='v25';
+const APP_DATA='23/09/2026';
 const ENTI=[
  {id:'nas',sigla:'NAS · ULSS',nome:'Igienico-sanitario',
   nota:'Controlli ufficiali: Reg. UE 2017/625. Sanzioni HACCP: D.Lgs 193/2007 (1.000\u20136.000 \u20AC); rintracciabilit\u00E0: D.Lgs 190/2006; etichettatura/allergeni: D.Lgs 231/2017.',
@@ -240,13 +284,13 @@ const ENTI=[
   nota:'Bar e ristoranti di norma NON sono soggetti al DPR 151/2011 (nota VVF 17072/2011), salvo cucine con potenza termica > 116 kW (att. 74), depositi GPL o pubblico spettacolo. Restano obbligatori i decreti del settembre 2021.',
   items:[
   {id:'rischio-incendio',t:'Valutazione rischio incendio',n:'DM 3/09/2021 (minicodice) \u00B7 D.Lgs 81/2008 art. 17'},
-  {id:'scia-antincendio',t:'SCIA antincendio / CPI (solo se attivit\u00E0 soggetta)',n:'DPR 151/2011 All. I (es. att. 74 cucine > 116 kW)'},
+  {id:'scia-antincendio',t:'SCIA antincendio (solo se attivit\u00E0 soggetta)',n:'DPR 151/2011 All. I att. 74 (oltre 116 kW) \u00B7 categoria A: si presenta la SCIA, il CPI riguarda solo le attivit\u00E0 oltre 700 kW \u00B7 rinnovo ogni 5 anni'},
   {id:'registro-antincendio',t:'Registro antincendio (controlli e manutenzioni)',n:'DM 1/09/2021 \u2014 obbligatorio per tutte le attivit\u00E0'},
-  {id:'estintori',t:'Verbali manutenzione estintori (semestrali)',n:'DM 1/09/2021 \u00B7 UNI 9994-1'},
+  {id:'estintori',t:'Estintori: controllo semestrale, revisione e collaudo',n:'DM 1/09/2021 \u00B7 UNI 9994-1:2024 \u2014 oltre al controllo ogni 6 mesi servono la revisione programmata e il collaudo, secondo tipo e anno dell\u2019estintore'},
   {id:'conf-elettrico',t:'Dichiarazione conformit\u00E0 impianto elettrico',n:'DM 37/2008 art. 7'},
   {id:'conf-gas',t:'Dichiarazione conformit\u00E0 impianto gas',n:'DM 37/2008 \u00B7 UNI 7129'},
-  {id:'impianto-terra',t:'Verifica periodica impianto di terra',n:'DPR 462/2001 (biennale o quinquennale)'},
-  {id:'piano-emergenza',t:'Piano di emergenza ed evacuazione + planimetrie',n:'DM 2/09/2021 art. 2 \u2014 obbligo se \u226510 lavoratori o >50 presenti'},
+  {id:'impianto-terra',t:'Impianto di terra: denuncia INAIL e verifica periodica',n:'DPR 462/2001 \u2014 denuncia entro 30 giorni dalla messa in esercizio; verifica ogni 5 anni (ogni 2 negli ambienti a maggior rischio incendio o con pericolo di esplosione), da ASL/ARPA o organismo abilitato, non dall\u2019elettricista'},
+  {id:'piano-emergenza',t:'Piano di emergenza ed evacuazione + planimetrie',n:'DM 2/09/2021 art. 2 c. 2 \u2014 obbligo se \u226510 lavoratori, OPPURE pi\u00F9 di 50 presenze contemporanee, OPPURE attivit\u00E0 soggetta ai controlli VV.F. Sotto soglia restano comunque le misure antincendio da scrivere nel DVR (c. 4)'},
   {id:'addetti-antincendio',t:'Attestati addetti antincendio (e aggiornamenti)',n:'DM 2/09/2021 \u00B7 D.Lgs 81/2008 art. 37 c. 9'}]},
  {id:'itl',sigla:'ITL \u00B7 INPS \u00B7 INAIL',nome:'Ispettorato del Lavoro',
   nota:'Lavoro nero: maxisanzione D.L. 12/2002 art. 3 (da 1.950 \u20AC a oltre 46.000 \u20AC per lavoratore) + possibile sospensione attivit\u00E0 (D.Lgs 81/2008 art. 14).',
@@ -255,9 +299,11 @@ const ENTI=[
   {id:'lul',t:'Libro Unico del Lavoro (LUL)',n:'D.L. 112/2008 art. 39'},
   {id:'dvr',t:'DVR \u2014 Documento Valutazione Rischi',n:'D.Lgs 81/2008 artt. 17, 28-29'},
   {id:'rspp',t:'Nomina RSPP',n:'D.Lgs 81/2008 artt. 17, 31-34'},
+  {id:'rls',t:'Nomina o elezione RLS (o adesione all’RLS territoriale)',n:'D.Lgs 81/2008 artt. 47-48 — serve da 1 lavoratore in su; sopra i 15 cambia solo il modo di nominarlo'},
+  {id:'primo-soccorso',t:'Attestati addetti primo soccorso e cassetta di pronto soccorso',n:'D.Lgs 81/2008 artt. 18, 45 · DM 388/2003 — ristorazione gruppo B: corso 12 ore, aggiornamento ogni 3 anni'},
   {id:'medico-competente',t:'Nomina medico competente e sorveglianza sanitaria',n:'D.Lgs 81/2008 artt. 18, 25, 41'},
-  {id:'formazione-sicurezza',t:'Attestati formazione sicurezza lavoratori e preposti',n:'D.Lgs 81/2008 art. 37 \u00B7 Accordo Stato-Regioni 17/04/2025'},
-  {id:'formazione-datore',t:'Formazione datore di lavoro (16 ore, entro 24/05/2027)',n:'Accordo Stato-Regioni 17/04/2025 \u00B7 D.L. 146/2021'},
+  {id:'formazione-sicurezza',t:'Attestati formazione sicurezza lavoratori e preposti',n:'D.Lgs 81/2008 art. 37 \u00B7 Accordo Stato-Regioni 17/04/2025 \u2014 aggiornamento lavoratori ogni 5 anni, preposti ogni 2 anni (era 5: chi si \u00E8 formato prima del 24/05/2023 doveva aggiornarsi entro il 24/05/2026)'},
+  {id:'formazione-datore',t:'Formazione datore di lavoro (16 ore, 24 se fai anche da RSPP)',n:'Accordo Stato-Regioni 17/04/2025 \u00B7 D.L. 146/2021 \u2014 vale per TUTTI i datori di lavoro, anche con RSPP esterno; entro il 24/05/2027 per chi era in carica al 24/05/2025'},
   {id:'idoneita',t:'Idoneit\u00E0 sanitarie (visite mediche)',n:'D.Lgs 81/2008 art. 41'},
   {id:'durc',t:'DURC in corso di validit\u00E0',n:'D.M. 30/01/2015'},
   {id:'orari',t:'Orari di lavoro / turni e riposi',n:'D.Lgs 66/2003'},
@@ -292,10 +338,371 @@ const ENTI=[
   {id:'polizza-cat',t:'Polizza rischi catastrofali (obbligatoria \u2014 per somministrazione e ricettivo dal 31/03/2026)',n:'L. 213/2023 art. 1 c. 101 \u00B7 D.L. 39/2025 \u00B7 D.L. 200/2025 (Milleproroghe 2026)'},
   {id:'polizza-rc',t:'Polizza assicurativa RC',n:'facoltativa ma raccomandata'},
   {id:'oli-esausti',t:'Contratto smaltimento oli vegetali esausti',n:'D.Lgs 152/2006 art. 233 (CONOE)'},
-  {id:'rifiuti',t:'Gestione rifiuti / iscrizione RENTRI (solo se produttore di rifiuti pericolosi)',n:'D.Lgs 152/2006 \u00B7 D.M. 59/2023 \u2014 esclusi i soli rifiuti non pericolosi conferiti al servizio pubblico'},
+  {id:'rifiuti',t:'Iscrizione RENTRI (solo se produci rifiuti pericolosi)',n:'D.Lgs 152/2006 \u00B7 D.M. 59/2023 \u2014 iscrizione entro il 13/02/2026 per i produttori di rifiuti pericolosi fino a 10 dipendenti, con registro e formulario digitali. Chi produce solo rifiuti non pericolosi di norma non \u00E8 tenuto, salvo lavorazioni artigianali con pi\u00F9 di 10 dipendenti'},
   {id:'privacy',t:'Informative privacy GDPR + cartelli videosorveglianza',n:'Reg. UE 2016/679 \u00B7 Provv. Garante 8/04/2010'},
   {id:'tariffe',t:'Esposizione tariffe e diritti del consumatore',n:'D.Lgs 206/2005 (Codice del Consumo)'}]}
 ];
+/* ===== v25: profilo del locale e motore delle regole ===== */
+/* ============================================================
+   PROFILO DEL LOCALE + MOTORE DELLE REGOLE  (v25)
+   Le condizioni sono scritte a mano e verificate sulla fonte.
+   L'AI non decide mai se un obbligo si applica.
+   REGOLA DELL'ASIMMETRIA: un dato non risposto puo' far comparire
+   una voce, mai farla sparire.
+   ============================================================ */
+
+/* --- le domande del profilo --- */
+const PROF_BLOCCHI=[
+ {id:'base',titolo:'Le basi',sub:'Bastano queste per iniziare: due minuti.',dom:[
+  {k:'tipo',t:'Che tipo di attività è?',tipo:'scelta',opt:[['bar','Bar / caffetteria'],['ristorante','Ristorante'],['pizzeria','Pizzeria'],['pub','Pub / birreria'],['agriturismo','Agriturismo'],['gastronomia','Gastronomia / asporto']]},
+  {k:'presenze',t:'Quante persone al massimo ci sono dentro contemporaneamente?',aiuto:'Clienti e personale insieme. Serve per il piano di emergenza: la legge conta le presenze, non i posti a sedere.',tipo:'numero',unita:'persone'},
+  {k:'lavoratori',t:'Quante persone lavorano nel locale in tutto?',aiuto:'Conta dipendenti, soci lavoratori, collaboratori familiari e stagionali. Se sei socio e lavori anche tu, contati. Il titolare di ditta individuale non si conta.',tipo:'numero',unita:'persone'},
+  {k:'alcolici',t:'Vendi alcolici?',tipo:'sino'},
+  {k:'superalc',t:'Vendi superalcolici?',tipo:'sino',dipende:['alcolici',true]},
+  {k:'kwgas',t:'Quanti kW fanno in tutto gli apparecchi a fiamma nello stesso locale?',aiuto:'Sta sul libretto o sulla targhetta di forni, cucine e friggitrici. Si sommano tutti gli apparecchi a fiamma dello stesso locale o di locali comunicanti: gas, gasolio, legna. Gli elettrici non contano. Se non hai apparecchi a fiamma, scrivi 0.',tipo:'numero',unita:'kW'},
+  {k:'forma',t:'Che forma giuridica?',tipo:'scelta',opt:[['individuale','Ditta individuale'],['societa','Società']]},
+  {k:'immobile',t:'Il locale è di proprietà o in affitto?',tipo:'scelta',opt:[['proprieta','Di proprietà'],['affitto','In affitto']]}
+ ]},
+ {id:'impianti',titolo:'Impianti e struttura',sub:'Decidono buona parte della sezione Vigili del Fuoco.',dom:[
+  {k:'acqua',t:'L’acqua da dove arriva?',tipo:'scelta',opt:[['acquedotto','Acquedotto'],['pozzo','Pozzo privato']]},
+  {k:'tratt_acqua',t:'Hai serbatoi, addolcitori, filtri o fabbricatori di ghiaccio?',aiuto:'Anche con l’acquedotto, se c’è un trattamento interno la responsabilità dell’acqua al rubinetto è tua.',tipo:'sino'},
+  {k:'gpl',t:'Hai GPL in bombole o serbatoio?',tipo:'sino'},
+  {k:'forno_legna',t:'Hai forno a legna o canna fumaria?',tipo:'sino'},
+  {k:'dehors',t:'Hai dehors o tavolini all’esterno?',tipo:'sino'},
+  {k:'interrati',t:'Usi locali interrati o seminterrati?',tipo:'sino'},
+  {k:'ascensore',t:'Hai ascensore o montacarichi?',tipo:'sino'},
+  {k:'marci',t:'Nel progetto elettrico l’ambiente è classificato a maggior rischio incendio o con pericolo di esplosione?',aiuto:'Sta nella dichiarazione di conformità o nel progetto. Decide se la verifica dell’impianto di terra è ogni 2 anni invece che ogni 5. Se non lo sai, lascia in bianco: teniamo la scadenza più stretta.',tipo:'sino'},
+  {k:'insegna',t:'Hai un’insegna esterna?',tipo:'sino'}
+ ]},
+ {id:'lavoro',titolo:'Chi ci lavora',sub:'Da compilare solo se hai almeno un lavoratore.',dom:[
+  {k:'rspp_datore',t:'Fai tu da RSPP?',aiuto:'Se sì, il corso da datore di lavoro è di 24 ore invece che 16.',tipo:'sino'},
+  {k:'sorv_sanitaria',t:'Il DVR prevede la sorveglianza sanitaria?',aiuto:'Il medico competente si nomina se lo richiede la valutazione dei rischi, non in base al numero di dipendenti. In un ristorante di norma serve.',tipo:'sino'},
+  {k:'preposti',t:'Hai nominato dei preposti (capo sala, capo partita)?',aiuto:'Il loro aggiornamento è ogni 2 anni, non più ogni 5: molti ce l’hanno indietro senza saperlo.',tipo:'sino'},
+  {k:'minori',t:'Ci sono apprendisti o lavoratori under 18?',tipo:'sino'},
+  {k:'gravidanza',t:'Ci sono lavoratrici in gravidanza o che allattano?',tipo:'sino'},
+  {k:'stranieri',t:'Ci sono lavoratori extra-UE?',tipo:'sino'},
+  {k:'videosorv',t:'Hai telecamere di videosorveglianza?',tipo:'sino'}
+ ]},
+ {id:'attivita',titolo:'Cosa fai nel locale',sub:'È la parte che cambia più spesso: rivedila ogni sei mesi.',dom:[
+  {k:'musica',t:'Metti musica o fai intrattenimento?',tipo:'scelta',opt:[['no','No, niente musica'],['ambiente','Solo musica di sottofondo'],['dalvivo','Musica dal vivo'],['karaoke','Karaoke'],['ballo','Si balla']]},
+  {k:'intratt_prev',t:'L’intrattenimento è diventato l’attività principale, o hai una sala dedicata?',aiuto:'Musica e karaoke da soli non cambiano la natura del locale: resti bar o ristorante finché l’intrattenimento resta accessorio (Circolare VVF 674/2026).',tipo:'sino',dipende:['musica','!no']},
+  {k:'tv',t:'Hai TV, radio o playlist in sala?',aiuto:'Anche solo la TV accesa è “musica d’ambiente” per la SIAE.',tipo:'sino'},
+  {k:'dopo24',t:'Resti aperto dopo mezzanotte?',aiuto:'Se hai lavoratori dopo le 24 scatta anche la sorveglianza sanitaria per il lavoro notturno.',tipo:'sino'},
+  {k:'giochi',t:'Hai slot, VLT o gratta e vinci?',tipo:'sino'},
+  {k:'tabacchi',t:'Vendi tabacchi?',tipo:'sino'},
+  {k:'asporto',t:'Fai asporto o consegna a domicilio?',tipo:'sino'},
+  {k:'catering',t:'Fai catering o banchetti fuori sede?',tipo:'sino'},
+  {k:'prod_propria',t:'Produci in proprio (pane, dolci, gelato, conserve)?',tipo:'sino'},
+  {k:'pesce_crudo',t:'Servi pesce crudo, marinato o affumicato?',aiuto:'Sushi, tartare, carpacci, marinati, salmone affumicato fatto da te. Fa scattare la bonifica preventiva con le temperature registrate.',tipo:'sino'},
+  {k:'sottovuoto',t:'Fai sottovuoto, affumicatura o fermentazioni?',tipo:'sino'},
+  {k:'funghi',t:'Usi funghi spontanei?',tipo:'sino'},
+  {k:'celiaci',t:'Fai piatti per celiaci?',tipo:'sino'},
+  {k:'surgelati',t:'Usi prodotti surgelati o congeli tu?',tipo:'sino'},
+  {k:'frittura',t:'Friggi?',tipo:'sino'},
+  {k:'distributori',t:'Hai distributori automatici?',tipo:'sino'}
+ ]},
+ {id:'varie',titolo:'Rifiuti e fisco',sub:'',dom:[
+  {k:'rifiuti_pericolosi',t:'Produci rifiuti pericolosi?',aiuto:'Neon, toner, batterie, oli minerali esausti. Gli avanzi di cucina e gli oli da frittura non sono pericolosi.',tipo:'sino'},
+  {k:'degrassatore',t:'Hai il degrassatore?',tipo:'sino'},
+  {k:'aff_azienda',t:'Hai un contratto di affitto d’azienda o di ramo d’azienda?',tipo:'sino'},
+  {k:'impresa_fam',t:'È un’impresa familiare?',tipo:'sino',dipende:['forma','individuale']},
+  {k:'pos',t:'Hai il POS?',tipo:'sino'}
+ ]}
+];
+
+/* --- le regole: per ogni voce, quando si applica ---
+   ril(p) ritorna: true = ti riguarda, false = non ti riguarda,
+   null = non lo so ancora (quindi resta visibile, da confermare) */
+const N=(v)=>(v===undefined||v===null||v==='')?null:v;
+const REGOLE={
+ /* ---- NAS / ULSS ---- */
+ 'nas:haccp':{ril:()=>true},
+ 'nas:scia-sanitaria':{ril:()=>true},
+ 'nas:formazione-alimentaristi':{ril:()=>true},
+ 'nas:temperature':{ril:()=>true},
+ 'nas:pulizie':{ril:()=>true},
+ 'nas:disinfestazione':{ril:()=>true},
+ 'nas:tracciabilita':{ril:()=>true},
+ 'nas:allergeni':{ril:()=>true},
+ 'nas:schede-tecniche':{ril:()=>true},
+ 'nas:acqua':{ril:()=>true,
+  si:'Anche solo con l’acquedotto, dal contatore al rubinetto il gestore sei tu (D.Lgs 18/2023) e la ristorazione è edificio prioritario: il monitoraggio dell’impianto interno va dentro l’HACCP. Con pozzo o trattamenti interni servono le analisi complete.'},
+ 'nas:congelati':{ril:p=>{
+   if(N(p.pesce_crudo)===true)return true;
+   if(N(p.surgelati)===true)return true;
+   if(N(p.surgelati)===false&&N(p.pesce_crudo)===false)return false;
+   return true;},
+  si:'Se servi pesce crudo, marinato o affumicato la bonifica per congelamento è obbligatoria (Reg. CE 853/2004, sostituito dal Reg. UE 1276/2011): −20 °C per 24 ore oppure −35 °C per 15 ore, con le temperature registrate.',
+  no:'Non usi surgelati, non congeli tu e non servi pesce crudo.'},
+
+ /* ---- VIGILI DEL FUOCO ---- */
+ 'vvf:rischio-incendio':{ril:()=>true},
+ 'vvf:scia-antincendio':{ril:p=>{
+   const kw=N(p.kwgas);
+   const intr=(N(p.musica)==='no')?false:N(p.intratt_prev);
+   if(kw!==null&&kw>116)return true;
+   if(N(p.gpl)===true)return null;
+   if(intr===true)return null;
+   if(kw!==null&&kw<=116&&N(p.gpl)===false&&intr===false&&N(p.forno_legna)===false)return false;
+   return null;},
+  si:'Sopra i 116 kW rientri nell’attività 74: serve la SCIA antincendio. Il CPI riguarda solo le attività oltre 700 kW, a te non serve.',
+  no:'Sotto i 116 kW, senza GPL, senza forno a legna e senza pubblico spettacolo non sei soggetto al DPR 151/2011. Restano comunque le regole tecniche delle grandi cucine.',
+  forse:'Da verificare: dipende dai kW complessivi degli apparecchi a fiamma, dal GPL, dal forno a legna e dal tipo di intrattenimento.'},
+ 'vvf:registro-antincendio':{ril:()=>true},
+ 'vvf:estintori':{ril:()=>true},
+ 'vvf:conf-elettrico':{ril:()=>true},
+ 'vvf:conf-gas':{ril:p=>{
+   const kw=N(p.kwgas);
+   if(kw!==null&&kw>0)return true;
+   if(N(p.gpl)===true)return true;
+   if(kw===0&&N(p.gpl)===false)return false;
+   return null;},
+  no:'Nessun apparecchio a gas.'},
+ 'vvf:impianto-terra':{ril:()=>true},
+ 'vvf:piano-emergenza':{ril:p=>{
+   const lav=N(p.lavoratori),pre=N(p.presenze);
+   const sog=REGOLE['vvf:scia-antincendio'].ril(p);
+   if(lav!==null&&lav>=10)return true;
+   if(pre!==null&&pre>50)return true;
+   if(sog===true)return true;
+   if(lav!==null&&lav<10&&pre!==null&&pre<=50&&sog===false)return false;
+   return null;},
+  si:'Rientri in uno dei tre casi del DM 2/09/2021: almeno 10 lavoratori, oppure più di 50 presenze contemporanee, oppure attività soggetta ai controlli dei Vigili del Fuoco.',
+  no:'Sotto tutte e tre le soglie il piano scritto non serve. ATTENZIONE: restano comunque obbligatorie le misure antincendio, che vanno scritte dentro il DVR.',
+  forse:'Dipende da quanti lavorano, da quante persone ci sono dentro e dal fatto che tu sia o no soggetto ai controlli dei Vigili del Fuoco.'},
+ 'vvf:addetti-antincendio':{ril:p=>{
+   const lav=N(p.lavoratori);
+   if(lav!==null&&lav>=1)return true;
+   if(lav===0)return false;
+   return null;},
+  no:'Nessun lavoratore.'},
+
+ /* ---- ISPETTORATO DEL LAVORO ---- */
+ 'itl:unilav':{ril:p=>lavSi(p),no:'Nessun lavoratore.'},
+ 'itl:lul':{ril:p=>lavSi(p),no:'Nessun lavoratore.'},
+ 'itl:dvr':{ril:p=>lavSi(p),no:'Nessun lavoratore.'},
+ 'itl:rspp':{ril:p=>lavSi(p),no:'Nessun lavoratore.'},
+ 'itl:rls':{ril:p=>lavSi(p),si:'Serve da un lavoratore in su: la soglia dei 15 cambia solo come si nomina, non se serve.',no:'Nessun lavoratore.'},
+ 'itl:primo-soccorso':{ril:p=>lavSi(p),si:'Obbligo distinto da quello antincendio: addetti formati (12 ore, gruppo B) e cassetta di pronto soccorso.',no:'Nessun lavoratore.'},
+ 'itl:medico-competente':{ril:p=>{
+   if(N(p.sorv_sanitaria)===true)return true;
+   if(lavSi(p)===false)return false;
+   if(lavSi(p)===true&&N(p.dopo24)===true)return true;
+   return null;},
+  si:'Sorveglianza sanitaria prevista dal DVR, oppure lavoro notturno (D.Lgs 66/2003 art. 14: visite almeno ogni 2 anni).',
+  no:'Nessun lavoratore.',
+  forse:'Hai lavoratori: tra movimentazione carichi, turni e videoterminali la valutazione dei rischi di norma fa scattare la sorveglianza sanitaria. Non te la tolgo finché non lo conferma chi ti segue.'},
+ 'itl:formazione-sicurezza':{ril:p=>lavSi(p),no:'Nessun lavoratore.'},
+ 'itl:formazione-datore':{ril:p=>lavSi(p),
+  si:'Vale per tutti i datori di lavoro con almeno un dipendente, anche se l’RSPP è esterno.',
+  no:'Nessun lavoratore.'},
+ 'itl:idoneita':{ril:p=>{
+   if(N(p.sorv_sanitaria)===true)return true;
+   if(lavSi(p)===false)return false;
+   if(lavSi(p)===true&&N(p.dopo24)===true)return true;
+   return null;},
+  no:'Nessun lavoratore.',
+  forse:'Le visite servono se è prevista la sorveglianza sanitaria: verifica con il medico competente.'},
+ 'itl:durc':{ril:p=>lavSi(p)===true?true:null,
+  si:'Hai lavoratori: il DURC deve essere in corso di validità (120 giorni dalla verifica).',
+  forse:'Anche senza dipendenti il DURC esiste sulla posizione INPS del titolare o dei soci, e te lo chiedono per bonus, contributi e pratiche con la pubblica amministrazione.'},
+ 'itl:orari':{ril:p=>lavSi(p),no:'Nessun lavoratore.'},
+ 'itl:videosorveglianza':{ril:p=>{
+   if(N(p.videosorv)===true)return true;
+   if(N(p.videosorv)===false)return false;
+   return null;},
+  no:'Nessuna telecamera.'},
+
+ /* ---- QUESTURA / POLIZIA LOCALE ---- */
+ 'plq:scia-somministrazione':{ril:()=>true},
+ 'plq:requisiti':{ril:()=>true},
+ 'plq:acustica':{ril:p=>{
+   const m=N(p.musica);
+   if(m&&m!=='no')return true;
+   if(N(p.dehors)===true)return true;
+   return null;},
+  si:'Hai musica o dehors: il comune di norma la richiede.',
+  forse:'Molti comuni la chiedono comunque all’apertura: verifica il regolamento comunale.'},
+ 'plq:suolo-pubblico':{ril:p=>{
+   if(N(p.dehors)===true)return true;
+   if(N(p.dehors)===false&&N(p.insegna)===false)return false;
+   return null;},
+  si:'Hai dehors o tavolini fuori: serve la concessione e il canone unico.',
+  no:'Nessuna occupazione di suolo pubblico e nessuna insegna.',
+  forse:'Niente dehors, ma anche l’insegna rientra nel canone unico se sta su spazio pubblico: esenti solo le insegne di esercizio fino a 5 mq.'},
+ 'plq:siae':{ril:p=>{
+   const m=N(p.musica);
+   if(m&&m!=='no')return true;
+   if(N(p.tv)===true)return true;
+   if(m==='no'&&N(p.tv)===false)return false;
+   return null;},
+  si:'Musica, TV o radio in sala: serve la licenza SIAE musica d’ambiente, più i diritti connessi (SCF).',
+  no:'Nessuna musica e nessun apparecchio sonoro in sala.',
+  forse:'Anche solo la TV accesa conta come musica d’ambiente: dimmi se hai apparecchi in sala.'},
+ 'plq:cartello-orari':{ril:()=>true},
+ 'plq:listino':{ril:()=>true},
+ 'plq:divieto-fumo':{ril:()=>true},
+ 'plq:insegna':{ril:p=>{
+   if(N(p.insegna)===true)return true;
+   if(N(p.insegna)===false)return false;
+   return null;},
+  no:'Nessuna insegna esterna.'},
+ 'plq:alcolemica':{ril:p=>{
+   if(N(p.alcolici)===false)return false;
+   if(N(p.dopo24)===false)return false;
+   if(N(p.alcolici)===true&&N(p.dopo24)===true)return true;
+   return null;},
+  si:'Vendi alcolici e resti aperto dopo mezzanotte.',
+  no:'Serve solo ai locali che vendono alcolici e restano aperti dopo le 24.'},
+
+ /* ---- GUARDIA DI FINANZA ---- */
+ 'gdf:registratore':{ril:()=>true},
+ 'gdf:corrispettivi':{ril:()=>true},
+ 'gdf:visura':{ril:()=>true},
+ 'gdf:piva':{ril:()=>true},
+ 'gdf:affitto-azienda':{ril:p=>{
+   if(N(p.immobile)==='affitto')return true;
+   if(N(p.aff_azienda)===true)return true;
+   if(N(p.immobile)==='proprieta'&&N(p.aff_azienda)===false)return false;
+   return null;},
+  si:'Hai un contratto di locazione o di affitto d’azienda: va tenuto registrato.',
+  no:'Immobile di proprietà e nessun affitto d’azienda.',
+  forse:'Se hai un contratto di locazione o di affitto d’azienda, va tenuto registrato.'},
+ 'gdf:alcolici':{ril:p=>{
+   if(N(p.alcolici)===true)return true;
+   if(N(p.alcolici)===false)return false;
+   return null;},
+  no:'Non vendi alcolici.'},
+ 'gdf:pos-rt':{ril:p=>{
+   if(N(p.pos)===false)return false;
+   return true;},
+  si:'Obbligo dal 1° gennaio 2026. Il termine per gli strumenti già attivi era il 20 aprile 2026; per ogni POS nuovo la comunicazione va fatta entro il secondo mese successivo.',
+  no:'Nessun POS. Attenzione però: accettare i pagamenti con carta è obbligatorio, e il rifiuto costa 30 € più il 4% dell’operazione.'},
+
+ /* ---- GENERALE ---- */
+ 'gen:atto-costitutivo':{ril:p=>{
+   if(N(p.forma)==='societa')return true;
+   if(N(p.forma)==='individuale')return N(p.impresa_fam)===true?true:(N(p.impresa_fam)===false?false:null);
+   return null;},
+  si:'Serve l’atto costitutivo (per l’impresa familiare è l’atto notarile ex art. 230-bis c.c.).',
+  no:'Ditta individuale senza impresa familiare: non c’è atto costitutivo.',
+  forse:'Se è un’impresa familiare l’atto notarile c’è e in un controllo lo chiedono.'},
+ 'gen:polizza-cat':{ril:p=>{
+   if(N(p.tipo)==='agriturismo')return null;
+   return true;},
+  si:'Obbligatoria per le imprese. Per bar e ristoranti micro e piccoli il termine era il 31/03/2026: è già in vigore.',
+  forse:'Se sei impresa agricola sei fuori da questo obbligo (c’è il Fondo AgriCat). Da verificare con il commercialista.'},
+ 'gen:polizza-rc':{ril:()=>true},
+ 'gen:oli-esausti':{ril:p=>{
+   if(N(p.frittura)===true)return true;
+   if(N(p.frittura)===false)return null;
+   return null;},
+  si:'Friggi: gli oli esausti vanno conferiti a ditta autorizzata.',
+  forse:'Serve se produci oli vegetali esausti.'},
+ 'gen:rifiuti':{ril:p=>{
+   if(N(p.rifiuti_pericolosi)===true)return true;
+   if(N(p.rifiuti_pericolosi)===false){
+     const l=N(p.lavoratori);
+     if(l!==null&&l<=10)return false;
+     return null;
+   }
+   return null;},
+  si:'ATTENZIONE: l’iscrizione andava fatta entro il 13/02/2026. Se non l’hai fatta, oggi sei già fuori termine.',
+  no:'Solo rifiuti non pericolosi e non più di 10 dipendenti: nessun obbligo RENTRI.',
+  forse:'Solo rifiuti non pericolosi, ma più di 10 dipendenti: se hai una lavorazione artigianale (produzione propria) l’iscrizione può servire. Da verificare sui codici dei rifiuti con chi ti segue.'},
+ 'gen:privacy':{ril:()=>true},
+ 'gen:tariffe':{ril:()=>true}
+};
+function lavSi(p){const l=N(p.lavoratori);if(l===null)return null;return l>=1;}
+
+/* --- profilo del locale corrente --- */
+function prof(){
+  if(!S.profili)S.profili=[];
+  if(!S.profili[S.locale])S.profili[S.locale]={};
+  return S.profili[S.locale];
+}
+function setProf(k,v){prof()[k]=v;saveSettings();}
+
+/* --- stato di una voce: ti riguarda o no --- */
+function voceStato(eid,itId){
+  const r=REGOLE[eid+':'+itId];
+  if(!r)return{ril:true,perche:''};
+  let v;
+  try{v=r.ril(prof());}catch(e){v=null;}
+  if(v===true)return{ril:true,perche:r.si||''};
+  if(v===false)return{ril:false,perche:r.no||''};
+  return{ril:null,perche:r.forse||'Non ho abbastanza informazioni sul tuo locale: nel dubbio te la lascio in lista.'};
+}
+/* quante risposte mancano */
+function profCompleto(){
+  const p=prof();let tot=0,fatte=0;
+  PROF_BLOCCHI.forEach(b=>b.dom.forEach(d=>{
+    if(d.dipende){const[k,val]=d.dipende;const cur=p[k];
+      if(val==='!no'){if(!cur||cur==='no')return;}else if(cur!==val)return;}
+    tot++;if(p[d.k]!==undefined&&p[d.k]!==null&&p[d.k]!=='')fatte++;
+  }));
+  return{tot,fatte,pct:tot?Math.round(fatte/tot*100):0};
+}
+
+/* ---------- vista: Il mio locale ---------- */
+function vProfilo(){
+  const p=prof(),c=profCompleto();
+  return topbar()+`<div class="page-head">
+    <button class="back-btn" onclick="go('home')">&#8592; Archivio</button>
+    <h2>Il mio locale</h2>
+    <div class="ph-meta">${esc(S.locali[S.locale])} &middot; ${c.fatte}/${c.tot} risposte</div>
+    <div class="prof-bar"><i style="width:${c.pct}%"></i></div>
+    <div class="ente-nota">Più cose so del tuo locale, meno voci inutili ti faccio vedere. Quello che non rispondi resta in lista: non ti tolgo mai niente al buio.</div>
+  </div>
+  <div class="wrap">
+  ${PROF_BLOCCHI.map(b=>{
+    const dom=b.dom.filter(d=>{
+      if(!d.dipende)return true;
+      const[k,val]=d.dipende;const cur=p[k];
+      if(val==='!no')return cur&&cur!=='no';
+      return cur===val;
+    });
+    if(!dom.length)return '';
+    return `<div class="sec-label">${esc(b.titolo)}</div>
+    ${b.sub?`<p class="prof-sub">${esc(b.sub)}</p>`:''}
+    ${dom.map(d=>{
+      const v=p[d.k];
+      const risposto=(v!==undefined&&v!==null&&v!=='');
+      let campo='';
+      if(d.tipo==='sino'){
+        campo=`<div class="prof-sino">
+          <button class="ps-btn${v===true?' on':''}" onclick="rispProf('${d.k}',true)">Sì</button>
+          <button class="ps-btn${v===false?' on':''}" onclick="rispProf('${d.k}',false)">No</button>
+          ${risposto?`<button class="ps-clr" onclick="rispProf('${d.k}',null)">&times;</button>`:''}
+        </div>`;
+      }else if(d.tipo==='numero'){
+        campo=`<div class="prof-num">
+          <input type="number" min="0" inputmode="numeric" value="${risposto?v:''}" placeholder="—"
+            onchange="rispProf('${d.k}',this.value===''?null:Number(this.value))">
+          <span>${esc(d.unita||'')}</span>
+        </div>`;
+      }else{
+        campo=`<div class="prof-opt">${d.opt.map(o=>
+          `<button class="po-btn${v===o[0]?' on':''}" onclick="rispProf('${d.k}','${o[0]}')">${esc(o[1])}</button>`).join('')}</div>`;
+      }
+      return `<div class="prof-item${risposto?' done':''}">
+        <div class="pi-t">${esc(d.t)}</div>
+        ${d.aiuto?`<div class="pi-a">${esc(d.aiuto)}</div>`:''}
+        ${campo}
+      </div>`;}).join('')}`;
+  }).join('')}
+  <div class="prof-fine">
+    <p>Quando cambia qualcosa nel locale, torna qui e cambia la risposta: la lista dei documenti si aggiorna da sola.</p>
+    <button class="btn primary" onclick="go('home')">Ho finito</button>
+  </div>
+  </div>`+navBar();
+}
+function rispProf(k,v){
+  if(v===null)delete prof()[k];else prof()[k]=v;
+  saveSettings();render();
+}
+
+
 const ENTE=id=>ENTI.find(e=>e.id===id);
 
 /* ---------- IndexedDB ---------- */
@@ -319,10 +726,10 @@ const dbClear=s=>new Promise(r=>{const q=tx(s,'readwrite').clear();q.onsuccess=(
 /* ---------- stato ---------- */
 let S={locali:['Il mio locale'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],operatori:[],opCorrente:null,
   societa:[{}],
-  loghi:[null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti',lastBackup:null,bkDismissed:0,storMese:'',benvenutoFatto:false,listini:null,apiKey:''};
+  loghi:[null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti',lastBackup:null,bkDismissed:0,storMese:'',benvenutoFatto:false,listini:null,apiKey:'',profili:[]};
 async function loadState(){
   const st=await dbGet('settings','app');
-  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];S.operatori=st.operatori||[];S.lastBackup=st.lastBackup||null;S.benvenutoFatto=!!st.benvenutoFatto;S.apiKey=st.apiKey||'';
+  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];S.operatori=st.operatori||[];S.lastBackup=st.lastBackup||null;S.benvenutoFatto=!!st.benvenutoFatto;S.apiKey=st.apiKey||'';S.profili=st.profili||[];
     // migrazione: vecchio codice operatore unico -> un operatore generico sul primo locale
     if(st.opPin&&!S.operatori.length)S.operatori=[{id:uid(),nome:'Operatore',cognome:'',sigla:'OP',pin:st.opPin,locale:0}];}
   while(S.societa.length<S.locali.length)S.societa.push({});
@@ -351,7 +758,7 @@ async function migrateSlots(){
   }
   if(changed)S.docs=await dbAll('docs');
 }
-const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,operatori:S.operatori,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico,lastBackup:S.lastBackup,benvenutoFatto:S.benvenutoFatto,apiKey:S.apiKey});
+const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,operatori:S.operatori,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico,lastBackup:S.lastBackup,benvenutoFatto:S.benvenutoFatto,apiKey:S.apiKey,profili:S.profili});
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -371,9 +778,14 @@ const docsLocale=()=>S.docs.filter(d=>d.locale===S.locale);
 const docEnti=d=>{const set=new Set((d.slots||[]).map(s=>s.split(':')[0]));(d.extraEnti||[]).forEach(e=>set.add(e));return[...set]};
 function enteStats(eid){
   const ente=ENTE(eid),docs=docsLocale();
-  let covered=0;
-  ente.items.forEach(it=>{if(docs.some(d=>(d.slots||[]).includes(eid+':'+it.id)))covered++;});
-  return{covered,total:ente.items.length,pct:Math.round(covered/ente.items.length*100)};
+  let covered=0,total=0,esclusi=0;
+  ente.items.forEach(it=>{
+    const st=voceStato(eid,it.id);
+    if(st.ril===false){esclusi++;return;}
+    total++;
+    if(docs.some(d=>(d.slots||[]).includes(eid+':'+it.id)))covered++;
+  });
+  return{covered,total,esclusi,pct:total?Math.round(covered/total*100):100};
 }
 
 /* ---------- file open ---------- */
@@ -401,6 +813,7 @@ function render(){
   else if(S.screen==='registri')app.innerHTML=vRegistri();
   else if(S.screen==='etichette')app.innerHTML=vEtichette();
   else if(S.screen==='listino')app.innerHTML=vListino();
+  else if(S.screen==='profilo')app.innerHTML=vProfilo();
   else if(S.screen==='settings')app.innerHTML=vSettings();
   bindNav();
 }
@@ -480,6 +893,23 @@ function vHome(){
     <div class="search-row"><input type="text" placeholder="Cerca un documento…" value="${esc(S.query)}"
       oninput="S.query=this.value;renderResultsOnly()" id="searchInput"></div>
     <div id="searchResults">${results}</div>
+    ${(()=>{const c=profCompleto();
+      if(c.fatte===0)return `<button class="prof-card vuoto" onclick="go('profilo')">
+        <span class="pc-ico">&#127968;</span>
+        <span class="pc-txt"><b>Dimmi com\u2019\u00E8 fatto il tuo locale</b>
+        <span>Otto domande, due minuti. Poi ti faccio vedere solo i documenti che servono a te.</span></span>
+        <span class="pc-go">&#8594;</span></button>`;
+      if(c.fatte<c.tot)return `<button class="prof-card" onclick="go('profilo')">
+        <span class="pc-ico">&#127968;</span>
+        <span class="pc-txt"><b>Il mio locale &middot; ${c.fatte} risposte su ${c.tot}</b>
+        <span>Ogni risposta in pi\u00F9 toglie una voce che non ti riguarda.</span></span>
+        <span class="pc-bar"><i style="width:${c.pct}%"></i></span>
+        <span class="pc-go">&#8594;</span></button>`;
+      return `<button class="prof-card ok" onclick="go('profilo')">
+        <span class="pc-ico">&#127968;</span>
+        <span class="pc-txt"><b>Il mio locale &middot; profilo completo</b>
+        <span>\u00C8 cambiato qualcosa? Aggiorna qui e la lista si rifa\u0300 da sola.</span></span>
+        <span class="pc-go">&#8594;</span></button>`;})()}
     ${bkAlert}
     ${alerts}
     <button class="controllo-btn" style="margin-top:18px" onclick="pickControllo()"><span class="dot"></span> Modalità controllo</button>
@@ -527,15 +957,18 @@ function vEnte(eid){
   return topbar()+`<div class="page-head">
     <button class="back-btn" onclick="go('home')">&#8592; Archivio</button>
     <h2>${e.nome}</h2>
-    <div class="ph-meta">${e.sigla} &middot; ${st.covered}/${st.total} voci coperte &middot; ${esc(S.locali[S.locale])}</div>
+    <div class="ph-meta">${e.sigla} &middot; ${st.total===0?'nessuna voce ti riguarda':st.covered+'/'+st.total+' voci coperte'}${st.esclusi&&st.total?' &middot; '+st.esclusi+' non ti riguardano':''} &middot; ${esc(S.locali[S.locale])}</div>
     ${(S.societa[S.locale]&&S.societa[S.locale].ragione)?`<div class="ph-meta">${esc(S.societa[S.locale].ragione)}${S.societa[S.locale].piva?' &middot; P.IVA '+esc(S.societa[S.locale].piva):''}</div>`:''}
     <button class="controllo-btn" onclick="startControllo('${eid}')"><span class="dot"></span> Modalità controllo</button>
     ${e.nota?`<div class="ente-nota">${esc(e.nota)}</div>`:''}
   </div>
   <div class="wrap">
-    <div class="sec-label">Checklist documenti</div>
-    ${e.items.map((it,i)=>{
+    ${st.total===0?`<div class="ente-vuoto"><b>In base al profilo del tuo locale, qui non ti serve niente.</b>
+      <span>Le ${st.esclusi} voci di questo ente non ti riguardano. Le trovi qui sotto con il perch\u00E9. Se cambia qualcosa nel locale, tornano da sole.</span>
+      <button class="link-btn" onclick="go('profilo')">Rivedi il profilo del locale</button></div>`:'<div class="sec-label">Checklist documenti</div>'}
+    ${e.items.filter(it=>voceStato(eid,it.id).ril!==false).map((it,i)=>{
       const linked=inSlot(it.id);
+      const vs=voceStato(eid,it.id);
       let badge;
       if(!linked.length)badge='<span class="badge manca">Manca</span>';
       else{
@@ -544,13 +977,22 @@ function vEnte(eid){
           :worst.includes('warn')?'<span class="badge scad">In scadenza</span>'
           :'<span class="badge ok">OK</span>';
       }
-      return `<div class="check-item">
+      return `<div class="check-item${vs.ril===null?' forse':''}">
         <div class="ci-top"><h4>${esc(it.t)}</h4>${badge}</div>
         <div class="ci-norma">${esc(it.n)}</div>
+        ${vs.ril===null?`<div class="ci-forse">Da confermare &middot; ${esc(vs.perche)} <button class="link-btn" onclick="go('profilo')">Rispondi nel profilo</button></div>`:(vs.perche?`<div class="ci-perche">${esc(vs.perche)}</div>`:'')}
         ${linked.map(docRow).join('')}
         ${eid==='nas'&&(it.id==='temperature'||it.id==='pulizie')?`<button class="link-btn" onclick="go('registri')">&#128202; Apri il registro digitale compilabile</button><br>`:''}
         <button class="link-btn" onclick="openDocModal(null,'${eid}:${it.id}')">+ Carica documento per questa voce</button>
       </div>`;}).join('')}
+    ${(()=>{const fuori=e.items.filter(it=>voceStato(eid,it.id).ril===false);
+      if(!fuori.length)return '';
+      return `<div class="sec-label">Non ti riguarda &mdash; e perch\u00E9</div>
+      <p class="prof-sub">Queste voci non te le chiedo, in base a quello che mi hai detto del locale. Se cambia qualcosa, tornano.</p>
+      ${fuori.map(it=>`<div class="check-item fuori">
+        <div class="ci-top"><h4>${esc(it.t)}</h4><span class="badge fuori">Non serve</span></div>
+        <div class="ci-perche">${esc(voceStato(eid,it.id).perche)}</div>
+      </div>`).join('')}`;})()}
     ${extra.length?`<div class="sec-label">Altri documenti collegati</div>${extra.map(docRow).join('')}`:''}
   </div>`+navBar();
 }
@@ -1617,7 +2059,12 @@ function salvaBenvenuto(){
 /* ---------- settings ---------- */
 function vSettings(){
   return topbar()+`<div class="wrap">
-    <div class="sec-label" style="margin-top:6px">Documenti da esporre</div>
+    <div class="sec-label" style="margin-top:6px">Il mio locale</div>
+    <div class="set-card"><h4>Profilo del locale</h4>
+      <p>Le risposte che decidono quali documenti ti servono davvero. Aggiornale ogni volta che cambia qualcosa nel locale.</p>
+      <button class="sm-btn green" onclick="go('profilo')">Apri il profilo &middot; ${profCompleto().fatte}/${profCompleto().tot} risposte</button></div>
+
+    <div class="sec-label">Documenti da esporre</div>
     <div class="set-card"><h4>Listino prezzi</h4>
       <p>Compila i prezzi del tuo locale e stampa un listino col tuo logo, pronto da esporre come richiede la legge.</p>
       <button class="sm-btn green" onclick="go('listino')">Apri il listino prezzi</button></div>
@@ -1701,6 +2148,7 @@ function vSettings(){
     <div class="set-card"><h4>Azzeramento totale</h4>
       <p>Elimina definitivamente tutti i documenti e le impostazioni da questo dispositivo.</p>
       <button class="sm-btn red" onclick="resetAll()">Cancella tutto</button></div>
+    <div class="ver-line">EssereInRegola ${APP_VER} &middot; aggiornata il ${APP_DATA}</div>
   </div>`+navBar();
 }
 

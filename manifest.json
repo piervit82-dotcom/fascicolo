@@ -2,12 +2,12 @@
   "name": "EssereInRegola",
   "short_name": "EssereInRegola",
   "description": "Documenti, registri e norme pronti per ogni controllo.",
-  "start_url": "./index.html",
+  "start_url": "./app.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#178f5a",
-  "theme_color": "#178f5a",
+  "background_color": "#1d4634",
+  "theme_color": "#1d4634",
   "lang": "it",
   "icons": [
     {

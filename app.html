@@ -44,7 +44,7 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .topbar .icon-btn{background:var(--verde);border:none;color:#fff;border-radius:50%;width:38px;height:38px;font-size:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .locale-bar{background:transparent;padding:0 20px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
 .locale-bar::-webkit-scrollbar{display:none}
-.locale-chip{flex-shrink:0;border:1.5px solid var(--line2);background:#fff;color:var(--ink2);border-radius:99px;padding:8px 16px;font-size:13.5px;font-weight:700;white-space:nowrap}
+.locale-chip{flex-shrink:0;border:1.5px solid var(--line2);background:#fff;color:var(--ink2);border-radius:99px;padding:11px 18px;font-size:14px;font-weight:700;white-space:nowrap;min-height:44px;display:inline-flex;align-items:center}
 .locale-chip.active{background:var(--verde);color:#fff;border-color:var(--verde)}
 
 /* ---------- sections ---------- */
@@ -68,7 +68,7 @@ input,select,textarea{font-family:inherit;font-size:16px}
 /* ---------- ente tiles ---------- */
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .tile{position:relative;text-align:left;background:var(--card);border:none;border-radius:24px;padding:17px;min-height:140px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid var(--line)}
-.tile .t-sigla{font-size:10px;font-weight:800;letter-spacing:.04em;color:var(--ink3);text-transform:uppercase}
+.tile .t-sigla{font-size:11px;font-weight:800;letter-spacing:.04em;color:var(--ink3);text-transform:uppercase}
 .tile h3{font-size:15.5px;font-weight:800;letter-spacing:-.01em;line-height:1.15;margin-top:2px}
 .tile .t-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:11px}
 .tile .t-pct{font-size:18px;font-weight:900;line-height:1}
@@ -90,7 +90,7 @@ input,select,textarea{font-family:inherit;font-size:16px}
 
 /* ---------- ente screen ---------- */
 .page-head{padding:18px 20px 20px;background:var(--verde);color:#fff;border-radius:0 0 26px 26px}
-.back-btn{background:rgba(255,255,255,.2);border:none;color:#fff;font-weight:800;font-size:13.5px;padding:7px 14px;border-radius:99px;margin-bottom:12px;display:inline-flex;align-items:center;gap:6px}
+.back-btn{background:rgba(255,255,255,.2);border:none;color:#fff;font-weight:800;font-size:14px;padding:11px 18px;border-radius:99px;margin-bottom:12px;display:inline-flex;align-items:center;gap:6px;min-height:44px}
 .page-head h2{font-size:24px;font-weight:900;letter-spacing:-.02em;line-height:1.1}
 .page-head .ph-meta{font-size:12.5px;font-weight:600;opacity:.88;margin-top:5px}
 .controllo-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:16px;background:#fff;color:var(--rosso);border:none;border-radius:99px;padding:15px;font-size:15px;font-weight:900;letter-spacing:.01em;text-transform:none}
@@ -101,21 +101,21 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .ci-norma{font-size:11px;font-weight:600;color:var(--ink3);margin-top:5px;line-height:1.5}
 .ente-nota{margin-top:14px;padding:14px 15px;background:var(--verde-soft);border:none;border-radius:8px;font-size:12.5px;font-weight:600;color:var(--verde-d);line-height:1.55}
 .check-item h4{font-size:14.5px;font-weight:800;line-height:1.3;flex:1}
-.badge{font-size:10.5px;font-weight:800;letter-spacing:.01em;padding:5px 11px;border-radius:99px;white-space:nowrap;text-transform:none}
+.badge{font-size:11px;font-weight:800;letter-spacing:.01em;padding:6px 12px;border-radius:99px;white-space:nowrap;text-transform:none}
 .badge.manca{background:var(--rosso-soft);color:var(--rosso)}
 .badge.ok{background:var(--verde-soft);color:var(--verde-d)}
 .badge.scad{background:var(--ambra-soft);color:var(--ambra-d)}
 .badge.exp{background:var(--rosso);color:#fff}
 .doc-row{display:flex;align-items:center;gap:12px;margin-top:12px;padding:11px 12px;background:var(--bg);border-radius:15px;border:none}
-.doc-row .d-ico{width:34px;height:34px;flex-shrink:0;border:none;border-radius:6px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:800;color:var(--ink3);position:relative;border:1px solid var(--line)}
+.doc-row .d-ico{width:34px;height:34px;flex-shrink:0;border:none;border-radius:6px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;color:var(--ink3);position:relative;border:1px solid var(--line)}
 .doc-row .d-info{flex:1;min-width:0}
 .doc-row .d-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.doc-row .d-meta{font-size:10.5px;font-weight:600;color:var(--ink3);margin-top:1px}
+.doc-row .d-meta{font-size:11.5px;font-weight:600;color:var(--ink3);margin-top:1px}
 .doc-row .d-meta.warn{color:var(--ambra-d);font-weight:700}
 .doc-row .d-meta.exp{color:var(--rosso);font-weight:700}
-.doc-row .d-open{border:none;background:var(--verde);color:#fff;border-radius:99px;padding:9px 16px;font-size:12.5px;font-weight:800;flex-shrink:0}
-.doc-row .d-edit{border:none;background:#fff;color:var(--ink2);border-radius:6px;width:38px;height:38px;font-size:14px;flex-shrink:0;border:1px solid var(--line)}
-.link-btn{background:none;border:none;color:var(--verde);font-weight:800;font-size:13px;padding:10px 2px 0;text-decoration:none}
+.doc-row .d-open{border:none;background:var(--verde);color:#fff;border-radius:99px;padding:12px 18px;font-size:13px;font-weight:800;flex-shrink:0;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+.doc-row .d-edit{border:none;background:#fff;color:var(--ink2);border-radius:6px;width:44px;height:44px;font-size:14px;flex-shrink:0;border:1px solid var(--line)}
+.link-btn{background:none;border:none;color:var(--verde);font-weight:800;font-size:13.5px;padding:13px 2px 11px;text-decoration:none;min-height:44px;display:inline-flex;align-items:center;text-align:left}
 
 /* ---------- modalità controllo ---------- */
 .controllo-screen{position:fixed;inset:0;z-index:100;background:var(--bg);overflow-y:auto;border:5px solid var(--rosso)}
@@ -135,7 +135,7 @@ input,select,textarea{font-family:inherit;font-size:16px}
 /* ---------- FAB & nav ---------- */
 .fab{position:fixed;right:16px;bottom:104px;z-index:50;width:50px;height:50px;border-radius:99px;background:var(--verde);color:#fff;font-size:25px;font-weight:400;border:1px solid var(--verde-d);display:flex;align-items:center;justify-content:center;line-height:1}
 .bottom-nav{position:fixed;left:18px;right:18px;bottom:18px;z-index:50;background:var(--ink);border:none;border-radius:99px;display:flex;max-width:644px;margin:0 auto;padding:7px;border:1px solid var(--line2)}
-.bottom-nav button{flex:1;background:none;border:none;padding:8px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;color:rgba(255,255,255,.55);font-size:8.5px;font-weight:700;border-radius:99px;min-width:0}
+.bottom-nav button{flex:1;background:none;border:none;padding:9px 1px;display:flex;flex-direction:column;align-items:center;gap:3px;color:rgba(255,255,255,.55);font-size:9.5px;font-weight:700;border-radius:99px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:52px;justify-content:center}
 .bottom-nav button.active{color:#fff;background:rgba(255,255,255,.16)}
 .bottom-nav .n-ico{font-size:17px;line-height:1}
 
@@ -231,14 +231,14 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .prof-item .pi-t{font-size:14px;font-weight:800;line-height:1.35;color:var(--ink)}
 .prof-item .pi-a{font-size:11.5px;font-weight:600;color:var(--ink2);line-height:1.5;margin-top:5px}
 .prof-sino{display:flex;gap:8px;margin-top:11px;align-items:center}
-.ps-btn{flex:1;max-width:96px;padding:10px 0;border:1.5px solid var(--line2);background:#fff;border-radius:6px;font-size:13.5px;font-weight:800;color:var(--ink2)}
+.ps-btn{flex:1;max-width:108px;padding:13px 0;border:1.5px solid var(--line2);background:#fff;border-radius:6px;font-size:14.5px;font-weight:800;color:var(--ink2);min-height:48px}
 .ps-btn.on{background:var(--verde);border-color:var(--verde);color:#fff}
-.ps-clr{width:34px;padding:10px 0;border:none;background:transparent;color:var(--ink3);font-size:17px;font-weight:700}
+.ps-clr{width:46px;min-height:46px;padding:0;border:none;background:transparent;color:var(--ink3);font-size:18px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
 .prof-num{display:flex;gap:9px;align-items:center;margin-top:11px}
 .prof-num input{width:104px;border:1.5px solid var(--line2);border-radius:6px;padding:10px 12px;font-size:15px;font-weight:800;color:var(--ink);font-family:inherit}
 .prof-num span{font-size:12.5px;font-weight:700;color:var(--ink2)}
 .prof-opt{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
-.po-btn{padding:9px 14px;border:1.5px solid var(--line2);background:#fff;border-radius:6px;font-size:13px;font-weight:700;color:var(--ink2)}
+.po-btn{padding:12px 15px;border:1.5px solid var(--line2);background:#fff;border-radius:6px;font-size:13.5px;font-weight:700;color:var(--ink2);min-height:46px;display:inline-flex;align-items:center}
 .po-btn.on{background:var(--verde);border-color:var(--verde);color:#fff}
 .prof-fine{margin-top:22px;padding:18px 16px;background:var(--verde-soft);border-radius:var(--r);text-align:center}
 .prof-fine p{font-size:12.5px;font-weight:600;color:var(--verde-d);line-height:1.55;margin-bottom:14px}
@@ -288,19 +288,25 @@ input,select,textarea{font-family:inherit;font-size:16px}
 /* durante il controllo il nome del documento si legge tutto */
 .controllo-body .d-name{white-space:normal;overflow:visible;text-overflow:clip;font-size:14px;line-height:1.35}
 .controllo-body .doc-row{align-items:flex-start}
+@media(max-width:359px){
+  .fab{width:44px;height:44px;font-size:22px;right:12px;bottom:98px}
+  .bottom-nav{left:10px;right:10px;padding:5px}
+  .bottom-nav button{font-size:8.5px;padding:8px 0}
+  .n-ico svg{width:19px;height:19px}
+  .tiles{gap:9px}
+  .tile{padding:14px;min-height:130px}
+  .tile h3{font-size:14px}
+  .wrap{padding-left:14px;padding-right:14px}
+}
 </style>
 </head>
 <body>
 <script>
-/* chi apre l'app senza aver messo il codice torna alla pagina di presentazione.
-   Chi l'ha gia' installata sulla schermata Home entra diretto. */
 (function(){
   try{
     var ok = localStorage.getItem('eir_ok')==='1';
     var installata = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone===true;
-    if(!ok && !installata && location.protocol.indexOf('http')===0){
-      location.replace('index.html');
-    }
+    if(!ok && !installata && location.protocol.indexOf('http')===0){ location.replace('index.html'); }
     if(installata){ try{ localStorage.setItem('eir_ok','1'); }catch(e){} }
   }catch(e){}
 })();
@@ -927,7 +933,7 @@ function navBar(){
       <button onclick="lockNow()"><span class="n-ico">${ICO.esci}</span>Esci</button>
     </div>`;
   }
-  const n=[['home',ICO.archivio,'Home'],['registri',ICO.registri,'Registri'],['profilo',ICO.locale,'Il mio locale'],['scadenze',ICO.scadenze,'Scadenze'],['settings',ICO.settings,'Impostazioni']];
+  const n=[['home',ICO.archivio,'Home'],['registri',ICO.registri,'Registri'],['profilo',ICO.locale,'Locale'],['scadenze',ICO.scadenze,'Scadenze'],['settings',ICO.settings,'Opzioni']];
   return `<div class="bottom-nav">${n.map(([id,ico,lab])=>
     `<button class="${S.screen===id?'active':''}" onclick="go('${id}')"><span class="n-ico">${ico}</span>${lab}</button>`).join('')}</div>
   ${(S.screen==='home'||S.screen==='ente'||S.screen==='scadenze')?'<button class="fab" onclick="openDocModal()" aria-label="Aggiungi un documento">+</button>':''}`;

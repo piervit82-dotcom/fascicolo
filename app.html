@@ -291,6 +291,15 @@ input,select,textarea{font-family:inherit;font-size:16px}
 /* durante il controllo il nome del documento si legge tutto */
 .controllo-body .d-name{white-space:normal;overflow:visible;text-overflow:clip;font-size:14px;line-height:1.35}
 .controllo-body .doc-row{align-items:flex-start}
+@media(max-width:400px){
+  .bottom-nav{left:10px;right:10px;padding:5px}
+  .bottom-nav button{font-size:8.6px;letter-spacing:-.03em;padding:9px 0}
+}
+@media(max-width:345px){
+  .bottom-nav button{font-size:8px;letter-spacing:-.04em}
+  .bottom-nav button:last-child{flex:1.3}
+  .bottom-nav button:first-child{flex:.85}
+}
 @media(max-width:359px){
   .fab{width:44px;height:44px;font-size:22px;right:12px;bottom:98px}
   .bottom-nav{left:10px;right:10px;padding:5px}
@@ -415,6 +424,11 @@ body{background:var(--bg)}
 .ente-nota-box[open] summary::after{transform:rotate(-90deg)}
 .ente-nota-box[open] summary{border-radius:16px 16px 0 0}
 .ente-nota-box .ente-nota{margin-top:0;border-radius:0 0 16px 16px}
+.bk-stato{border-radius:14px;padding:13px 15px;margin:2px 0 13px;font-size:14.5px;font-weight:800;line-height:1.3}
+.bk-stato span{display:block;font-size:12.5px;font-weight:600;margin-top:4px;opacity:.9}
+.bk-stato.mai{background:var(--rosso-soft);color:var(--rosso)}
+.bk-stato.vecchio{background:var(--ambra-soft);color:var(--ambra-d)}
+.bk-stato.ok{background:var(--verde-soft);color:var(--verde)}
 </style>
 </head>
 <body>
@@ -1062,7 +1076,7 @@ function navBar(){
       <button onclick="lockNow()"><span class="n-ico">${ICO.esci}</span>Esci</button>
     </div>`;
   }
-  const n=[['home',ICO.archivio,'Home'],['registri',ICO.registri,'Registri'],['profilo',ICO.locale,'Locale'],['scadenze',ICO.scadenze,'Scadenze'],['settings',ICO.settings,'Opzioni']];
+  const n=[['home',ICO.archivio,'Home'],['registri',ICO.registri,'Registri'],['profilo',ICO.locale,'Locale'],['scadenze',ICO.scadenze,'Scadenze'],['settings',ICO.settings,'Impostazioni']];
   return `<div class="bottom-nav">${n.map(([id,ico,lab])=>
     `<button class="${S.screen===id?'active':''}" onclick="go('${id}')"><span class="n-ico">${ico}</span>${lab}</button>`).join('')}</div>
   ${(S.screen==='home'||S.screen==='scadenze')?'<button class="fab" onclick="openDocModal()" aria-label="Aggiungi un documento">+</button>':''}`;
@@ -1173,18 +1187,6 @@ function vHome(){
         :(c.fatte<c.tot?c.fatte+' risposte su '+c.tot:'Profilo completo \u00B7 \u00E8 cambiato qualcosa?')}</span></span>
       <span class="fre">&#8250;</span>
     </button>`;
-
-  const gb=giorniDaBackup();
-  if(!S.bkDismissed&&(gb===null||gb>=7)){
-    const msg=gb===null?'Non hai mai fatto un backup. I documenti stanno solo su questo dispositivo.'
-      :'Sono passati '+gb+' giorni dall\u2019ultimo backup.';
-    html+=`<div class="riga-av backup">
-      <span class="pal a">${ICO.backup}</span>
-      <span class="ra-txt"><b>Backup consigliato</b><span>${msg}</span></span>
-      <button class="mini" onclick="exportBackup()">Scarica</button>
-      <button class="mini x" onclick="S.bkDismissed=1;render()" aria-label="Chiudi">&#10005;</button>
-    </div>`;
-  }
 
   return topbar()+`<div class="wrap">
     <div id="cercaBox">${S.cercaAperta?boxCerca():''}</div>
@@ -2418,10 +2420,10 @@ function vSettings(){
     <div class="set-card"><h4>Esporta tutto</h4>
       <p>Scarica un file con tutti i documenti e le impostazioni. <b>Importante:</b> dopo averlo scaricato, spostalo su Google Drive o iCloud (o mandalo via email a te stesso). Se resta solo nel telefono e il telefono si rompe o si perde, perdi tutto. <b>Attenzione:</b> il backup automatico del telefono (iCloud/Google) NON salva i dati di questa app, quindi questo backup va fatto a parte.</p>
       ${(()=>{const g=giorniDaBackup();
-        if(g===null)return '<p style="margin:-4px 0 12px;font-weight:800;color:var(--rosso)">Backup mai effettuato.</p>';
+        if(g===null)return '<div class="bk-stato mai">Non hai mai fatto un backup<span>I tuoi documenti stanno solo su questo dispositivo.</span></div>';
         const txt=g===0?'oggi':g===1?'ieri':g+' giorni fa';
-        const col=g>=7?'var(--rosso)':'var(--ok)';
-        return `<p style="margin:-4px 0 12px;font-weight:800;color:${col}">Ultimo backup: ${txt}.</p>`;})()}
+        if(g>=7)return `<div class="bk-stato vecchio">Ultimo backup ${txt}<span>\u00C8 passato un po\u2019: scaricane uno nuovo.</span></div>`;
+        return `<div class="bk-stato ok">Ultimo backup ${txt}<span>Sei a posto.</span></div>`;})()}
       <div class="row"><button class="sm-btn green" onclick="exportBackup()">Scarica backup</button>
       <button class="sm-btn" onclick="document.getElementById('importFile').click()">Ripristina backup</button>
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(this.files[0])"></div></div>

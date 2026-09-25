@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- EssereInRegola v25 - 23/09/2026 - profilo del locale e motore delle regole -->
+<!-- EssereInRegola v26 - 25/09/2026 - scheletro nuovo, pensato per i controlli -->
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -16,14 +16,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#16201b; --ink2:#6b746d; --ink3:#9aa29b;
-  --bg:#ecebe2; --card:#ffffff;
-  --verde:#1d4634; --verde-d:#143126; --verde-l:#2f6b4f; --verde-soft:#e3e9e3;
-  --rosso:#b23427; --rosso-d:#8e281e; --rosso-soft:#f2e1de;
-  --ambra:#9a6b15; --ambra-d:#7a5410; --ambra-soft:#f1e8d5;
-  --ok:#1d4634;
-  --line:#e0e0d6; --line2:#d2d3c6;
-  --r:8px;
+  --ink:#121a16; --ink2:#697a71; --ink3:#9daaa3;
+  --bg:#f6f7f4; --card:#ffffff;
+  --verde:#136b4a; --verde-d:#0e5239; --verde-l:#1c9163; --verde-soft:#e7f4ed;
+  --rosso:#c0392b; --rosso-d:#9c2e22; --rosso-soft:#fbeae8;
+  --ambra:#b07d10; --ambra-d:#8a6108; --ambra-soft:#fbf1dc;
+  --blu:#1e4e8c; --blu-soft:#e6eef8;
+  --ok:#136b4a;
+  --line:#e6e9e4; --line2:#d8ddd7;
+  --r:18px;
   --sans:'Nunito',-apple-system,system-ui,sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -49,7 +50,7 @@ input,select,textarea{font-family:inherit;font-size:16px}
 
 /* ---------- sections ---------- */
 .wrap{padding-bottom:120px;padding:18px 18px 0}
-.sec-label{font-size:12px;font-weight:800;letter-spacing:.01em;text-transform:uppercase;color:var(--ink2);margin:22px 4px 12px;display:flex;align-items:center;gap:10px}
+.sec-label{font-size:11.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);margin:26px 0 12px;display:flex;align-items:center;gap:10px}
 .sec-label:first-child{margin-top:6px}
 
 /* ---------- alert scadenze ---------- */
@@ -89,17 +90,19 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .search-row input:focus{outline:2px solid var(--verde)}
 
 /* ---------- ente screen ---------- */
-.page-head{padding:18px 20px 20px;background:var(--verde);color:#fff;border-radius:0 0 26px 26px}
-.back-btn{background:rgba(255,255,255,.2);border:none;color:#fff;font-weight:800;font-size:14px;padding:11px 18px;border-radius:99px;margin-bottom:12px;display:inline-flex;align-items:center;gap:6px;min-height:44px}
-.page-head h2{font-size:24px;font-weight:900;letter-spacing:-.02em;line-height:1.1}
-.page-head .ph-meta{font-size:12.5px;font-weight:600;opacity:.88;margin-top:5px}
-.controllo-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:16px;background:#fff;color:var(--rosso);border:none;border-radius:99px;padding:15px;font-size:15px;font-weight:900;letter-spacing:.01em;text-transform:none}
+.page-head{padding:0 18px 4px;background:transparent;color:var(--ink)}
+.back-btn{background:var(--card);border:1px solid var(--line);color:var(--ink2);font-weight:800;font-size:13.5px;padding:10px 16px;border-radius:99px;margin-bottom:14px;display:inline-flex;align-items:center;gap:7px;min-height:44px}
+.page-head h2{font-size:25px;font-weight:900;letter-spacing:-.03em;line-height:1.12;color:var(--ink);margin-top:2px}
+.page-head .ph-meta{font-size:12.5px;font-weight:600;color:var(--ink2);margin-top:6px;line-height:1.45}
+.controllo-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:14px;background:var(--rosso);color:#fff;border:none;border-radius:16px;padding:16px;font-size:15.5px;font-weight:900;letter-spacing:-.01em;min-height:52px}
+.controllo-btn:active{background:var(--rosso-d)}
+.controllo-btn .dot{width:9px;height:9px;border-radius:99px;background:#fff}
 .controllo-btn:active{background:#f5f5f0}
 
-.check-item{background:var(--card);border:none;border-radius:var(--r);padding:15px 16px;margin-bottom:10px;border:1px solid var(--line)}
+.check-item{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:10px}
 .check-item .ci-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .ci-norma{font-size:11px;font-weight:600;color:var(--ink3);margin-top:5px;line-height:1.5}
-.ente-nota{margin-top:14px;padding:14px 15px;background:var(--verde-soft);border:none;border-radius:8px;font-size:12.5px;font-weight:600;color:var(--verde-d);line-height:1.55}
+.ente-nota{margin-top:14px;padding:15px 16px;background:var(--verde-soft);border:none;border-radius:16px;font-size:12.5px;font-weight:600;color:var(--verde-d);line-height:1.55}
 .check-item h4{font-size:14.5px;font-weight:800;line-height:1.3;flex:1}
 .badge{font-size:11px;font-weight:800;letter-spacing:.01em;padding:6px 12px;border-radius:99px;white-space:nowrap;text-transform:none}
 .badge.manca{background:var(--rosso-soft);color:var(--rosso)}
@@ -223,10 +226,10 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .prof-card .pc-go{font-size:19px;color:var(--ink3);flex-shrink:0}
 .prof-card .pc-bar{position:absolute;left:0;bottom:0;height:3px;width:100%;background:var(--line)}
 .prof-card .pc-bar i{display:block;height:100%;background:var(--verde);border-radius:0 99px 99px 0}
-.prof-bar{height:5px;background:rgba(255,255,255,.35);border-radius:99px;margin-top:12px;overflow:hidden}
-.prof-bar i{display:block;height:100%;background:#fff;border-radius:99px;transition:width .25s}
+.prof-bar{height:6px;background:#eef1ed;border-radius:99px;margin-top:13px;overflow:hidden}
+.prof-bar i{display:block;height:100%;background:var(--verde);border-radius:99px;transition:width .3s}
 .prof-sub{font-size:12px;font-weight:600;color:var(--ink2);line-height:1.5;margin:-4px 0 10px}
-.prof-item{background:var(--card);border-radius:var(--r);padding:14px 15px;margin-bottom:9px;border:1px solid var(--line);border-left:3px solid transparent}
+.prof-item{background:var(--card);border-radius:18px;padding:16px;margin-bottom:10px;border:1px solid var(--line);border-left:3px solid transparent}
 .prof-item.done{border-left-color:var(--verde)}
 .prof-item .pi-t{font-size:14px;font-weight:800;line-height:1.35;color:var(--ink)}
 .prof-item .pi-a{font-size:11.5px;font-weight:600;color:var(--ink2);line-height:1.5;margin-top:5px}
@@ -307,6 +310,111 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .benv-warn{background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.5);border-radius:8px;padding:15px;margin-bottom:16px}
 .benv-warn b{font-size:14.5px;font-weight:900;color:#fff;display:block;line-height:1.3}
 .benv-warn p{font-size:13px;font-weight:600;color:#f2f1e6;line-height:1.5;margin-top:8px}
+
+/* ===== v26: scheletro nuovo ===== */
+body{background:var(--bg)}
+.wrap{padding:0 18px 130px}
+
+/* testata */
+.testata{background:var(--verde);color:#fff;padding:18px 18px 22px;border-radius:0 0 26px 26px;position:relative;overflow:hidden;margin-bottom:18px}
+.testata::after{content:'';position:absolute;right:-50px;top:-50px;width:190px;height:190px;border-radius:99px;background:rgba(255,255,255,.055)}
+.testata.piccola{padding-bottom:16px;border-radius:0 0 22px 22px}
+.t-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+.marchio{display:flex;align-items:center;gap:9px}
+.marchio .segno{width:31px;height:31px;border-radius:10px;background:rgba(255,255,255,.17);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.marchio .segno svg{width:17px;height:17px;display:block}
+.marchio b{font-size:16.5px;font-weight:900;letter-spacing:-.03em;color:#fff}
+.tonda{width:44px;height:44px;border-radius:99px;background:rgba(255,255,255,.15);border:none;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.tonda svg{width:18px;height:18px;display:block}
+.claim{margin-top:17px;position:relative;z-index:1}
+.claim h1{font-size:23px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#fff}
+.claim p{font-size:12px;font-weight:600;color:rgba(255,255,255,.72);margin-top:7px;line-height:1.5}
+.locali{display:flex;gap:7px;margin-top:15px;position:relative;z-index:1;overflow-x:auto;padding-bottom:2px}
+.loc{padding:11px 17px;border-radius:99px;font-size:13.5px;font-weight:800;background:rgba(255,255,255,.15);color:rgba(255,255,255,.8);border:none;white-space:nowrap;min-height:44px;flex-shrink:0}
+.loc.on{background:#fff;color:var(--verde)}
+.op-nome{font-size:13px;font-weight:800;color:rgba(255,255,255,.85);margin-top:10px;position:relative;z-index:1}
+
+/* quanto sono pronto */
+.stato{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;display:flex;align-items:center;gap:15px;margin-bottom:16px}
+.stato .cerchio{position:relative;width:60px;height:60px;flex-shrink:0}
+.stato .cerchio svg{width:60px;height:60px;transform:rotate(-90deg);display:block}
+.stato .cerchio i{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;font-style:normal;letter-spacing:-.03em}
+.stato .st-txt{flex:1;min-width:0}
+.stato b{display:block;font-size:16px;font-weight:900;letter-spacing:-.02em;line-height:1.25}
+.stato span{display:block;font-size:12.5px;font-weight:600;color:var(--ink2);margin-top:4px;line-height:1.45}
+.v-ok{color:var(--verde)} .v-med{color:var(--ambra)} .v-bad{color:var(--rosso)}
+.b-ok{background:var(--verde)} .b-med{background:var(--ambra)} .b-bad{background:var(--rosso)}
+
+/* la striscia del controllo */
+.allarme{display:flex;align-items:center;gap:13px;width:100%;background:var(--rosso);color:#fff;border:none;
+  border-radius:20px;padding:17px 18px;text-align:left;margin-bottom:4px}
+.allarme:active{background:var(--rosso-d)}
+.allarme .puls{width:11px;height:11px;border-radius:99px;background:#fff;flex-shrink:0;box-shadow:0 0 0 5px rgba(255,255,255,.2);animation:pulsa 1.9s infinite}
+@keyframes pulsa{0%,100%{box-shadow:0 0 0 5px rgba(255,255,255,.2)}50%{box-shadow:0 0 0 9px rgba(255,255,255,.08)}}
+.allarme .al-txt{flex:1}
+.allarme b{display:block;font-size:16.5px;font-weight:900;letter-spacing:-.02em}
+.allarme .al-txt span{display:block;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.82);margin-top:3px;line-height:1.4}
+
+.titolo{font-size:11.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);margin:26px 0 12px}
+
+/* gli enti, uno per riga, col loro distintivo */
+.ente-riga{display:flex;align-items:center;gap:13px;width:100%;background:var(--card);border:1px solid var(--line);
+  border-radius:18px;padding:14px 15px;margin-bottom:10px;text-align:left}
+.ente-riga:active{background:#fafbf9}
+.dist{width:46px;height:46px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.dist svg{width:23px;height:23px;display:block}
+.dist.verde{background:var(--verde-soft);color:var(--verde)}
+.dist.rosso{background:var(--rosso-soft);color:var(--rosso)}
+.dist.blu{background:var(--blu-soft);color:var(--blu)}
+.dist.ambra{background:var(--ambra-soft);color:var(--ambra)}
+.dist.grigio{background:#eef1ed;color:var(--ink2)}
+.e-info{flex:1;min-width:0}
+.e-sigla{display:block;font-size:10.5px;font-weight:800;letter-spacing:.07em;color:var(--ink3);text-transform:uppercase}
+.e-info b{display:block;font-size:15px;font-weight:800;letter-spacing:-.01em;line-height:1.2;margin-top:2px}
+.e-barra{display:block;height:5px;border-radius:99px;background:#eef1ed;margin-top:9px;overflow:hidden}
+.e-barra i{display:block;height:100%;border-radius:99px}
+.e-dx{text-align:right;flex-shrink:0}
+.e-pct{display:block;font-size:17px;font-weight:900;letter-spacing:-.03em;line-height:1}
+.e-man{display:block;font-size:11.5px;font-weight:700;color:var(--ink3);margin-top:4px;white-space:nowrap}
+
+/* righe di avviso */
+.riga-av{display:flex;align-items:center;gap:13px;width:100%;background:var(--card);border:1px solid var(--line);
+  border-radius:16px;padding:13px 15px;margin-bottom:9px;text-align:left;min-height:64px}
+.riga-av:active{background:#fafbf9}
+.riga-av .pal{width:38px;height:38px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px}
+.riga-av .pal.r{background:var(--rosso-soft);color:var(--rosso)}
+.riga-av .pal.a{background:var(--ambra-soft);color:var(--ambra)}
+.riga-av .pal.v{background:var(--verde-soft);color:var(--verde)}
+.riga-av .pal svg{width:19px;height:19px;display:block}
+.riga-av .ra-txt{flex:1;min-width:0}
+.riga-av b{display:block;font-size:14.5px;font-weight:800;letter-spacing:-.01em;line-height:1.25}
+.riga-av .ra-txt span{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-top:2px}
+.riga-av .fre{color:var(--ink3);font-size:19px;flex-shrink:0}
+.riga-av .mini{border:1px solid var(--line2);background:var(--bg);color:var(--ink);border-radius:99px;padding:9px 14px;font-size:12.5px;font-weight:800;flex-shrink:0;min-height:40px}
+.riga-av .mini.x{width:40px;padding:0;color:var(--ink3)}
+
+/* barra in basso, con il vetro */
+.bottom-nav{position:fixed;left:14px;right:14px;bottom:14px;z-index:50;background:rgba(255,255,255,.93);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:24px;
+  display:flex;max-width:644px;margin:0 auto;padding:6px}
+.bottom-nav button{flex:1;background:none;border:none;padding:9px 1px;display:flex;flex-direction:column;align-items:center;gap:4px;
+  color:var(--ink3);font-size:9.5px;font-weight:800;border-radius:19px;min-width:0;white-space:nowrap;overflow:hidden;min-height:54px;justify-content:center}
+.bottom-nav button.active{background:var(--verde-soft);color:var(--verde)}
+.bottom-nav .n-ico svg{width:20px;height:20px;display:block}
+
+.fab{position:fixed;right:18px;bottom:96px;z-index:49;width:52px;height:52px;border-radius:99px;background:var(--verde);
+  color:#fff;border:none;font-size:26px;font-weight:400;display:flex;align-items:center;justify-content:center;line-height:1}
+.fab:active{background:var(--verde-d)}
+.ph-riga{display:flex;align-items:center;gap:12px}
+.ph-riga h2{flex:1}
+.ente-nota-box{margin-top:14px}
+.ente-nota-box summary{list-style:none;cursor:pointer;background:var(--verde-soft);color:var(--verde);border-radius:16px;
+  padding:14px 16px;font-size:13.5px;font-weight:800;display:flex;align-items:center;justify-content:space-between;min-height:50px}
+.ente-nota-box summary::-webkit-details-marker{display:none}
+.ente-nota-box summary::after{content:'\203A';font-size:22px;line-height:1;transform:rotate(90deg);transition:transform .2s;flex-shrink:0;margin-left:10px}
+.ente-nota-box[open] summary::after{transform:rotate(-90deg)}
+.ente-nota-box[open] summary{border-radius:16px 16px 0 0}
+.ente-nota-box .ente-nota{margin-top:0;border-radius:0 0 16px 16px}
 </style>
 </head>
 <body>
@@ -333,6 +441,15 @@ input,select,textarea{font-family:inherit;font-size:16px}
 /* ---------- checklist per ente ---------- */
 const LOGO_HOME=`<svg class="logo-v" width="186" height="112" viewBox="0 0 460 165" xmlns="http://www.w3.org/2000/svg"><circle cx="230.0" cy="44" r="28" fill="none" stroke="#16201b" stroke-width="6"/><circle cx="230.0" cy="44" r="20" fill="none" stroke="#1d4634" stroke-width="2.8"/><path d="M219.0 44 L227.0 54 L243.0 33" fill="none" stroke="#1d4634" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><text x="230.0" y="120" font-family="Nunito,Arial,sans-serif" font-size="40" font-weight="900" text-anchor="middle" letter-spacing="-1.2"><tspan fill="#16201b">Essere</tspan><tspan fill="#1d4634">InRegola</tspan></text><text x="230.0" y="148" font-family="Nunito,Arial,sans-serif" font-size="15" font-weight="700" fill="#6b746d" text-anchor="middle" letter-spacing="0.4">Pronti ad ogni controllo!</text></svg>`;
 const LOGO_RIGA=`<svg class="logo-r" width="168" height="26" viewBox="0 0 300 46" xmlns="http://www.w3.org/2000/svg"><circle cx="21" cy="23" r="16" fill="none" stroke="#16201b" stroke-width="3.4"/><circle cx="21" cy="23" r="11.4" fill="none" stroke="#1d4634" stroke-width="1.7"/><path d="M14.7 23 L19.3 28.7 L28.4 16.6" fill="none" stroke="#1d4634" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><text x="46" y="31" font-family="Nunito,Arial,sans-serif" font-size="25" font-weight="900" letter-spacing="-0.7"><tspan fill="#16201b">Essere</tspan><tspan fill="#1d4634">InRegola</tspan></text></svg>`;
+const SEGNO='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 5L19 6.5"/></svg>';
+const DIST={
+ nas:{c:'verde',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5.5c0 4.3-2.9 7.8-7 9.5-4.1-1.7-7-5.2-7-9.5V6z"/><path d="M9 12l2 2 4-4.5"/></svg>'},
+ vvf:{c:'rosso',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3.5-2.5 4.5-2.5 8A2.5 2.5 0 0012 13.5 2.5 2.5 0 0014.5 11c0-1-.4-1.8-.8-2.4C16 9.8 17.5 12 17.5 14.5A5.5 5.5 0 0112 20a5.5 5.5 0 01-5.5-5.5C6.5 9 12 8 12 3z"/></svg>'},
+ itl:{c:'blu',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v12H4z"/><path d="M9 8V5.5h6V8"/><path d="M4 13h16"/></svg>'},
+ plq:{c:'blu',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3.2v5c0 4.2-2.9 7.6-7 9.3-4.1-1.7-7-5.1-7-9.3v-5z"/><path d="M12 8.5v5M9.5 11h5"/></svg>'},
+ gdf:{c:'ambra',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v10H3z"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 12h.01M17.5 12h.01"/></svg>'},
+ gen:{c:'grigio',svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h6l2 2.5h8V19H4z"/><path d="M4 6V4.5h5L11 7"/></svg>'}
+};
 const ICO={
  archivio:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v13H3z"/><path d="M3 7l1.5-3h15L21 7"/><path d="M9 12h6"/></svg>',
  registri:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h11l4 4v14H5z"/><path d="M16 3v4h4"/><path d="M9 12h7M9 16h7"/></svg>',
@@ -352,8 +469,8 @@ const ICO={
  matita:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14.5 5.5l4 4"/></svg>',
  backup:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="M8 10.5l4 4 4-4"/><path d="M4 17v3h16v-3"/></svg>'
 };
-const APP_VER='v25';
-const APP_DATA='23/09/2026';
+const APP_VER='v26';
+const APP_DATA='25/09/2026';
 const ENTI=[
  {id:'nas',sigla:'NAS · ULSS',nome:'Igienico-sanitario',
   nota:'Controlli ufficiali: Reg. UE 2017/625. Sanzioni HACCP: D.Lgs 193/2007 (1.000\u20136.000 \u20AC); rintracciabilit\u00E0: D.Lgs 190/2006; etichettatura/allergeni: D.Lgs 231/2017.',
@@ -909,27 +1026,30 @@ function render(){
 
 function topbar(){
   const home=(S.screen==='home');
-  const logo=home?LOGO_HOME:LOGO_RIGA;
-  const barraLocali=(S.locali.length>1)?`<div class="locale-bar">${S.locali.map((l,i)=>
-      `<button class="locale-chip ${i===S.locale?'active':''}" onclick="setLocale(${i})">${esc(l)}</button>`).join('')}
+  const barraLocali=(S.locali.length>1)?`<div class="locali">${S.locali.map((l,i)=>
+      `<button class="loc ${i===S.locale?'on':''}" onclick="setLocale(${i})">${esc(l)}</button>`).join('')}
     </div>`:'';
   if(S.role==='op'){
     const o=opCorr();
     const nome=o?((o.nome+' '+(o.cognome||'')).trim()+(o.sigla?' ('+o.sigla+')':'')):'';
-    return `<div class="topbar-block${home?'':' compatta'}"><div class="topbar" style="position:relative;flex-direction:column;align-items:center">
-      ${logo}
+    return `<div class="testata">
+      <div class="t-top">
+        <div class="marchio"><div class="segno">${SEGNO}</div><b>EssereInRegola</b></div>
+        <button class="tonda" onclick="lockNow()" aria-label="Esci">${ICO.esci}</button>
+      </div>
       ${nome?`<div class="op-nome">${esc(nome)}</div>`:''}
-      <button class="icon-btn" style="position:absolute;right:0;top:2px" onclick="lockNow()" aria-label="Esci">${ICO.esci}</button>
-    </div>
-    <div class="locale-bar" style="justify-content:center">
-      <button class="locale-chip active">${esc(S.locali[S.locale]||'')}</button>
-    </div></div>`;
+      <div class="locali"><button class="loc on">${esc(S.locali[S.locale]||'')}</button></div>
+    </div>`;
   }
-  return `<div class="topbar-block${home?'':' compatta'}">
-    <div class="topbar" style="position:relative;flex-direction:column;align-items:center">
-      ${logo}
-      ${home?`<button class="icon-btn cerca-btn" onclick="apriCerca()" aria-label="Cerca un documento">${ICO.cerca}</button>`:''}
+  return `<div class="testata${home?'':' piccola'}">
+    <div class="t-top">
+      <div class="marchio"><div class="segno">${SEGNO}</div><b>EssereInRegola</b></div>
+      <button class="tonda" onclick="apriCerca()" aria-label="Cerca un documento">${ICO.cerca}</button>
     </div>
+    ${home?`<div class="claim">
+      <h1>Pronto per il controllo</h1>
+      <p>NAS &middot; Vigili del Fuoco &middot; Ispettorato del Lavoro &middot; Questura &middot; Polizia Locale &middot; Guardia di Finanza</p>
+    </div>`:''}
     ${barraLocali}
   </div>`;
 }
@@ -945,7 +1065,7 @@ function navBar(){
   const n=[['home',ICO.archivio,'Home'],['registri',ICO.registri,'Registri'],['profilo',ICO.locale,'Locale'],['scadenze',ICO.scadenze,'Scadenze'],['settings',ICO.settings,'Opzioni']];
   return `<div class="bottom-nav">${n.map(([id,ico,lab])=>
     `<button class="${S.screen===id?'active':''}" onclick="go('${id}')"><span class="n-ico">${ico}</span>${lab}</button>`).join('')}</div>
-  ${(S.screen==='home'||S.screen==='ente'||S.screen==='scadenze')?'<button class="fab" onclick="openDocModal()" aria-label="Aggiungi un documento">+</button>':''}`;
+  ${(S.screen==='home'||S.screen==='scadenze')?'<button class="fab" onclick="openDocModal()" aria-label="Aggiungi un documento">+</button>':''}`;
 }
 
 /* ---------- home ---------- */
@@ -985,55 +1105,84 @@ function vHome(){
   const urgent=docs.map(d=>({d,st:scadStato(d)})).filter(x=>x.st!=='ok')
     .sort((a,b)=>(a.d.scadenza||'').localeCompare(b.d.scadenza||''));
 
-  // 1) il pulsante del controllo, grande, prima di tutto
-  let html=`<button class="controllo-big" onclick="pickControllo()">
-      <span class="cb-dot"></span>
-      <span class="cb-txt"><b>Modalit\u00E0 controllo</b><span>\u00C8 arrivato un controllo? Parti da qui</span></span>
+  // quanto sono pronto, in tutto
+  let tot=0,cop=0; const perEnte=[];
+  ENTI.forEach(e=>{const st=enteStats(e.id);tot+=st.total;cop+=st.covered;perEnte.push({e,st});});
+  const pct=tot?Math.round(cop/tot*100):100;
+  const mancano=tot-cop;
+  const completi=perEnte.filter(x=>x.st.total>0&&x.st.covered===x.st.total).length;
+  const conVoci=perEnte.filter(x=>x.st.total>0).length;
+  // quale ente conviene finire per primo
+  const vicino=perEnte.filter(x=>x.st.total>0&&x.st.covered<x.st.total)
+    .sort((a,b)=>(a.st.total-a.st.covered)-(b.st.total-b.st.covered))[0];
+  const col=pct>=100?'ok':pct>=50?'med':'bad';
+  const giro=2*Math.PI*25;
+
+  let html=`<div class="stato">
+    <div class="cerchio">
+      <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="25" fill="none" stroke="#eef1ed" stroke-width="7"/>
+        <circle cx="30" cy="30" r="25" fill="none" stroke="${pct>=100?'var(--verde)':pct>=50?'var(--ambra)':'var(--rosso)'}"
+          stroke-width="7" stroke-linecap="round" stroke-dasharray="${giro.toFixed(0)}" stroke-dashoffset="${(giro*(1-pct/100)).toFixed(0)}"/></svg>
+      <i class="v-${col}">${pct}%</i>
+    </div>
+    <div class="st-txt">
+      <b>${mancano===0?'Sei pronto per il controllo':(mancano===1?'Ti manca 1 documento':'Ti mancano '+mancano+' documenti')}</b>
+      <span>${mancano===0?'Tutti i documenti richiesti sono in archivio. Controlla ogni tanto le scadenze.'
+        :'Sei coperto su '+completi+' enti su '+conVoci+(vicino?'. Parti da '+esc(vicino.e.nome)+', \u00E8 il pi\u00F9 vicino.':'.')}</span>
+    </div>
+  </div>`;
+
+  html+=`<button class="allarme" onclick="pickControllo()">
+      <span class="puls"></span>
+      <span class="al-txt"><b>Modalit\u00E0 controllo</b><span>Sono gi\u00E0 qui? Apri e mostra solo quello che chiedono</span></span>
     </button>`;
 
-  // 2) gli enti
-  html+=`<div class="sec-label">Enti di controllo</div><div class="tiles">`+
-    ENTI.map(e=>{
-      const st=enteStats(e.id);
-      const cls=st.total===0?'full':st.pct===100?'full':st.pct>=50?'mid':'low';
-      return `<button class="tile ${cls}" onclick="go('ente','${e.id}')">
-        <div><div class="t-sigla">${esc(e.sigla)}</div><h3>${esc(e.nome)}</h3></div>
-        <div><div class="t-foot"><div class="t-pct">${st.total===0?'\u2014':st.pct+'<small>%</small>'}</div>
-          <div class="t-missing">${st.total===0?'non ti riguarda':(st.total-st.covered===0?'completo':(st.total-st.covered)+' da caricare')}</div></div>
-          <div class="pbar"><i style="width:${st.total===0?0:st.pct}%"></i></div></div>
-      </button>`;}).join('')+`</div>`;
+  html+=`<div class="titolo">Chi ti pu\u00F2 controllare</div>`+
+    perEnte.map(({e,st})=>{
+      const d=DIST[e.id]||DIST.gen;
+      const c=st.total===0?'ok':st.pct===100?'ok':st.pct>=50?'med':'bad';
+      return `<button class="ente-riga" onclick="go('ente','${e.id}')">
+        <span class="dist ${d.c}">${d.svg}</span>
+        <span class="e-info">
+          <span class="e-sigla">${esc(e.sigla)}</span>
+          <b>${esc(e.nome)}</b>
+          <span class="e-barra"><i class="b-${c}" style="width:${st.total===0?100:st.pct}%"></i></span>
+        </span>
+        <span class="e-dx">
+          <span class="e-pct v-${c}">${st.total===0?'\u2014':st.pct+'%'}</span>
+          <span class="e-man">${st.total===0?'non ti riguarda':(st.total-st.covered===0?'completo':(st.total-st.covered)+' mancano')}</span>
+        </span>
+      </button>`;}).join('');
 
-  // 3) cosa manca
   if(urgent.length){
-    html+=`<div class="sec-label">Da sistemare</div>`+urgent.slice(0,5).map(({d,st})=>
-      `<button class="alert-card ${st==='exp'?'scaduto':'scadenza'}" style="width:100%" onclick="openDocModal(${d.id})">
-        <span class="a-ico ${st}">${st==='exp'?'!':'\u00B7'}</span>
-        <span style="flex:1;text-align:left"><b>${esc(d.nome)}</b>
-        <span>${st==='exp'?'Scaduto il':'Scade il'} <span class="a-date">${fmtDate(d.scadenza)}</span></span></span>
+    html+=`<div class="titolo">Da sistemare subito</div>`+urgent.slice(0,4).map(({d,st})=>
+      `<button class="riga-av" onclick="openDocModal(${d.id})">
+        <span class="pal ${st==='exp'?'r':'a'}">${st==='exp'?'!':'\u00B7'}</span>
+        <span class="ra-txt"><b>${esc(d.nome)}</b><span>${st==='exp'?'Scaduto il':'Scade il'} ${fmtDate(d.scadenza)}</span></span>
+        <span class="fre">&#8250;</span>
       </button>`).join('');
-    if(urgent.length>5)html+=`<button class="riga-link" onclick="go('scadenze')"><span class="rl-txt"><b>Vedi tutte le ${urgent.length} scadenze</b></span><span class="rl-go">&#8594;</span></button>`;
+    if(urgent.length>4)html+=`<button class="riga-av" onclick="go('scadenze')"><span class="ra-txt"><b>Vedi tutte le ${urgent.length} scadenze</b></span><span class="fre">&#8250;</span></button>`;
   }
 
-  // 4) il profilo del locale
   const c=profCompleto();
-  html+=`<button class="riga-link${c.fatte===0?' evidenza':''}" onclick="go('profilo')">
-      <span class="rl-ico">${ICO.locale}</span>
-      <span class="rl-txt"><b>${c.fatte===0?'Dimmi com\u2019\u00E8 fatto il tuo locale':'Il mio locale'}</b>
-      <span>${c.fatte===0?'Otto domande, due minuti: poi ti mostro solo i documenti che servono a te'
-        :(c.fatte<c.tot?c.fatte+' risposte su '+c.tot+' \u00B7 ogni risposta toglie una voce che non ti riguarda'
-        :'Profilo completo \u00B7 \u00E8 cambiato qualcosa nel locale?')}</span></span>
-      <span class="rl-go">&#8594;</span></button>`;
+  html+=`<div class="titolo">Il tuo locale</div>
+    <button class="riga-av" onclick="go('profilo')">
+      <span class="pal v">${ICO.locale}</span>
+      <span class="ra-txt"><b>${c.fatte===0?'Dimmi com\u2019\u00E8 fatto il tuo locale':'Il mio locale'}</b>
+      <span>${c.fatte===0?'Otto domande: poi ti mostro solo i documenti che servono a te'
+        :(c.fatte<c.tot?c.fatte+' risposte su '+c.tot:'Profilo completo \u00B7 \u00E8 cambiato qualcosa?')}</span></span>
+      <span class="fre">&#8250;</span>
+    </button>`;
 
-  // 5) il backup, solo quando serve davvero
   const gb=giorniDaBackup();
   if(!S.bkDismissed&&(gb===null||gb>=7)){
-    const msg=gb===null?'Non hai mai fatto un backup. Scaricane uno e mettilo su Google Drive o iCloud.'
-      :'Sono passati '+gb+' giorni dall\u2019ultimo backup. Scaricane uno nuovo.';
-    html+=`<div class="alert-card scadenza" style="width:100%;align-items:center">
-      <span class="a-ico">${ICO.backup}</span>
-      <span style="flex:1;text-align:left"><b>Backup consigliato</b><span>${msg}</span></span>
-      <button class="d-open" style="flex-shrink:0" onclick="exportBackup()">Scarica</button>
-      <button class="d-edit" style="flex-shrink:0" onclick="S.bkDismissed=1;render()" aria-label="Chiudi">&#10005;</button>
+    const msg=gb===null?'Non hai mai fatto un backup. I documenti stanno solo su questo dispositivo.'
+      :'Sono passati '+gb+' giorni dall\u2019ultimo backup.';
+    html+=`<div class="riga-av backup">
+      <span class="pal a">${ICO.backup}</span>
+      <span class="ra-txt"><b>Backup consigliato</b><span>${msg}</span></span>
+      <button class="mini" onclick="exportBackup()">Scarica</button>
+      <button class="mini x" onclick="S.bkDismissed=1;render()" aria-label="Chiudi">&#10005;</button>
     </div>`;
   }
 
@@ -1083,13 +1232,14 @@ function vEnte(eid){
   const e=ENTE(eid),docs=docsLocale(),st=enteStats(eid);
   const inSlot=id=>docs.filter(d=>(d.slots||[]).includes(eid+':'+id));
   const extra=docs.filter(d=>docEnti(d).includes(eid)&&!(d.slots||[]).some(s=>s.startsWith(eid+':')));
+  const dd=DIST[eid]||DIST.gen;
   return topbar()+`<div class="page-head">
     <button class="back-btn" onclick="go('home')">&#8592; Home</button>
-    <h2>${e.nome}</h2>
+    <div class="ph-riga"><span class="dist ${dd.c}">${dd.svg}</span><h2>${e.nome}</h2></div>
     <div class="ph-meta">${e.sigla} &middot; ${st.total===0?'nessuna voce ti riguarda':st.covered+'/'+st.total+' voci coperte'}${st.esclusi&&st.total?' &middot; '+st.esclusi+' non ti riguardano':''} &middot; ${esc(S.locali[S.locale])}</div>
     ${(S.societa[S.locale]&&S.societa[S.locale].ragione)?`<div class="ph-meta">${esc(S.societa[S.locale].ragione)}${S.societa[S.locale].piva?' &middot; P.IVA '+esc(S.societa[S.locale].piva):''}</div>`:''}
     <button class="controllo-btn" onclick="startControllo('${eid}')"><span class="dot"></span> Modalità controllo</button>
-    ${e.nota?`<div class="ente-nota">${esc(e.nota)}</div>`:''}
+    ${e.nota?`<details class="ente-nota-box"><summary>Cosa dice la norma per questo ente</summary><div class="ente-nota">${esc(e.nota)}</div></details>`:''}
   </div>
   <div class="wrap">
     ${st.total===0?`<div class="ente-vuoto"><b>In base al profilo del tuo locale, qui non ti serve niente.</b>
@@ -1566,10 +1716,10 @@ function vScadenze(){
   return topbar()+`<div class="wrap">
     <div class="sec-label" style="margin-top:6px">Scadenziario &middot; tutti i locali</div>
     <button class="controllo-btn" style="background:var(--verde);margin-top:0;margin-bottom:10px" onclick="openScadModal()">+ Aggiungi scadenza</button>
-    <button class="riga-link" onclick="go('etichette')">
-      <span class="rl-ico">${ICO.esporre}</span>
-      <span class="rl-txt"><b>Da esporre</b><span>Etichette, listino prezzi e i cinque cartelli obbligatori</span></span>
-      <span class="rl-go">&#8594;</span></button>
+    <button class="riga-av" onclick="go('etichette')">
+      <span class="pal v">${ICO.esporre}</span>
+      <span class="ra-txt"><b>Da esporre</b><span>Etichette, listino prezzi e i cinque cartelli obbligatori</span></span>
+      <span class="fre">&#8250;</span></button>
     ${items.length?'':'<div class="empty">Nessuna scadenza impostata.<br>Aggiungi una scadenza qui sopra, oppure metti una data ai documenti che hai caricato.</div>'}
     ${grp('Scaduti',items.filter(x=>x.st==='exp'))}
     ${grp('Entro 60 giorni',items.filter(x=>x.st==='warn'))}

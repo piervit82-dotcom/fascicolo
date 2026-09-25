@@ -16,11 +16,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#16201b; --ink2:#6b746d; --ink3:#9aa29b;
-  --bg:#ecebe2; --card:#ffffff;
-  --verde:#1d4634; --verde-d:#143126; --verde-l:#2f6b4f; --verde-soft:#e3e9e3;
-  --rosso:#b23427;
-  --line:#e0e0d6; --line2:#d2d3c6;
+  --ink:#121a16; --ink2:#697a71; --ink3:#9daaa3;
+  --bg:#f6f7f4; --card:#ffffff;
+  --verde:#136b4a; --verde-d:#0e5239; --verde-l:#1c9163; --verde-soft:#e7f4ed;
+  --rosso:#c0392b;
+  --line:#e6e9e4; --line2:#d8ddd7;
   --sans:'Nunito',-apple-system,system-ui,sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -33,9 +33,9 @@ header{background:var(--verde);color:#fff;padding:26px 0 40px}
 .head-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .hero{margin-top:36px}
 .hero h1{font-size:34px;font-weight:900;letter-spacing:-.025em;line-height:1.12}
-.hero p{font-size:16px;font-weight:600;margin-top:12px;color:#cfe0d3;max-width:520px}
+.hero p{font-size:16px;font-weight:600;margin-top:12px;color:#cfe6d9;max-width:520px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;font-family:inherit;
-  font-size:15px;font-weight:800;padding:15px 24px;border-radius:8px;cursor:pointer;text-decoration:none;min-height:48px}
+  font-size:15px;font-weight:800;padding:15px 24px;border-radius:16px;cursor:pointer;text-decoration:none;min-height:48px}
 .btn.chiaro{background:#fff;color:var(--verde)}
 .btn.chiaro:active{background:#e8ece8}
 .btn.verde{background:var(--verde);color:#fff}
@@ -51,7 +51,7 @@ h2{font-size:26px;font-weight:900;letter-spacing:-.02em;margin-top:8px;line-heig
 
 .tre{display:grid;gap:14px;margin-top:26px}
 @media(min-width:680px){.tre{grid-template-columns:repeat(3,1fr)}}
-.box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:20px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
 .box .num{font-size:12px;font-weight:900;color:var(--verde);letter-spacing:.06em}
 .box h3{font-size:17px;font-weight:800;margin-top:8px;letter-spacing:-.01em;line-height:1.25}
 .box p{font-size:14px;font-weight:600;color:var(--ink2);margin-top:8px}
@@ -65,26 +65,26 @@ h2{font-size:26px;font-weight:900;letter-spacing:-.02em;margin-top:8px;line-heig
 .riga b{font-size:15.5px;font-weight:800;display:block;letter-spacing:-.01em}
 .riga span{font-size:14px;font-weight:600;color:var(--ink2);display:block;margin-top:3px}
 
-.rilievo{background:var(--verde);color:#fff;border-radius:8px;padding:28px 24px;margin-top:10px}
+.rilievo{background:var(--verde);color:#fff;border-radius:16px;padding:28px 24px;margin-top:10px}
 .rilievo h2{color:#fff}
-.rilievo p{font-size:15px;font-weight:600;color:#cfe0d3;margin-top:10px;max-width:480px}
+.rilievo p{font-size:15px;font-weight:600;color:#cfe6d9;margin-top:10px;max-width:480px}
 .rilievo .btn{margin-top:20px}
 
-.nota{background:var(--verde-soft);border:1px solid var(--line2);border-radius:8px;padding:18px 20px;margin-top:26px}
+.nota{background:var(--verde-soft);border:1px solid var(--line2);border-radius:16px;padding:18px 20px;margin-top:26px}
 .nota b{font-size:14.5px;font-weight:800;display:block;margin-bottom:6px}
 .nota p{font-size:13.5px;font-weight:600;color:var(--ink2)}
 
-footer{background:var(--verde);color:#cfe0d3;padding:30px 0;font-size:13px;font-weight:600;margin-top:10px}
+footer{background:var(--verde);color:#cfe6d9;padding:30px 0;font-size:13px;font-weight:600;margin-top:10px}
 footer .f-row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
 footer a{display:inline-flex;align-items:center;min-height:44px;font-weight:800}
 
 /* finestra del codice */
 .mask{position:fixed;inset:0;background:rgba(22,32,27,.55);display:none;align-items:center;justify-content:center;padding:22px;z-index:50}
 .mask.on{display:flex}
-.modal{background:var(--card);border-radius:10px;padding:26px 22px;max-width:380px;width:100%;text-align:center}
+.modal{background:var(--card);border-radius:20px;padding:26px 22px;max-width:380px;width:100%;text-align:center}
 .modal h3{font-size:20px;font-weight:900;letter-spacing:-.02em}
 .modal p{font-size:14px;font-weight:600;color:var(--ink2);margin-top:9px;line-height:1.5}
-.modal input{width:100%;margin-top:18px;border:1.5px solid var(--line2);border-radius:8px;padding:14px;
+.modal input{width:100%;margin-top:18px;border:1.5px solid var(--line2);border-radius:16px;padding:14px;
   font-family:inherit;font-size:17px;font-weight:800;text-align:center;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
 .modal input:focus{outline:2px solid var(--verde)}
 .modal .err{font-size:13.5px;font-weight:700;color:var(--rosso);margin-top:10px;display:none}
@@ -101,9 +101,9 @@ footer a{display:inline-flex;align-items:center;min-height:44px;font-weight:800}
     <div class="head-top">
       <svg width="176" height="28" viewBox="0 0 300 46" xmlns="http://www.w3.org/2000/svg" aria-label="EssereInRegola">
         <circle cx="21" cy="23" r="16" fill="none" stroke="#ffffff" stroke-width="3.4"/>
-        <circle cx="21" cy="23" r="11.4" fill="none" stroke="#cfe0d3" stroke-width="1.7"/>
-        <path d="M14.7 23 L19.3 28.7 L28.4 16.6" fill="none" stroke="#cfe0d3" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
-        <text x="46" y="31" font-family="Nunito,Arial,sans-serif" font-size="25" font-weight="900" letter-spacing="-0.7"><tspan fill="#ffffff">Essere</tspan><tspan fill="#cfe0d3">InRegola</tspan></text>
+        <circle cx="21" cy="23" r="11.4" fill="none" stroke="#cfe6d9" stroke-width="1.7"/>
+        <path d="M14.7 23 L19.3 28.7 L28.4 16.6" fill="none" stroke="#cfe6d9" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="46" y="31" font-family="Nunito,Arial,sans-serif" font-size="25" font-weight="900" letter-spacing="-0.7"><tspan fill="#ffffff">Essere</tspan><tspan fill="#cfe6d9">InRegola</tspan></text>
       </svg>
       <button class="btn bordo" onclick="apriCodice()">Entra</button>
     </div>

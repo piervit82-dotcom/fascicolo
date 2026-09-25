@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>EssereInRegola · Documenti e norme pronti per ogni controllo</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1d4634">
+<meta name="theme-color" content="#136b4a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="EssereInRegola">
@@ -429,6 +429,84 @@ body{background:var(--bg)}
 .bk-stato.mai{background:var(--rosso-soft);color:var(--rosso)}
 .bk-stato.vecchio{background:var(--ambra-soft);color:var(--ambra-d)}
 .bk-stato.ok{background:var(--verde-soft);color:var(--verde)}
+.boll-avviso{display:flex;align-items:center;gap:13px;width:100%;background:var(--ambra-soft);border:1px solid var(--ambra);
+  border-radius:20px;padding:15px 16px;margin-bottom:14px;text-align:left}
+.boll-avviso .ba-pal{width:40px;height:40px;border-radius:13px;background:#fff;color:var(--ambra);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.boll-avviso .ba-pal svg{width:20px;height:20px;display:block}
+.boll-avviso .ba-txt{flex:1;min-width:0}
+.boll-avviso b{display:block;font-size:15px;font-weight:900;color:var(--ambra-d);letter-spacing:-.01em}
+.boll-avviso .ba-txt span{display:block;font-size:12.5px;font-weight:600;color:var(--ambra-d);opacity:.85;margin-top:2px}
+.boll-avviso .fre{color:var(--ambra);font-size:19px;flex-shrink:0}
+.boll-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:17px;margin-bottom:12px}
+.boll-card.nuovo{border-color:var(--ambra);border-left:4px solid var(--ambra)}
+.boll-card.fuori{opacity:.62}
+.bc-top{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.bc-data{font-size:11px;font-weight:800;color:var(--ink3);letter-spacing:.04em}
+.bc-tag{font-size:10.5px;font-weight:800;background:var(--ambra);color:#fff;border-radius:99px;padding:4px 10px}
+.bc-tag.grigio{background:var(--line);color:var(--ink2)}
+.boll-card h3{font-size:16.5px;font-weight:900;letter-spacing:-.02em;line-height:1.25}
+.bc-chi{font-size:12px;font-weight:800;color:var(--verde);margin-top:7px}
+.bc-testo{font-size:13.5px;font-weight:600;color:var(--ink2);line-height:1.6;margin-top:9px}
+.bc-fare{font-size:13px;font-weight:700;color:var(--ink);line-height:1.5;margin-top:11px;background:var(--verde-soft);border-radius:12px;padding:11px 13px}
+.bc-norma{font-size:11px;font-weight:700;color:var(--ink3);margin-top:10px;line-height:1.45}
+.bc-azioni{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px}
+
+/* ===== v26: come si vede dal computer ===== */
+@media (min-width:920px){
+  body{background:#eef1ec}
+  #app{max-width:1180px;padding:0 0 40px 250px;min-height:100vh}
+  .wrap{padding:0 26px 60px}
+  .testata{border-radius:26px;margin:22px 26px 20px;padding:26px 30px 28px}
+  .testata.piccola{border-radius:22px}
+  .testata::after{width:260px;height:260px;right:-70px;top:-70px}
+  .claim h1{font-size:32px}
+  .claim p{font-size:14px;max-width:760px}
+  .testata:not(.piccola) .marchio{display:none}
+  .testata:not(.piccola) .t-top{justify-content:flex-end}
+  .testata.piccola{padding:16px 24px 18px;margin:22px 26px 16px}
+  .testata.piccola .marchio b{font-size:17px}
+  .stato{padding:22px 24px;border-radius:22px}
+  .stato .cerchio,.stato .cerchio svg{width:74px;height:74px}
+  .stato .cerchio i{font-size:19px}
+  .stato b{font-size:19px}
+  .stato .st-txt span{font-size:14px}
+  .allarme{padding:20px 22px}
+  .allarme b{font-size:18px}
+  .allarme .al-txt span{font-size:13.5px}
+  .boll-avviso b{font-size:16px}
+  .griglia-enti .ente-riga{padding:17px 18px}
+  .riga-av{padding:15px 18px}
+  .titolo{font-size:12px;margin:30px 0 13px}
+  .boll-card,.empty,.ente-nota,.bk-stato{max-width:830px}
+  .page-head{padding:0 26px 4px}
+  .page-head h2{font-size:29px}
+  .modal-bg{align-items:center}
+  .modal{max-width:620px;border-radius:24px;padding:26px 26px 28px;max-height:86vh}
+  .controllo-body{max-width:900px;padding:26px}
+  /* la barra in basso diventa una colonna a sinistra */
+  .bottom-nav{left:22px;top:22px;bottom:22px;right:auto;width:206px;max-width:206px;
+    flex-direction:column;justify-content:flex-start;gap:4px;border-radius:24px;
+    background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none;padding:18px 12px;
+    box-shadow:0 2px 16px rgba(18,26,22,.07)}
+  .bottom-nav::before{content:'EssereInRegola';display:block;font-size:16.5px;font-weight:900;
+    letter-spacing:-.03em;color:var(--verde);padding:6px 12px 18px}
+  .bottom-nav button{flex:0 0 auto;width:100%;flex-direction:row;justify-content:flex-start;
+    gap:12px;padding:0 14px;font-size:14.5px;min-height:50px;border-radius:14px}
+  .bottom-nav .n-ico svg{width:21px;height:21px}
+  .fab{right:34px;bottom:34px;width:58px;height:58px;font-size:28px}
+}
+@media (min-width:1120px){
+  .griglia-enti{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .griglia-enti .ente-riga{margin-bottom:0}
+}
+@media (hover:hover) and (pointer:fine){
+  .ente-riga:hover,.riga-av:hover,.doc-row:hover,.alert-card:hover{background:#fafbf9}
+  .bottom-nav button:hover{color:var(--verde)}
+  .allarme:hover{background:var(--rosso-d)}
+  .loc:hover{background:rgba(255,255,255,.27)}
+  .loc.on:hover{background:#fff}
+  .back-btn:hover{background:var(--bg)}
+}
 </style>
 </head>
 <body>
@@ -481,6 +559,7 @@ const ICO={
  pulizie:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13h12l-1 8H7z"/><path d="M9 13V5h6v8"/></svg>',
  gelo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9"/></svg>',
  matita:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14.5 5.5l4 4"/></svg>',
+ campana:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9A6 6 0 006 9c0 5-2.2 6.5-2.2 6.5h16.4S18 14 18 9z"/><path d="M13.7 19.5a2 2 0 01-3.4 0"/></svg>',
  backup:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="M8 10.5l4 4 4-4"/><path d="M4 17v3h16v-3"/></svg>'
 };
 const APP_VER='v26';
@@ -946,10 +1025,10 @@ const dbClear=s=>new Promise(r=>{const q=tx(s,'readwrite').clear();q.onsuccess=(
 /* ---------- stato ---------- */
 let S={locali:['Il mio locale'],locale:0,pin:'',screen:'home',ente:null,query:'',docs:[],logs:[],punti:[],aree:[],operatori:[],opCorrente:null,
   societa:[{}],
-  loghi:[null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti',lastBackup:null,bkDismissed:0,storMese:'',benvenutoFatto:false,listini:null,apiKey:'',profili:[]};
+  loghi:[null],scadenze:[],discOk:false,lockMin:5,role:null,lastActive:Date.now(),prodotti:[],etStorico:[],etTab:'prodotti',lastBackup:null,bkDismissed:0,storMese:'',benvenutoFatto:false,listini:null,apiKey:'',profili:[],boll:[],bollLetti:[],bollData:'',bollAgg:''};
 async function loadState(){
   const st=await dbGet('settings','app');
-  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];S.operatori=st.operatori||[];S.lastBackup=st.lastBackup||null;S.benvenutoFatto=!!st.benvenutoFatto;S.apiKey=st.apiKey||'';S.profili=st.profili||[];
+  if(st){S.locali=st.locali||S.locali;S.pin=st.pin||'';S.punti=st.punti||[];S.aree=st.aree||[];if(st.societa)S.societa=st.societa;if(st.loghi)S.loghi=st.loghi;if(st.scadenze)S.scadenze=st.scadenze;S.discOk=!!st.discOk;S.lockMin=(st.lockMin!==undefined?st.lockMin:5);S.prodotti=st.prodotti||[];S.etStorico=st.etStorico||[];S.operatori=st.operatori||[];S.lastBackup=st.lastBackup||null;S.benvenutoFatto=!!st.benvenutoFatto;S.apiKey=st.apiKey||'';S.profili=st.profili||[];S.boll=st.boll||[];S.bollLetti=st.bollLetti||[];S.bollData=st.bollData||'';S.bollAgg=st.bollAgg||'';
     // migrazione: vecchio codice operatore unico -> un operatore generico sul primo locale
     if(st.opPin&&!S.operatori.length)S.operatori=[{id:uid(),nome:'Operatore',cognome:'',sigla:'OP',pin:st.opPin,locale:0}];}
   while(S.societa.length<S.locali.length)S.societa.push({});
@@ -978,7 +1057,7 @@ async function migrateSlots(){
   }
   if(changed)S.docs=await dbAll('docs');
 }
-const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,operatori:S.operatori,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico,lastBackup:S.lastBackup,benvenutoFatto:S.benvenutoFatto,apiKey:S.apiKey,profili:S.profili});
+const saveSettings=()=>dbPut('settings',{k:'app',locali:S.locali,pin:S.pin,punti:S.punti,aree:S.aree,societa:S.societa,loghi:S.loghi,scadenze:S.scadenze,discOk:S.discOk,operatori:S.operatori,lockMin:S.lockMin,prodotti:S.prodotti,etStorico:S.etStorico,lastBackup:S.lastBackup,benvenutoFatto:S.benvenutoFatto,apiKey:S.apiKey,profili:S.profili,boll:S.boll,bollLetti:S.bollLetti,bollData:S.bollData,bollAgg:S.bollAgg});
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -1034,6 +1113,7 @@ function render(){
   else if(S.screen==='etichette')app.innerHTML=vEtichette();
   else if(S.screen==='listino')app.innerHTML=vListino();
   else if(S.screen==='profilo')app.innerHTML=vProfilo();
+  else if(S.screen==='bollettino')app.innerHTML=vBollettino();
   else if(S.screen==='settings')app.innerHTML=vSettings();
   bindNav();
 }
@@ -1114,6 +1194,87 @@ function avvisoBrowser(){
   </div>`;
 }
 
+
+/* ---------- il bollettino normativo ---------- */
+function bollNuovi(){
+  if(!S.boll||!S.boll.length)return [];
+  const letti=S.bollLetti||[];
+  return S.boll.filter(b=>letti.indexOf(b.id)<0 && bollRiguarda(b));
+}
+/* un bollettino ti riguarda in base a com'e' fatto il tuo locale */
+function bollRiguarda(b){
+  const p=prof();
+  switch(b.cond){
+    case 'musica_si':   return N(p.musica)!=='no';
+    case 'lavoratori':  return N(p.lavoratori)===null || p.lavoratori>=1;
+    case 'rifiuti_pericolosi': return N(p.rifiuti_pericolosi)!==false;
+    case 'alcolici':    return N(p.alcolici)!==false;
+    default: return true;
+  }
+}
+function segnaLetto(id){
+  if(!S.bollLetti)S.bollLetti=[];
+  if(S.bollLetti.indexOf(id)<0)S.bollLetti.push(id);
+  saveSettings();render();
+}
+function segnaTuttiLetti(){
+  if(!S.bollLetti)S.bollLetti=[];
+  (S.boll||[]).forEach(b=>{if(S.bollLetti.indexOf(b.id)<0)S.bollLetti.push(b.id);});
+  saveSettings();render();
+}
+/* scarica il bollettino dal sito, al massimo una volta al giorno */
+async function caricaBollettino(){
+  try{
+    const oggi=new Date().toISOString().slice(0,10);
+    if(S.bollData===oggi && S.boll && S.boll.length) return;
+    if(location.protocol.indexOf('http')!==0) return;
+    const r=await fetch('norme.json?d='+oggi,{cache:'no-store'});
+    if(!r.ok) return;
+    const d=await r.json();
+    if(d && d.bollettini){
+      S.boll=d.bollettini; S.bollData=oggi; S.bollAgg=d.aggiornato||'';
+      saveSettings(); render();
+    }
+  }catch(e){}
+}
+
+function vBollettino(){
+  const letti=S.bollLetti||[];
+  const miei=(S.boll||[]).filter(bollRiguarda);
+  const altri=(S.boll||[]).filter(b=>!bollRiguarda(b));
+  const card=(b,riguarda)=>{
+    const nuovo=letti.indexOf(b.id)<0 && riguarda;
+    return `<div class="boll-card${nuovo?' nuovo':''}${riguarda?'':' fuori'}">
+      <div class="bc-top">
+        <span class="bc-data">${fmtDate(b.data)}</span>
+        ${nuovo?'<span class="bc-tag">Nuovo</span>':''}
+        ${riguarda?'':'<span class="bc-tag grigio">Non ti riguarda</span>'}
+      </div>
+      <h3>${esc(b.titolo)}</h3>
+      <p class="bc-chi">${esc(b.riguarda)}</p>
+      <p class="bc-testo">${esc(b.testo)}</p>
+      ${b.fare?`<p class="bc-fare"><b>Cosa fare:</b> ${esc(b.fare)}</p>`:''}
+      <p class="bc-norma">${esc(b.norma)}</p>
+      <div class="bc-azioni">
+        ${b.voce?`<button class="link-btn" onclick="const v='${b.voce}'.split(':');S.ente=v[0];go('ente',v[0])">Vai alla voce nell\u2019app</button>`:''}
+        ${nuovo?`<button class="sm-btn green" onclick="segnaLetto('${b.id}')">Ho letto</button>`:''}
+      </div>
+    </div>`;
+  };
+  const nn=bollNuovi().length;
+  return topbar()+`<div class="page-head">
+    <button class="back-btn" onclick="go('home')">&#8592; Home</button>
+    <h2>Novit\u00E0 sulle norme</h2>
+    <div class="ph-meta">${S.bollAgg?'Ultimo controllo delle fonti: '+fmtDate(S.bollAgg):'Controllo mensile delle norme che riguardano il tuo locale'}</div>
+  </div>
+  <div class="wrap">
+    ${miei.length?(nn?`<button class="sm-btn" style="margin-bottom:14px" onclick="segnaTuttiLetti()">Segna tutte come lette</button>`:''):''}
+    ${miei.length?miei.map(b=>card(b,true)).join(''):'<div class="empty">Nessuna novit\u00E0 che riguarda il tuo locale.</div>'}
+    ${altri.length?`<div class="sec-label">Non ti riguardano</div>${altri.map(b=>card(b,false)).join('')}`:''}
+    <div class="ente-nota" style="margin-top:20px">Le fonti vengono controllate una volta al mese su Normattiva, EUR-Lex, le circolari dei Vigili del Fuoco, il Ministero della Salute, l\u2019Ispettorato del Lavoro e l\u2019Agenzia delle Entrate. Ogni novit\u00E0 viene letta e verificata da una persona prima di finire qui.</div>
+  </div>`+navBar();
+}
+
 function vHome(){
   const docs=docsLocale();
   const urgent=docs.map(d=>({d,st:scadStato(d)})).filter(x=>x.st!=='ok')
@@ -1146,12 +1307,20 @@ function vHome(){
     </div>
   </div>`;
 
+  const nn=bollNuovi().length;
+  if(nn){
+    html+=`<button class="boll-avviso" onclick="go('bollettino')">
+      <span class="ba-pal">${ICO.campana}</span>
+      <span class="ba-txt"><b>${nn===1?'1 novit\u00E0 sulle norme':nn+' novit\u00E0 sulle norme'}</b>
+      <span>Riguardano il tuo locale. Tocca per leggere.</span></span>
+      <span class="fre">&#8250;</span></button>`;
+  }
   html+=`<button class="allarme" onclick="pickControllo()">
       <span class="puls"></span>
       <span class="al-txt"><b>Modalit\u00E0 controllo</b><span>Sono gi\u00E0 qui? Apri e mostra solo quello che chiedono</span></span>
     </button>`;
 
-  html+=`<div class="titolo">Chi ti pu\u00F2 controllare</div>`+
+  html+=`<div class="titolo">Chi ti pu\u00F2 controllare</div><div class="griglia-enti">`+
     perEnte.map(({e,st})=>{
       const d=DIST[e.id]||DIST.gen;
       const c=st.total===0?'ok':st.pct===100?'ok':st.pct>=50?'med':'bad';
@@ -1166,7 +1335,7 @@ function vHome(){
           <span class="e-pct v-${c}">${st.total===0?'\u2014':st.pct+'%'}</span>
           <span class="e-man">${st.total===0?'non ti riguarda':(st.total-st.covered===0?'completo':(st.total-st.covered)+' mancano')}</span>
         </span>
-      </button>`;}).join('');
+      </button>`;}).join('')+'</div>';
 
   if(urgent.length){
     html+=`<div class="titolo">Da sistemare subito</div>`+urgent.slice(0,4).map(({d,st})=>
@@ -1177,6 +1346,13 @@ function vHome(){
       </button>`).join('');
     if(urgent.length>4)html+=`<button class="riga-av" onclick="go('scadenze')"><span class="ra-txt"><b>Vedi tutte le ${urgent.length} scadenze</b></span><span class="fre">&#8250;</span></button>`;
   }
+
+  html+=`<div class="titolo">Norme e aggiornamenti</div>
+    <button class="riga-av" onclick="go('bollettino')">
+      <span class="pal ${nn?'a':'v'}">${ICO.campana}</span>
+      <span class="ra-txt"><b>Novit\u00E0 sulle norme</b>
+      <span>${nn?nn+' da leggere':(S.bollAgg?'Ultimo controllo delle fonti: '+fmtDate(S.bollAgg):'Controllo mensile delle norme')}</span></span>
+      <span class="fre">&#8250;</span></button>`;
 
   const c=profCompleto();
   html+=`<div class="titolo">Il tuo locale</div>
@@ -2769,6 +2945,7 @@ function bindNav(){}
   await loadState();
   startLockWatch();
   render();
+  try{ caricaBollettino(); }catch(e){}
 })();
 </script>
 <script>

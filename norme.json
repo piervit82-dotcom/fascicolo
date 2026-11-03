@@ -1,0 +1,69 @@
+{
+  "aggiornato": "2026-11-01",
+  "fonti": "Normattiva e Gazzetta Ufficiale, EUR-Lex, circolari dei Vigili del Fuoco, Ministero della Salute, Ispettorato Nazionale del Lavoro, INAIL, Agenzia delle Entrate, RENTRI, MIMIT, FIPE-Confcommercio.",
+  "bollettini": [
+    {
+      "id": "dehors-schema-2026-10",
+      "data": "2026-10-28",
+      "cond": "dehors",
+      "titolo": "Dehors: in arrivo la semplificazione, ma non è ancora legge",
+      "riguarda": "Solo chi ha tavolini o dehors all'esterno su suolo pubblico. Se il tuo spazio esterno è su area privata, non ti riguarda.",
+      "testo": "Il Consiglio dei ministri del 28 ottobre 2026 ha approvato in esame preliminare uno schema di decreto legislativo: tavolini, sedie, ombrelloni, pedane e coperture leggere senza opere murarie non avrebbero più bisogno delle autorizzazioni del Codice dei beni culturali nelle piazze e vie vincolate, e per le strutture chiuse la SCIA sostituirebbe il permesso di costruire. Dove l'autorizzazione resta necessaria, la Soprintendenza avrà 45 giorni e poi vale il silenzio-assenso. Restano fuori dalla semplificazione le aree davanti a siti archeologici e beni di eccezionale valore. ATTENZIONE: è una bozza, non è in vigore. L'entrata in vigore indicata al momento è il 1° gennaio 2027.",
+      "fare": "Niente adesso. Il titolo per l'occupazione di suolo pubblico e il canone unico restano comunque obbligatori. Quando il decreto viene pubblicato in Gazzetta, controlla se il tuo comune aggiorna il regolamento sui dehors.",
+      "norma": "Schema di D.Lgs. in attuazione dell'art. 26 della L. 193/2024 · approvazione preliminare CdM 28/10/2026 · entrata in vigore prevista 1/01/2027",
+      "voce": "plq:suolo-pubblico"
+    },
+    {
+      "id": "inl-2377-2026-10",
+      "data": "2026-10-27",
+      "cond": "lavoratori",
+      "titolo": "I 60 giorni per formare un neoassunto non esistono più",
+      "riguarda": "Chiunque assuma una persona, anche un solo extra per un weekend. Non ci sono soglie di dipendenti. Non ti riguarda solo se non hai e non prevedi lavoratori.",
+      "testo": "L'Ispettorato del Lavoro ha chiarito che la regola dei 60 giorni per completare il corso sicurezza dopo l'assunzione era una lettura sbagliata di una norma transitoria del vecchio Accordo Stato-Regioni del 2011, cancellata dal nuovo Accordo del 17 aprile 2025. La formazione va erogata alla costituzione del rapporto di lavoro. Per bar, ristoranti e imprese turistico-ricettive c'è una deroga: 30 giorni per COMPLETARE il percorso, non per cominciarlo. Il lavoratore può lavorare mentre finisce il corso, ma se arriva un'ispezione nei primi 30 giorni e non hai né attestato né prova della prenotazione, l'ispettore può contestare la violazione dell'art. 37. Se il contratto dura meno di 30 giorni, la formazione va chiusa entro la fine del rapporto.",
+      "fare": "Prenota il corso lo stesso giorno in cui firmi il contratto e metti nel fascicolo la prova con data certa: la PEC di prenotazione, la richiesta all'organismo paritetico o la mail al formatore. L'informazione sui rischi del locale (art. 36) va data prima che la persona inizi a lavorare.",
+      "norma": "Nota INL n. 2377 del 27/10/2026 · D.Lgs 81/2008 art. 37 c. 4 lett. a) · art. 1-bis D.L. 159/2025 conv. L. 198/2025 · Accordo Stato-Regioni 17/04/2025 (Rep. atti 59/CSR)",
+      "voce": "itl:avvio-formazione"
+    },
+    {
+      "id": "imballaggi-173-2026-10",
+      "data": "2026-10-06",
+      "titolo": "Imballaggi monouso compostabili: restano legali in Italia",
+      "riguarda": "Chi usa monouso per il consumo sul posto o monoporzioni di zucchero, salse e panna da caffè. L'asporto resta fuori dal divieto.",
+      "testo": "Buona notizia, non un obbligo nuovo. Il regolamento europeo PPWR dal 1° gennaio 2030 vieterebbe vassoi, bicchieri, sacchetti e scatole monouso in plastica per il consumo sul posto, più le monoporzioni. L'Italia ha usato una deroga del regolamento: quegli imballaggi si possono continuare a usare se certificati biodegradabili e compostabili secondo la norma UNI EN 13432 o standard europei equivalenti, e conferibili nell'organico. Le sanzioni (da 2.500 a 25.000 euro) scattano dal 2030, non adesso. La legge tutela espressamente l'esercente che dimostra di aver acquistato imballaggi accompagnati dalla documentazione di conformità del produttore o distributore.",
+      "fare": "Quando compri imballaggi monouso, farsi dare dal fornitore la documentazione di conformità e tenerla nel fascicolo. Nient'altro.",
+      "norma": "L. 5/10/2026 n. 173, conversione del D.L. 143/2026 (GU del 6/10/2026) · art. 226-quinquies D.Lgs 152/2006 · Reg. UE 2025/40 (PPWR) art. 25 e All. V · UNI EN 13432",
+      "voce": "gen:imballaggi-compostabili"
+    },
+    {
+      "id": "claim-ambientali-dlgs-30-2026",
+      "data": "2026-09-27",
+      "titolo": "Se scrivi green, eco o sostenibile devi poterlo dimostrare",
+      "riguarda": "Tutti quelli che comunicano con i clienti. Non ti riguarda se su menu, listino, cartelli, sito e social non c'è nessun messaggio ambientale.",
+      "testo": "Dal 27 settembre 2026 si applicano le nuove regole anti-greenwashing. Le parole generiche come green, ecologico, sostenibile o la scelta naturale sono vietate se non puoi dimostrare prestazioni ambientali eccellenti, riconosciute e pertinenti. E non conta solo il testo: contano anche foglioline, icone di riciclo e verde dominante, perché conta l'impressione complessiva sul cliente medio. Vale su menu, listini, cartelli, insegna, sito, post e foto sui social. Sono vietati anche i claim di impatto neutro o zero emissioni basati sulla compensazione di CO2, i bollini di sostenibilità inventati senza un vero sistema di certificazione, e presentare come un pregio del locale una cosa che la legge già impone. Vegano e vegetariano da soli non sono claim ambientali: lo diventano se abbinati a un beneficio per il pianeta. Vigila l'AGCM.",
+      "fare": "Rileggere menu, listino, sito e social: togliere i claim ambientali generici, oppure tenere nel fascicolo le certificazioni e le schede tecniche che li giustificano.",
+      "norma": "D.Lgs 20/02/2026 n. 30 (GU Serie Generale n. 56 del 9/03/2026), che recepisce la Direttiva (UE) 2024/825 e modifica il Codice del Consumo (D.Lgs 206/2005) · applicabile dal 27/09/2026 · chiarimenti MIMIT 27/08/2026",
+      "voce": "gen:claim-ambientali"
+    },
+    {
+      "id": "fir-digitale-rentri-2026-09",
+      "data": "2026-09-16",
+      "cond": "rifiuti_pericolosi",
+      "titolo": "Formulario rifiuti solo digitale, per chi è iscritto al RENTRI",
+      "riguarda": "Solo chi è iscritto al RENTRI: produttori di rifiuti pericolosi, trasportatori, intermediari. Non ti riguarda se produci solo rifiuti non pericolosi: continui con il formulario cartaceo, generandolo dall'area Produttori non iscritti del portale.",
+      "testo": "Il formulario cartaceo era ammesso in alternativa al digitale fino al 15 settembre 2026. Dal 16 settembre 2026 chi è iscritto al RENTRI deve emettere il formulario solo in formato digitale (xFIR). Le sanzioni per mancata o incompleta trasmissione dei dati al RENTRI si applicano dal 15 settembre 2026.",
+      "fare": "Verificare con il consulente se il locale produce qualche rifiuto pericoloso (neon, batterie, toner, alcuni prodotti chimici): in quel caso scatta l'iscrizione e quindi il formulario digitale. Gli avanzi di cucina e gli oli da frittura non sono rifiuti pericolosi.",
+      "norma": "D.L. 200/2025 art. 13 c. 5-bis e 5-septies, conv. L. 26/2026 · D.M. 59/2023 · D.Lgs 152/2006",
+      "voce": "gen:rifiuti"
+    },
+    {
+      "id": "manutentore-antincendio-2026-09",
+      "data": "2026-09-25",
+      "titolo": "Gli estintori li può controllare solo un tecnico qualificato",
+      "riguarda": "Tutti: basta avere un estintore. Non ci sono soglie di superficie né di dipendenti.",
+      "testo": "Dal 25 settembre 2026 è entrato in vigore l'art. 4 del DM 1 settembre 2021: il controllo e la manutenzione di estintori, impianti e attrezzature antincendio può essere fatta solo da un tecnico manutentore qualificato. Era rinviato dal 2022. Il DM Interno del 22 settembre 2026 ha aggiunto un periodo transitorio: chi ha presentato regolare istanza di valutazione dei requisiti entro il 25 settembre 2026 può continuare a lavorare fino alla conclusione della valutazione, e in ogni caso non oltre il 31 marzo 2027. Se la manutenzione la fa una ditta non in regola, i verbali e il registro antincendio valgono poco in caso di controllo.",
+      "fare": "Chiedere alla ditta che fa la manutenzione la prova della qualifica: l'attestato, oppure la ricevuta dell'istanza presentata entro il 25/09/2026. Allegarla al fascicolo accanto ai verbali degli estintori.",
+      "norma": "DM 1/09/2021 art. 4 e All. II · DM Interno 22/09/2026 art. 6-bis (GU Serie Generale n. 222 del 24/09/2026) · Circolare VVF DCPREV 20188 del 24/09/2026 · Nota DCPREV 22572 del 15/10/2026",
+      "voce": "vvf:manutentore-qualificato"
+    }
+  ]
+}

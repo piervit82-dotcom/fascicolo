@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- EssereInRegola v26 - 25/09/2026 - scheletro nuovo, pensato per i controlli -->
+<!-- EssereInRegola v27 - 01/11/2026 - bollettino normativo di novembre: formazione neoassunti, claim ambientali, imballaggi compostabili, manutentore antincendio -->
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -562,7 +562,7 @@ const ICO={
  campana:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9A6 6 0 006 9c0 5-2.2 6.5-2.2 6.5h16.4S18 14 18 9z"/><path d="M13.7 19.5a2 2 0 01-3.4 0"/></svg>',
  backup:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="M8 10.5l4 4 4-4"/><path d="M4 17v3h16v-3"/></svg>'
 };
-const APP_VER='v26';
+const APP_VER='v27';
 const APP_DATA='25/09/2026';
 const ENTI=[
  {id:'nas',sigla:'NAS · ULSS',nome:'Igienico-sanitario',
@@ -585,7 +585,8 @@ const ENTI=[
   {id:'rischio-incendio',t:'Valutazione rischio incendio',n:'DM 3/09/2021 (minicodice) \u00B7 D.Lgs 81/2008 art. 17'},
   {id:'scia-antincendio',t:'SCIA antincendio (solo se attivit\u00E0 soggetta)',n:'DPR 151/2011 All. I att. 74 (oltre 116 kW) \u00B7 categoria A: si presenta la SCIA, il CPI riguarda solo le attivit\u00E0 oltre 700 kW \u00B7 rinnovo ogni 5 anni'},
   {id:'registro-antincendio',t:'Registro antincendio (controlli e manutenzioni)',n:'DM 1/09/2021 \u2014 obbligatorio per tutte le attivit\u00E0'},
-  {id:'estintori',t:'Estintori: controllo semestrale, revisione e collaudo',n:'DM 1/09/2021 \u00B7 UNI 9994-1:2024 \u2014 oltre al controllo ogni 6 mesi servono la revisione programmata e il collaudo, secondo tipo e anno dell\u2019estintore'},
+  {id:'estintori',t:'Estintori: controllo semestrale, revisione e collaudo',n:'DM 1/09/2021 \u00B7 UNI 9994-1:2024 \u2014 oltre al controllo ogni 6 mesi servono la revisione programmata e il collaudo, secondo tipo e anno dell\u2019estintore. Dal 25/09/2026 gli interventi valgono solo se fatti da un tecnico manutentore qualificato'},
+  {id:'manutentore-qualificato',t:'Qualifica del manutentore antincendio (attestato della ditta esterna)',n:'DM 1/09/2021 art. 4 e All. II \u2014 in vigore dal 25/09/2026: controlli e manutenzioni di estintori, impianti e attrezzature antincendio solo da tecnico qualificato \u00B7 DM Interno 22/09/2026 art. 6-bis (GU 222 del 24/09/2026): chi ha presentato istanza entro il 25/09/2026 pu\u00F2 operare fino alla conclusione della valutazione e in ogni caso non oltre il 31/03/2027 \u00B7 Nota DCPREV 22572 del 15/10/2026'},
   {id:'conf-elettrico',t:'Dichiarazione conformit\u00E0 impianto elettrico',n:'DM 37/2008 art. 7'},
   {id:'conf-gas',t:'Dichiarazione conformit\u00E0 impianto gas',n:'DM 37/2008 \u00B7 UNI 7129'},
   {id:'impianto-terra',t:'Impianto di terra: denuncia INAIL e verifica periodica',n:'DPR 462/2001 \u2014 denuncia entro 30 giorni dalla messa in esercizio; verifica ogni 5 anni (ogni 2 negli ambienti a maggior rischio incendio o con pericolo di esplosione), da ASL/ARPA o organismo abilitato, non dall\u2019elettricista'},
@@ -601,14 +602,15 @@ const ENTI=[
   {id:'rls',t:'Nomina o elezione RLS (o adesione all’RLS territoriale)',n:'D.Lgs 81/2008 artt. 47-48 — serve da 1 lavoratore in su; sopra i 15 cambia solo il modo di nominarlo'},
   {id:'primo-soccorso',t:'Attestati addetti primo soccorso e cassetta di pronto soccorso',n:'D.Lgs 81/2008 artt. 18, 45 · DM 388/2003 — ristorazione gruppo B: corso 12 ore, aggiornamento ogni 3 anni'},
   {id:'medico-competente',t:'Nomina medico competente e sorveglianza sanitaria',n:'D.Lgs 81/2008 artt. 18, 25, 41'},
-  {id:'formazione-sicurezza',t:'Attestati formazione sicurezza lavoratori e preposti',n:'D.Lgs 81/2008 art. 37 \u00B7 Accordo Stato-Regioni 17/04/2025 \u2014 aggiornamento lavoratori ogni 5 anni, preposti ogni 2 anni (era 5: chi si \u00E8 formato prima del 24/05/2023 doveva aggiornarsi entro il 24/05/2026)'},
+  {id:'formazione-sicurezza',t:'Attestati formazione sicurezza lavoratori e preposti',n:'D.Lgs 81/2008 art. 37 \u00B7 Accordo Stato-Regioni 17/04/2025 \u2014 aggiornamento lavoratori ogni 5 anni, preposti ogni 2 anni (era 5: chi si \u00E8 formato prima del 24/05/2023 doveva aggiornarsi entro il 24/05/2026). La formazione iniziale va avviata il giorno dell\u2019assunzione: i 60 giorni non esistono pi\u00F9 (Nota INL 2377 del 27/10/2026)'},
+  {id:'avvio-formazione',t:'Prova di avvio della formazione dei neoassunti (prenotazione con data certa)',n:'D.Lgs 81/2008 art. 37 c. 4 lett. a) \u00B7 art. 1-bis D.L. 159/2025 conv. L. 198/2025 \u00B7 Nota INL 2377 del 27/10/2026 \u2014 la formazione va AVVIATA alla costituzione del rapporto; per la somministrazione di alimenti e bevande (art. 5 L. 287/1991) va COMPLETATA entro 30 giorni. Vale la PEC di prenotazione del corso, la richiesta all\u2019organismo paritetico o la mail al formatore'},
   {id:'formazione-datore',t:'Formazione datore di lavoro (16 ore, 24 se fai anche da RSPP)',n:'Accordo Stato-Regioni 17/04/2025 \u00B7 D.L. 146/2021 \u2014 vale per TUTTI i datori di lavoro, anche con RSPP esterno; entro il 24/05/2027 per chi era in carica al 24/05/2025'},
   {id:'idoneita',t:'Idoneit\u00E0 sanitarie (visite mediche)',n:'D.Lgs 81/2008 art. 41'},
   {id:'durc',t:'DURC in corso di validit\u00E0',n:'D.M. 30/01/2015'},
   {id:'orari',t:'Orari di lavoro / turni e riposi',n:'D.Lgs 66/2003'},
   {id:'videosorveglianza',t:'Autorizzazione videosorveglianza (ITL o accordo sindacale)',n:'L. 300/1970 art. 4 (Statuto dei Lavoratori)'}]},
  {id:'plq',sigla:'QUESTURA \u00B7 P.L.',nome:'Questura e Polizia Locale',
-  nota:'La somministrazione senza titolo comporta sanzioni e chiusura (L. 287/1991 art. 10 \u00B7 TULPS).',
+  nota:'La somministrazione senza titolo comporta sanzioni e chiusura (L. 287/1991 art. 10 \u00B7 TULPS). DEHORS: il Consiglio dei ministri del 28/10/2026 ha approvato in esame preliminare uno schema di decreto legislativo (art. 26 L. 193/2024) che semplifica tavolini, sedie e ombrelloni nelle aree vincolate e sostituisce il permesso di costruire con la SCIA per le strutture chiuse. NON \u00E8 ancora in vigore: entrata prevista il 1/01/2027. Il titolo per l\u2019occupazione di suolo pubblico resta sempre obbligatorio.',
   items:[
   {id:'scia-somministrazione',t:'SCIA somministrazione alimenti e bevande',n:'L. 287/1991 \u00B7 D.Lgs 59/2010 art. 64 \u00B7 TULPS art. 86'},
   {id:'requisiti',t:'Requisiti professionali (SAB / REC) e morali',n:'D.Lgs 59/2010 art. 71'},
@@ -639,7 +641,9 @@ const ENTI=[
   {id:'oli-esausti',t:'Contratto smaltimento oli vegetali esausti',n:'D.Lgs 152/2006 art. 233 (CONOE)'},
   {id:'rifiuti',t:'Iscrizione RENTRI (solo se produci rifiuti pericolosi)',n:'D.Lgs 152/2006 \u00B7 D.M. 59/2023 \u2014 iscrizione entro il 13/02/2026 per i produttori di rifiuti pericolosi fino a 10 dipendenti, con registro e formulario digitali. Chi produce solo rifiuti non pericolosi di norma non \u00E8 tenuto, salvo lavorazioni artigianali con pi\u00F9 di 10 dipendenti'},
   {id:'privacy',t:'Informative privacy GDPR + cartelli videosorveglianza',n:'Reg. UE 2016/679 \u00B7 Provv. Garante 8/04/2010'},
-  {id:'tariffe',t:'Esposizione tariffe e diritti del consumatore',n:'D.Lgs 206/2005 (Codice del Consumo)'}]}
+  {id:'tariffe',t:'Esposizione tariffe e diritti del consumatore',n:'D.Lgs 206/2005 (Codice del Consumo)'},
+  {id:'claim-ambientali',t:'Claim ambientali su menu, listino, sito e social \u2014 prove e certificazioni',n:'D.Lgs 20/02/2026 n. 30 (GU 56 del 9/03/2026), che recepisce la Direttiva UE 2024/825 e modifica il Codice del Consumo \u2014 si applica dal 27/09/2026. Parole come green, ecologico e sostenibile, e anche foglioline, icone di riciclo e grafica ambientale, vanno dimostrate con documenti. Vigila l\u2019AGCM'},
+  {id:'imballaggi-compostabili',t:'Conformit\u00E0 degli imballaggi monouso compostabili (documenti del fornitore)',n:'L. 5/10/2026 n. 173, di conversione del D.L. 143/2026 (GU del 6/10/2026) \u00B7 art. 226-quinquies D.Lgs 152/2006 \u00B7 Reg. UE 2025/40 (PPWR) art. 25 e All. V \u00B7 UNI EN 13432 \u2014 il divieto scatta dal 1/01/2030 e non riguarda l\u2019asporto. Oggi basta farsi dare dal fornitore la documentazione di conformit\u00E0'}]}
 ];
 /* ===== v25: profilo del locale e motore delle regole ===== */
 /* ============================================================
@@ -749,6 +753,8 @@ const REGOLE={
   forse:'Da verificare: dipende dai kW complessivi degli apparecchi a fiamma, dal GPL, dal forno a legna e dal tipo di intrattenimento.'},
  'vvf:registro-antincendio':{ril:()=>true},
  'vvf:estintori':{ril:()=>true},
+ 'vvf:manutentore-qualificato':{ril:()=>true,
+  si:'Basta avere un estintore. Dal 25/09/2026 chi fa controlli e manutenzioni deve essere un tecnico qualificato: chiedi alla ditta l\u2019attestato, oppure la ricevuta dell\u2019istanza presentata entro il 25/09/2026 \u2014 in quel caso la sua copertura scade il 31/03/2027. Senza qualifica, i verbali di manutenzione e il registro antincendio valgono poco in un controllo.'},
  'vvf:conf-elettrico':{ril:()=>true},
  'vvf:conf-gas':{ril:p=>{
    const kw=N(p.kwgas);
@@ -792,6 +798,9 @@ const REGOLE={
   no:'Nessun lavoratore.',
   forse:'Hai lavoratori: tra movimentazione carichi, turni e videoterminali la valutazione dei rischi di norma fa scattare la sorveglianza sanitaria. Non te la tolgo finché non lo conferma chi ti segue.'},
  'itl:formazione-sicurezza':{ril:p=>lavSi(p),no:'Nessun lavoratore.'},
+ 'itl:avvio-formazione':{ril:p=>lavSi(p),
+  si:'Il giorno che firmi il contratto il corso deve essere gi\u00E0 prenotato, e la prova va tenuta nel fascicolo. Tu hai 30 giorni per completarlo (art. 1-bis D.L. 159/2025), ma non per cominciarlo. Se il contratto dura meno di 30 giorni, la formazione va chiusa entro la fine del rapporto. L\u2019informazione sui rischi del locale (art. 36) va data prima che la persona inizi a lavorare.',
+  no:'Nessun lavoratore.'},
  'itl:formazione-datore':{ril:p=>lavSi(p),
   si:'Vale per tutti i datori di lavoro con almeno un dipendente, anche se l’RSPP è esterno.',
   no:'Nessun lavoratore.'},
@@ -910,7 +919,11 @@ const REGOLE={
   no:'Solo rifiuti non pericolosi e non più di 10 dipendenti: nessun obbligo RENTRI.',
   forse:'Solo rifiuti non pericolosi, ma più di 10 dipendenti: se hai una lavorazione artigianale (produzione propria) l’iscrizione può servire. Da verificare sui codici dei rifiuti con chi ti segue.'},
  'gen:privacy':{ril:()=>true},
- 'gen:tariffe':{ril:()=>true}
+ 'gen:tariffe':{ril:()=>true},
+ 'gen:claim-ambientali':{ril:()=>true,
+  si:'Riguarda tutti, perch\u00E9 tutti comunicano con i clienti. Se su menu, listino, sito o social non c\u2019\u00E8 nessun messaggio ambientale, non devi fare niente: segna la voce come non applicabile. Se invece c\u2019\u00E8, tieni qui le certificazioni e le schede che lo dimostrano, oppure togli la scritta.'},
+ 'gen:imballaggi-compostabili':{ril:()=>true,
+  si:'Nessuna scadenza vicina: il divieto parte dal 1/01/2030 e l\u2019asporto ne resta fuori. Serve solo farsi dare dal fornitore la documentazione di conformit\u00E0 degli imballaggi monouso: la legge tutela l\u2019esercente che ce l\u2019ha.'}
 };
 function lavSi(p){const l=N(p.lavoratori);if(l===null)return null;return l>=1;}
 
@@ -1209,6 +1222,8 @@ function bollRiguarda(b){
     case 'lavoratori':  return N(p.lavoratori)===null || p.lavoratori>=1;
     case 'rifiuti_pericolosi': return N(p.rifiuti_pericolosi)!==false;
     case 'alcolici':    return N(p.alcolici)!==false;
+    case 'dehors':      return N(p.dehors)!==false;
+    case 'asporto':     return N(p.asporto)!==false;
     default: return true;
   }
 }

@@ -540,7 +540,18 @@ body{background:var(--bg)}
 .ci-spiega{font-size:13.5px;font-weight:400;color:var(--ink2);line-height:1.55;margin-top:7px}
 
 /* --- il riferimento di legge si apre solo se lo cerchi --- */
-.ci-norma-box{display:inline-block}
+/* --- v29: sanzione sempre visibile, norma da leggere, regola regionale --- */
+.ci-sanz{font-size:13px;font-weight:500;color:var(--ink);line-height:1.5;margin-top:10px;
+  padding:10px 12px;background:var(--rosso-soft);border-radius:12px}
+.ci-sanz b{display:block;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--rosso);margin-bottom:3px}
+.ci-reg{font-size:12.5px;font-weight:500;color:var(--blu);line-height:1.5;margin-top:8px;
+  padding:10px 12px;background:var(--blu-soft);border-radius:12px}
+.ci-reg b{display:block;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.ci-reg a,.ci-reg button{display:inline-block;margin-top:6px;color:var(--blu);font-weight:700;font-size:12.5px;background:none;border:none;padding:4px 0;text-decoration:underline}
+.ci-leggi{display:inline-flex;align-items:center;gap:6px;margin:4px 0 6px;padding:9px 14px;border-radius:99px;
+  background:var(--verde-soft);color:var(--verde-d);font-size:12.5px;font-weight:700;text-decoration:none;min-height:40px}
+.prof-sel{width:100%;margin-top:11px;border:1.5px solid var(--line2);border-radius:6px;padding:12px;font-size:15px;font-weight:700;background:#fff;color:var(--ink)}
+.ci-norma-box{display:block;margin-top:6px}
 .ci-norma-box summary{list-style:none;cursor:pointer;font-size:12px;font-weight:600;
   color:var(--verde);padding:6px 0;display:inline-flex;align-items:center;gap:5px}
 .ci-norma-box summary::-webkit-details-marker{display:none}
@@ -725,6 +736,7 @@ const ENTI=[
 /* --- le domande del profilo --- */
 const PROF_BLOCCHI=[
  {id:'base',titolo:'Le basi',sub:'Bastano queste per iniziare: due minuti.',dom:[
+  {k:'regione',t:'In che regione è il locale?',aiuto:'Alcune regole cambiano da regione a regione, come la formazione degli alimentaristi o le norme sulla somministrazione. Così ti mostro quelle giuste.',tipo:'elenco',opt:[['abruzzo','Abruzzo'],['basilicata','Basilicata'],['calabria','Calabria'],['campania','Campania'],['emilia','Emilia-Romagna'],['friuli','Friuli-Venezia Giulia'],['lazio','Lazio'],['liguria','Liguria'],['lombardia','Lombardia'],['marche','Marche'],['molise','Molise'],['piemonte','Piemonte'],['puglia','Puglia'],['sardegna','Sardegna'],['sicilia','Sicilia'],['toscana','Toscana'],['trentino','Trentino-Alto Adige'],['umbria','Umbria'],['vda','Valle d’Aosta'],['veneto','Veneto']]},
   {k:'tipo',t:'Che tipo di attività è?',tipo:'scelta',opt:[['bar','Bar / caffetteria'],['ristorante','Ristorante'],['pizzeria','Pizzeria'],['pub','Pub / birreria'],['agriturismo','Agriturismo'],['gastronomia','Gastronomia / asporto']]},
   {k:'presenze',t:'Quante persone al massimo ci sono dentro contemporaneamente?',aiuto:'Clienti e personale insieme. Serve per il piano di emergenza: la legge conta le presenze, non i posti a sedere.',tipo:'numero',unita:'persone'},
   {k:'lavoratori',t:'Quante persone lavorano nel locale in tutto?',aiuto:'Conta dipendenti, soci lavoratori, collaboratori familiari e stagionali. Se sei socio e lavori anche tu, contati. Il titolare di ditta individuale non si conta.',tipo:'numero',unita:'persone'},
@@ -1055,6 +1067,11 @@ function vProfilo(){
           <button class="ps-btn${v===false?' on':''}" onclick="rispProf('${d.k}',false)">No</button>
           ${risposto?`<button class="ps-clr" onclick="rispProf('${d.k}',null)">&times;</button>`:''}
         </div>`;
+      }else if(d.tipo==='elenco'){
+        campo=`<select class="prof-sel" onchange="rispProf('${d.k}',this.value===''?null:this.value)">
+          <option value="">Scegli…</option>
+          ${d.opt.map(o=>`<option value="${o[0]}"${v===o[0]?' selected':''}>${esc(o[1])}</option>`).join('')}
+        </select>`;
       }else if(d.tipo==='numero'){
         campo=`<div class="prof-num">
           <input type="number" min="0" inputmode="numeric" value="${risposto?v:''}" placeholder="—"
@@ -1442,7 +1459,7 @@ function vHome(){
     <button class="riga-av" onclick="go('profilo')">
       <span class="pal v">${ICO.locale}</span>
       <span class="ra-txt"><b>${c.fatte===0?'Dimmi com\u2019\u00E8 fatto il tuo locale':'Il mio locale'}</b>
-      <span>${c.fatte===0?'Otto domande: poi ti mostro solo i documenti che servono a te'
+      <span>${c.fatte===0?'Poche domande: poi ti mostro solo i documenti che servono a te'
         :(c.fatte<c.tot?c.fatte+' risposte su '+c.tot:'Profilo completo \u00B7 \u00E8 cambiato qualcosa?')}</span></span>
       <span class="fre">&#8250;</span>
     </button>`;
@@ -1488,6 +1505,21 @@ function docRow(d){
   </div>`;
 }
 
+/* ---------- regola regionale di una voce ---------- */
+function bloccoRegionale(it){
+  if(!it.r)return '';
+  const reg=prof().regione;
+  if(reg==='veneto'){
+    return `<div class="ci-reg"><b>In Veneto</b>${esc(it.r)}
+      ${it.rl?`<br><a href="${esc(it.rl)}" target="_blank" rel="noopener">Leggi la norma regionale &#8250;</a>`:''}</div>`;
+  }
+  if(!reg){
+    return `<div class="ci-reg"><b>Regola regionale</b>Questa voce cambia da regione a regione. Dimmi in che regione è il locale e ti mostro la regola giusta.
+      <br><button onclick="go('profilo')">Indica la regione</button></div>`;
+  }
+  return `<div class="ci-reg"><b>Regola regionale</b>Questa voce cambia da regione a regione. Per ora nell’app sono verificate solo le regole del Veneto: per la tua regione chiedi conferma al consulente o all’associazione di categoria.</div>`;
+}
+
 /* ---------- ente ---------- */
 function vEnte(eid){
   const e=ENTE(eid),docs=docsLocale(),st=enteStats(eid);
@@ -1521,9 +1553,12 @@ function vEnte(eid){
         <div class="ci-top"><h4>${esc(it.t)}</h4>${badge}</div>
         ${it.s?`<div class="ci-spiega">${esc(it.s)}</div>`:''}
         ${vs.ril===null?`<div class="ci-forse">Da confermare &middot; ${esc(vs.perche)} <button class="link-btn" onclick="go('profilo')">Rispondi nel profilo</button></div>`:(vs.perche?`<div class="ci-perche">${esc(vs.perche)}</div>`:'')}
+        ${it.z?`<div class="ci-sanz"><b>Sanzione</b>${esc(it.z)}</div>`:''}
+        ${bloccoRegionale(it)}
+        <details class="ci-norma-box"><summary>Norma</summary><div class="ci-norma">${esc(it.n)}</div>
+          ${it.l?`<a class="ci-leggi" href="${esc(it.l)}" target="_blank" rel="noopener">Leggi la norma${it.ll?': '+esc(it.ll):''} &#8250;</a>`:''}</details>
         ${linked.map(docRow).join('')}
         <div class="ci-azioni">
-          <details class="ci-norma-box"><summary>Norma</summary><div class="ci-norma">${esc(it.n)}</div></details>
           ${eid==='nas'&&(it.id==='temperature'||it.id==='pulizie')?`<button class="ci-link" onclick="go('registri')">Registro compilabile</button>`:''}
           <button class="ci-link" onclick="openDocModal(null,'${eid}:${it.id}')">${linked.length?'Aggiungi documento':'Carica documento'}</button>
         </div>
